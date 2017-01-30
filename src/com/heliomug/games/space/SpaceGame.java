@@ -85,8 +85,7 @@ public class SpaceGame implements Serializable, ActionListener {
 	}
 	
 	public void addPlayer(Player player) {
-		Color c = new Color((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255));
-		Ship ship = new Ship(this, c);
+		Ship ship = new Ship(this);
 		sprites.add(ship);
 		players.add(player);
 		playerAssignments.put(player, ship);

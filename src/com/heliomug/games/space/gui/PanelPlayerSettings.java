@@ -13,7 +13,7 @@ public class PanelPlayerSettings extends JPanel {
 		super();
 		setLayout(new GridLayout(1, 0));
 
-		ControlConfig controls = Frame.getFrame().getControls(player);
+		ControlConfig controls = SpaceFrame.getFrame().getControls(player);
 		
 		
 		add(new JLabel(player.getName()));

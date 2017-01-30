@@ -2,6 +2,8 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -39,74 +40,82 @@ public class PanelConnection extends JPanel implements ActionListener {
 		
 		// server panel
 		add(getServerPanel(), BorderLayout.WEST);
-
 		add(getClientPanel(), BorderLayout.EAST);
 		add(new PlayerPanel(), BorderLayout.CENTER);
 	}
 	
 	public JPanel getClientPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(0, 1));
-		
+		JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        
 		JButton button;
 		// client panel
 		JTextField host = new JTextField(ServerMaster.HOST);
-		panel.add(host);
-		JTextField port = new JTextField(String.valueOf(ServerMaster.PORT_NUMBER));
-		panel.add(port);
+		panel.add(host, gbc);
+		JTextField port = new JTextField(String.valueOf(ServerMaster.DEFAULT_PORT_NUMBER));
+		panel.add(port, gbc);
 		button = new JButton("Start Client");
 		button.addActionListener((ActionEvent e) -> {
 			try {
-				Frame.getFrame().getClient().start(host.getText(), Integer.parseInt(port.getText()));
+				SpaceFrame.getClient().start(host.getText(), Integer.parseInt(port.getText()));
 			} catch (NumberFormatException e1) {
 				e1.printStackTrace();
 			} 
 		});
-		panel.add(button);
+		panel.add(button, gbc);
 		button = new JButton("Add Player");
 		button.addActionListener((ActionEvent e) -> {
-			String name = (String)JOptionPane.showInputDialog(Frame.getFrame(), "New name?", "Player");
+			//String name = (String)JOptionPane.showInputDialog(SpaceFrame.getFrame(), "New name?", "Player");
+			String name = "Joe";
 			Player player = new Player(name);
-			Frame.getFrame().addPlayer(player);
+			SpaceFrame.getFrame().addPlayer(player);
 		});
-		panel.add(button);
+		panel.add(button, gbc);
 		panel.add(new UpdatingLabel("Pulled/s", () -> {
-			double gps = Frame.getFrame().getClient().getGamesPulledPerSec();
+			double gps = SpaceFrame.getClient().getGamesPulledPerSec();
 			return String.format("Pulled/s: %.3f", gps);
-		}));
+		}), gbc);
 
 		return panel;
 	}
 	
 	public JPanel getServerPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(0, 1));
+		JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
 		
 		JButton button;
 
+		JTextField port = new JTextField(String.valueOf(ServerMaster.DEFAULT_PORT_NUMBER));
+		panel.add(port, gbc);
 		button = new JButton("Start Server");
 		button.addActionListener((ActionEvent e) -> {
-			Frame.getFrame().getServer().start(new SpaceGame());
+			SpaceFrame.getFrame().getServer().start(Integer.parseInt(port.getText()), new SpaceGame());
 		});
-		panel.add(button);
+		panel.add(button, gbc);
 		button = new JButton("Start Game");
 		button.addActionListener((ActionEvent e) -> {
-			Frame.getFrame().getServer().getThing().start();
+			SpaceFrame.getFrame().getServer().getThing().start();
 		});
-		panel.add(button);
+		panel.add(button, gbc);
 		panel.add(new UpdatingLabel("Served/s", () -> {
-			double gps = Frame.getFrame().getServer().getAverageServedGamesPerSec();
+			double gps = SpaceFrame.getFrame().getServer().getAvgServedPerSec();
 			return String.format("Served/s: %.3f", gps);
-		}));
+		}), gbc);
 		panel.add(new UpdatingLabel("Updates/s", () -> {
-			SpaceGame game = Frame.getFrame().getServer().getThing(); 
+			SpaceGame game = SpaceFrame.getFrame().getServer().getThing(); 
 			if (game != null) {
 				double gps = game.getUpdatesPerSec();
 				return String.format("Updates/s: %.3f", gps);
 			} else {
 				return "Updates/s";
 			}
-		}));
+		}), gbc);
 
 		return panel;
 	}
@@ -121,7 +130,7 @@ public class PanelConnection extends JPanel implements ActionListener {
 		@Override
 		public void paint(Graphics g) {
 			this.removeAll();
-			List<Player> players = Frame.getFrame().getLocalPlayers();
+			List<Player> players = SpaceFrame.getFrame().getLocalPlayers();
 			if (players.size() == 0) {
 				add(new JLabel("No players yet!"));
 			} else {
@@ -129,7 +138,7 @@ public class PanelConnection extends JPanel implements ActionListener {
 					add(new PanelPlayerSettings(player));
 				}
 			}
-			//revalidate();
+			revalidate();
 			super.paint(g);
 		}
 	}

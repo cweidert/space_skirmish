@@ -22,12 +22,12 @@ public class PanelGame extends WeidertPanel implements Runnable {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Frame.getFrame().handleKey(e.getKeyCode(), true);
+				SpaceFrame.getFrame().handleKey(e.getKeyCode(), true);
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				Frame.getFrame().handleKey(e.getKeyCode(), false);
+				SpaceFrame.getFrame().handleKey(e.getKeyCode(), false);
 			}
 
 			@Override
@@ -55,12 +55,12 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	
 	@Override
 	public void paint(Graphics g) {
-		SpaceGame game = Frame.getFrame().getClient().getThing();
-		super.setScreenBounds(game.getBounds());
 		super.paint(g);
 
-		Graphics2D g2 = (Graphics2D)g;
+		SpaceGame game = SpaceFrame.getClient().getThing();
 		if (game != null) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.setScreenBounds(game.getBounds());
 			game.draw(g2);
 		}
 	}

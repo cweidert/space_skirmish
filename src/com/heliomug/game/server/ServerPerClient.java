@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.function.Consumer;
 
-public class ServerPerClient<S extends Serializable> {
+public class ServerPerClient<S extends Serializable, D extends MessageDisplayer> {
 	private static final int THREAD_SLEEP_TIME = 1;
 	private static final int GAME_SEND_SLEEP_TIME = 42;
 
@@ -34,7 +34,7 @@ public class ServerPerClient<S extends Serializable> {
 		return commandsPulled;
 	}
 	
-	public double getGamesServedPerSec() {
+	public double getServedPerSec() {
 		double time = System.currentTimeMillis() - timeStarted;
 		return gamesSent * 1000 / time;
 	}

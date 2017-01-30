@@ -13,6 +13,8 @@ public class ControlConfig {
 		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN },
 		new int[] { VK_A, VK_D, VK_W, VK_S},
 		new int[] { VK_J, VK_L, VK_I, VK_K},
+		new int[] { VK_F, VK_H, VK_T, VK_G},
+//		new int[] { VK_, VK_, VK_, VK_},
 //		new int[] { VK_, VK_, VK_, VK_},
 	};
 	
@@ -88,40 +90,40 @@ public class ControlConfig {
 			if (leftDown != isDown) {
 				leftDown = isDown;
 				if (isDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
 				} else {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
 				}
 				if (rightDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
 				}
 			} 
 		} else if (key == rightKey) {
 			if (rightDown != isDown) {
 				rightDown = isDown;
 				if (isDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
 				} else {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
 				}
 				if (leftDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
 				}
 			} 
 		} else if (key == boostKey) {
 			if (boostDown != isDown) {
 				boostDown = isDown;
 				if (isDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_ON));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_ON));
 				} else {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_OFF));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_OFF));
 				}
 			} 
 		} else if (key == fireKey) {
 			if (fireDown != isDown) {
 				fireDown = isDown;
 				if (isDown) {
-					Frame.getFrame().getClient().sendCommand(new CommandShip(player, ShipSignal.FIRE));
+					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.FIRE));
 				}
 			}
 		}

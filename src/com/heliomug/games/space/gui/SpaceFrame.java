@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.heliomug.game.server.Client;
+import com.heliomug.game.server.MessageDisplayer;
 import com.heliomug.game.server.ServerMaster;
 import com.heliomug.games.space.CommandPlayer;
 import com.heliomug.games.space.Player;
@@ -22,20 +23,24 @@ import com.heliomug.games.space.SpaceGame;
 import com.heliomug.gui.utils.UpdatingLabel;
 
 @SuppressWarnings("serial")
-public class Frame extends JFrame {
+public class SpaceFrame extends JFrame implements MessageDisplayer {
 
-	private static Frame theFrame;
+	private static SpaceFrame theFrame;
 	
-	public static Frame getFrame() {
+	public static SpaceFrame getFrame() {
 		if (theFrame == null) {
-			theFrame = new Frame();
+			theFrame = new SpaceFrame();
 		}
 		return theFrame;
 	}
 	
-
-	private ServerMaster<SpaceGame> server;
-	private Client<SpaceGame> client;
+	public static Client<SpaceGame, SpaceFrame> getClient() {
+		return theFrame.client;
+	}
+	
+	
+	private ServerMaster<SpaceGame, SpaceFrame> server;
+	private Client<SpaceGame, SpaceFrame> client;
 	
 	private Map<Player, ControlConfig> controlMap;
 	private List<Player> localPlayers;
@@ -44,10 +49,10 @@ public class Frame extends JFrame {
 	
 	private String message;
 	
-	private Frame() {
+	private SpaceFrame() {
 		super("Networked Space Game");
 		
-		server = new ServerMaster<>();
+		server = new ServerMaster<>(this);
 		client = new Client<>();
 		controlMap = new HashMap<>();
 		localPlayers = new ArrayList<>();
@@ -90,11 +95,7 @@ public class Frame extends JFrame {
 		}
 	}
 	
-	public Client<SpaceGame> getClient() {
-		return client;
-	}
-	
-	public ServerMaster<SpaceGame> getServer() {
+	public ServerMaster<SpaceGame, SpaceFrame> getServer() {
 		return server;
 	}
 	
@@ -120,8 +121,14 @@ public class Frame extends JFrame {
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
-			Frame frame = new Frame();
+			SpaceFrame frame = new SpaceFrame();
 			frame.setVisible(true);
 		});
+	}
+
+	@Override
+	public void displayMessage(String message) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
-public class Client<S extends Serializable> {
+public class Client<S extends Serializable, D extends MessageDisplayer> {
 	private static final int THREAD_SLEEP_TIME = 1;
 	
 	private S servable;

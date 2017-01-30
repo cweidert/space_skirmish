@@ -17,7 +17,6 @@ public class Ship extends Sprite implements Serializable {
 	private static final double BULLET_SPEED = 25;
 	private static final double BOOST_RAD = 5;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
-	private static final Color DEFAULT_COLOR = Color.BLUE;
 	
 	private static final double STARTING_HEALTH = 100;
 	
@@ -32,17 +31,19 @@ public class Ship extends Sprite implements Serializable {
 	private SpaceGame game;
 	
 	public Ship(SpaceGame game) {
-		this(game, DEFAULT_COLOR);
-	}
-	
-	public Ship(SpaceGame game, Color color) {
 		super(0, 0, 0, 0, SHIP_RAD);
-		this.color = color;
+		//Color c = Color.getHSBColor((float)Math.random(), 1.0f, 1.0f);
+		Color c = new Color(randInt(256), randInt(256), randInt(256));
+		this.color = c;
 		turnDirection = TurnDirection.NONE;
 		heading = 0;
 		accelerating = false;
 		health = STARTING_HEALTH;
 		this.game = game;
+	}
+	
+	private int randInt(int lim) {
+		return (int)(Math.random() * lim);
 	}
 	
 	public double getHeading() {
