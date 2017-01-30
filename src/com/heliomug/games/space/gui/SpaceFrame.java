@@ -16,7 +16,7 @@ import javax.swing.JTabbedPane;
 
 import com.heliomug.game.server.Client;
 import com.heliomug.game.server.MessageDisplayer;
-import com.heliomug.game.server.ServerMaster;
+import com.heliomug.game.server.GameServer;
 import com.heliomug.games.space.CommandPlayer;
 import com.heliomug.games.space.CommandShip;
 import com.heliomug.games.space.Player;
@@ -41,7 +41,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	}
 	
 	
-	private ServerMaster<SpaceGame, SpaceFrame> server;
+	private GameServer<SpaceGame, SpaceFrame> server;
 	private Client<SpaceGame, SpaceFrame> client;
 	
 	private Map<Player, ControlConfig> controlMap;
@@ -54,7 +54,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	private SpaceFrame() {
 		super("Networked Space Game");
 		
-		server = new ServerMaster<>(this);
+		server = new GameServer<>(this);
 		client = new Client<>();
 		controlMap = new HashMap<>();
 		localPlayers = new ArrayList<>();
@@ -101,7 +101,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		}
 	}
 	
-	public ServerMaster<SpaceGame, SpaceFrame> getServer() {
+	public GameServer<SpaceGame, SpaceFrame> getServer() {
 		return server;
 	}
 	

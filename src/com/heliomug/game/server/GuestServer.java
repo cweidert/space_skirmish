@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.function.Consumer;
 
-public class ServerPerClient<S extends Serializable, D extends MessageDisplayer> {
+public class GuestServer<S extends Serializable, D extends MessageDisplayer> {
 	private static final int THREAD_SLEEP_TIME = 1;
 	private static final int GAME_SEND_SLEEP_TIME = 42;
 
@@ -20,7 +20,7 @@ public class ServerPerClient<S extends Serializable, D extends MessageDisplayer>
 	
 	private S servable;
 	
-	public ServerPerClient(Socket incoming, S thing) {
+	public GuestServer(Socket incoming, S thing) {
 		this.incoming = incoming;
 		gamesSent = commandsPulled = 0;
 		this.servable = thing;

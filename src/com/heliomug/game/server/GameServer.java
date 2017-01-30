@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerMaster<S extends Serializable, D extends MessageDisplayer> {
+public class GameServer<S extends Serializable, D extends MessageDisplayer> {
 	public static final int DEFAULT_PORT_NUMBER = 27960; 
 	public static final String HOST = "home.heliomug.com";
 
@@ -16,9 +16,9 @@ public class ServerMaster<S extends Serializable, D extends MessageDisplayer> {
 	private S thing;
 	private D displayer; 
 	
-	private List<ServerPerClient<S, D>> clientServers;
+	private List<GuestServer<S, D>> clientServers;
 	
-	public ServerMaster(D displayer) {
+	public GameServer(D displayer) {
 		clientServers = new ArrayList<>();
 		thing = null;
 		this.displayer = displayer;
@@ -34,7 +34,7 @@ public class ServerMaster<S extends Serializable, D extends MessageDisplayer> {
 		}
 		
 		double tot = 0;
-		for (ServerPerClient<S, D> server : clientServers) {
+		for (GuestServer<S, D> server : clientServers) {
 			tot += server.getServedPerSec();
 		}
 		return tot / clientServers.size();
@@ -42,13 +42,13 @@ public class ServerMaster<S extends Serializable, D extends MessageDisplayer> {
 	
 	public int getTotalCommandsReceived() {
 		int tot = 0;
-		for (ServerPerClient<S, D> server : clientServers) {
+		for (GuestServer<S, D> server : clientServers) {
 			tot += server.getCommandsPulled();
 		}
 		return tot;
 	}
 	
-	public List<ServerPerClient<S, D>> getConnections() {
+	public List<GuestServer<S, D>> getConnections() {
 		return clientServers;
 	}
 
@@ -60,7 +60,7 @@ public class ServerMaster<S extends Serializable, D extends MessageDisplayer> {
 				displayer.displayMessage("starting server");
 				while (true) {
 					Socket incoming = serverSocket.accept();
-					ServerPerClient<S, D> clientServer = new ServerPerClient<>(incoming, this.thing);
+					GuestServer<S, D> clientServer = new GuestServer<>(incoming, this.thing);
 					clientServer.start();
 					clientServers.add(clientServer);
 					displayer.displayMessage("accepted new client");

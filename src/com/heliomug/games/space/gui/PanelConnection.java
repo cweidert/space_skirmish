@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import com.heliomug.game.server.ServerMaster;
+import com.heliomug.game.server.GameServer;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.SpaceGame;
 import com.heliomug.gui.utils.UpdatingLabel;
@@ -53,9 +53,9 @@ public class PanelConnection extends JPanel implements ActionListener {
         
 		JButton button;
 		// client panel
-		JTextField host = new JTextField(ServerMaster.HOST);
+		JTextField host = new JTextField(GameServer.HOST);
 		panel.add(host, gbc);
-		JTextField port = new JTextField(String.valueOf(ServerMaster.DEFAULT_PORT_NUMBER));
+		JTextField port = new JTextField(String.valueOf(GameServer.DEFAULT_PORT_NUMBER));
 		panel.add(port, gbc);
 		button = new JButton("Start Client");
 		button.addActionListener((ActionEvent e) -> {
@@ -91,7 +91,7 @@ public class PanelConnection extends JPanel implements ActionListener {
 		
 		JButton button;
 
-		JTextField port = new JTextField(String.valueOf(ServerMaster.DEFAULT_PORT_NUMBER));
+		JTextField port = new JTextField(String.valueOf(GameServer.DEFAULT_PORT_NUMBER));
 		panel.add(port, gbc);
 		button = new JButton("Start Server");
 		button.addActionListener((ActionEvent e) -> {
