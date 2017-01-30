@@ -18,7 +18,9 @@ import com.heliomug.game.server.Client;
 import com.heliomug.game.server.MessageDisplayer;
 import com.heliomug.game.server.ServerMaster;
 import com.heliomug.games.space.CommandPlayer;
+import com.heliomug.games.space.CommandShip;
 import com.heliomug.games.space.Player;
+import com.heliomug.games.space.ShipSignal;
 import com.heliomug.games.space.SpaceGame;
 import com.heliomug.gui.utils.UpdatingLabel;
 
@@ -57,9 +59,13 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		controlMap = new HashMap<>();
 		localPlayers = new ArrayList<>();
 		
-		message = " ";
+		message = "none";
 		
 		setupGUI();
+	}
+	
+	private String getMessage() {
+		return message;
 	}
 	
 	private void setupGUI() {
@@ -77,7 +83,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		
 		panel.add(tabbedPane, BorderLayout.CENTER);
 		
-		JLabel label = new UpdatingLabel(":", () -> message);
+		JLabel label = new UpdatingLabel("Messages", () -> getMessage());
 		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		panel.add(label, BorderLayout.SOUTH);
 		
@@ -111,7 +117,10 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	
 	public void handleKey(int key, boolean down) {
 		for (Player player : localPlayers) {
-			controlMap.get(player).handleKey(key, down);
+			ShipSignal signal = controlMap.get(player).getSignal(key, down);
+			if (signal != null) {
+				SpaceFrame.getClient().sendCommand(new CommandShip(player, signal));
+			}
 		}
 	}
 	
@@ -128,7 +137,8 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 
 	@Override
 	public void displayMessage(String message) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(message);
+		this.message = message;
+		repaint();
 	}
 }

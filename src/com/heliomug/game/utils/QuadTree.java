@@ -4,10 +4,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuadTree<T extends Boundable> {
+public class QuadTree<T extends Boundable> implements Serializable {
+	private static final long serialVersionUID = 1538100396665176370L;
+
+	public static <T extends Boundable> QuadTree<T> getTreeOf(List<T> boundables) {
+		QuadTree<T> tree = new QuadTree<>();
+		tree.refill(boundables);
+		return tree;
+	}
+	
+	private static final Color BOUNDS_COLOR = Color.GREEN;
+	
 	private static final int MAX_CAPACITY = 5;
 
 	private QuadTree<T>[] subTrees;
@@ -63,6 +74,8 @@ public class QuadTree<T extends Boundable> {
 	
 	public synchronized void clear() {
 		payload.clear();
+		subTrees = null;
+		/*
 		if (subTreesExist()) {
 			for (int i = 0 ; i < subTrees.length ; i++) {
 				if (subTrees[i] != null) {
@@ -71,6 +84,7 @@ public class QuadTree<T extends Boundable> {
 				}
 			}
 		}
+		*/
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -154,7 +168,7 @@ public class QuadTree<T extends Boundable> {
 		return getOverlappers(b.getBounds());
 	}
 	
-	public synchronized List<T> getOverlappers(Rectangle2D bounds) {
+	private synchronized List<T> getOverlappers(Rectangle2D bounds) {
 		List<T> li = getPossibleHits(bounds);
 		for (int i = 0 ; i < li.size() ; i++) {
 			T b = li.get(i);
@@ -167,7 +181,9 @@ public class QuadTree<T extends Boundable> {
 	}
 	
 	public synchronized List<T> getOverlappers(Boundable b) {
-		return getOverlappers(b.getBounds());
+		List<T> li = getOverlappers(b.getBounds());
+		li.remove(b);
+		return li;
 	}
 	
 	private synchronized List<T> getPossibleHits(Point2D p) {
@@ -223,12 +239,12 @@ public class QuadTree<T extends Boundable> {
 	}
 	
 	private void drawBounds(Graphics2D g) {
+		g.setColor(BOUNDS_COLOR);
 		if (subTreesExist()) {
 			for (int i = 0 ; i < subTrees.length ; i++) {
 				subTrees[i].drawBounds(g);
 			}
 		}
-		g.setColor(Color.BLACK);
 		g.draw(bounds);
 	}
 	

@@ -1,5 +1,6 @@
 package com.heliomug.games.space;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.io.Serializable;
@@ -7,18 +8,26 @@ import java.io.Serializable;
 public class Ship extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
-	private static final double ACCEL = 10.0;
+	private static final double BOOST_FORCE = 300.0;
 	private static final double MAX_SPEED = 100.0;
 	private static final double TURN_SPEED = 2.0;
 	
 	private static final double TUR_RAD = 5;
 	private static final double SHIP_RAD = 2;
 	private static final Color TUR_COLOR = Color.YELLOW;
-	private static final double BULLET_SPEED = 25;
-	private static final double BOOST_RAD = 5;
+	private static final double BOOST_RAD = 3;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
 	
+	private static final double BULLET_SPEED = 75;
+	private static final double BULLET_DAMAGE = 20;
+
 	private static final double STARTING_HEALTH = 100;
+	private static final long BLINK_CYCLE = 1000;
+	private static final int BLINK_THRESHOLD = 25;
+	
+	private static final double DEFAULT_HEADING = 0;
+	private static final Vec DEFAULT_POSITION = new Vec();
+	private static final Vec DEFAULT_VELOCITY = new Vec();
 	
 	private TurnDirection turnDirection;
 	private double heading;
@@ -28,18 +37,29 @@ public class Ship extends Sprite implements Serializable {
 	private double health;
 	private Color color;
 	
-	private SpaceGame game;
+	public Ship() {
+		this(DEFAULT_HEADING);
+	}
 	
-	public Ship(SpaceGame game) {
-		super(0, 0, 0, 0, SHIP_RAD);
+	public Ship(double heading) {
+		super(SHIP_RAD);
 		//Color c = Color.getHSBColor((float)Math.random(), 1.0f, 1.0f);
 		Color c = new Color(randInt(256), randInt(256), randInt(256));
 		this.color = c;
+		reset(DEFAULT_POSITION, heading);
+	}
+
+	public void reset(Vec pos, double heading) {
+		reset(pos, DEFAULT_VELOCITY, heading);
+	}
+	
+	public void reset(Vec pos, Vec velo, double heading) {
+		setPosition(pos);
+		setVelocity(velo);
+		this.heading = heading;
 		turnDirection = TurnDirection.NONE;
-		heading = 0;
 		accelerating = false;
 		health = STARTING_HEALTH;
-		this.game = game;
 	}
 	
 	private int randInt(int lim) {
@@ -50,54 +70,79 @@ public class Ship extends Sprite implements Serializable {
 		return heading;
 	}
 
-	public void fire() {
-		double bx = getX() + Math.cos(heading) * (SHIP_RAD + TUR_RAD);
-		double by = getY() + Math.sin(heading) * (SHIP_RAD + TUR_RAD);
-		double dx = getDX() + Math.cos(heading) * BULLET_SPEED;
-		double dy = getDY() + Math.sin(heading) * BULLET_SPEED;
-		Bullet bullet = new Bullet(bx, by, dx, dy);
-		
-		game.addBullet(bullet);
+	public Bullet getBullet() {
+		Vec position = getPosition().add(new Vec(heading).mult(SHIP_RAD + TUR_RAD));
+		Vec velocity = getVelocity().add(new Vec(heading).mult(BULLET_SPEED));
+		Bullet bullet = new Bullet(position, velocity);
+		setVelocity(getVelocity().sub(velocity.mult(bullet.getMass()))); 
+		return bullet;
 	}
 	
 	public void setTurnDirection(TurnDirection dir) {
 		turnDirection = dir;
 	}
 	
-	public void setAccel(boolean b) {
+	public void setBoostOn(boolean b) {
 		accelerating = b;
 	}
 
 	public void update(double dt) {
 		heading += turnDirection.getValue() * TURN_SPEED * dt;
 		if (accelerating) {
-			double ddx = Math.cos(heading) * ACCEL * dt;
-			double ddy = Math.sin(heading) * ACCEL * dt;
-			accelerate(ddx, ddy);
+			Vec force = new Vec(heading);
+			force = force.mult(BOOST_FORCE * dt);
+			addForce(force);
 		}
+		super.update(dt);
 		if (getSpeed() > MAX_SPEED) {
 			setSpeed(MAX_SPEED);
 		}
-		super.update(dt);
 	}
 
-	private Color getColor() {
-		double h = health / STARTING_HEALTH;
-		int r = color.getRed();
-		int g = color.getGreen();
-		int b = color.getBlue();
-		return new Color((int)((1 - h) * (255 - r) + r), g, (int)(h * (255 - b) + b));
+	@Override
+	public void getHitBy(Sprite other) {
+		if (other instanceof Ship) {
+			die();
+		} else {
+			health -= BULLET_DAMAGE;
+		}
+		if (health < 0) {
+			health = 0;
+			die();
+		}
 	}
 	
+	@Override
+	public Color getColor() {
+		if (health < BLINK_THRESHOLD) {
+			if (age() % BLINK_CYCLE < BLINK_CYCLE / 2) {
+				return Color.BLACK;
+			} else {
+				return Color.RED;
+			}
+		} else {
+			double h = health / STARTING_HEALTH;
+			int r = color.getRed();
+			int g = color.getGreen();
+			int b = color.getBlue();
+			r = r + (int)((1 - h) * (255 - r));
+			g = (int)(g * h);
+			b = (int)(b * h);
+			return new Color(r, g, b);
+		}
+	}
+	
+	@Override
 	public void draw(java.awt.Graphics2D g) {
-		double x = getX();
-		double y = getY();
+		double x = getPosition().getX();
+		double y = getPosition().getY();
 		g.setColor(TUR_COLOR);
 		g.draw(new Line2D.Double(x, y, x + Math.cos(heading) * TUR_RAD, y + Math.sin(heading) * TUR_RAD));
 		if (accelerating) {
 			g.setColor(BOOST_COLOR);
+			g.setStroke(new BasicStroke(2));
 			g.draw(new Line2D.Double(x, y, x - Math.cos(heading) * BOOST_RAD, y - Math.sin(heading) * BOOST_RAD));
 		}
-		super.draw(g, getColor());
+		super.draw(g);
 	}
 }

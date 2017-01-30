@@ -1,12 +1,26 @@
 package com.heliomug.games.space.gui;
 
+import static java.awt.event.KeyEvent.VK_A;
+import static java.awt.event.KeyEvent.VK_D;
+import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_F;
+import static java.awt.event.KeyEvent.VK_G;
+import static java.awt.event.KeyEvent.VK_H;
+import static java.awt.event.KeyEvent.VK_I;
+import static java.awt.event.KeyEvent.VK_J;
+import static java.awt.event.KeyEvent.VK_K;
+import static java.awt.event.KeyEvent.VK_L;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_S;
+import static java.awt.event.KeyEvent.VK_T;
+import static java.awt.event.KeyEvent.VK_UP;
+import static java.awt.event.KeyEvent.VK_W;
+
 import java.awt.event.KeyEvent;
 
-import com.heliomug.games.space.CommandShip;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
-
-import static java.awt.event.KeyEvent.*;
 
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {
@@ -85,47 +99,51 @@ public class ControlConfig {
 		return KeyEvent.getKeyText(key);
 	}
 	
-	public void handleKey(int key, boolean isDown) {
+	public ShipSignal getSignal(int key, boolean isDown) {
 		if (key == leftKey) {
 			if (leftDown != isDown) {
 				leftDown = isDown;
 				if (isDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
+					return ShipSignal.TURN_LEFT;
 				} else {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
-				}
-				if (rightDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
+					if (rightDown) {
+						return ShipSignal.TURN_RIGHT;
+					} else {
+						return ShipSignal.TURN_NONE;
+					}
 				}
 			} 
 		} else if (key == rightKey) {
 			if (rightDown != isDown) {
 				rightDown = isDown;
 				if (isDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_RIGHT));
+					return ShipSignal.TURN_RIGHT;
 				} else {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_NONE));
-				}
-				if (leftDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.TURN_LEFT));
+					if (leftDown) {
+						return ShipSignal.TURN_LEFT;
+					} else {
+						return ShipSignal.TURN_NONE;
+					}
 				}
 			} 
 		} else if (key == boostKey) {
 			if (boostDown != isDown) {
 				boostDown = isDown;
 				if (isDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_ON));
+					return ShipSignal.ACCEL_ON;
 				} else {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.ACCEL_OFF));
+					return ShipSignal.ACCEL_OFF;
 				}
 			} 
 		} else if (key == fireKey) {
 			if (fireDown != isDown) {
 				fireDown = isDown;
 				if (isDown) {
-					SpaceFrame.getClient().sendCommand(new CommandShip(player, ShipSignal.FIRE));
+					return ShipSignal.FIRE;
 				}
 			}
 		}
+		
+		return null;
 	}
 }

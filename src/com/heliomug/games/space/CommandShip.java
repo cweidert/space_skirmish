@@ -16,11 +16,7 @@ public class CommandShip implements Consumer<SpaceGame>, Serializable {
 	
 	@Override
 	public void accept(SpaceGame game) {
-		SpaceGame spaceGame = (SpaceGame) game;
-		Ship ship = spaceGame.getShip(player);
-		if (ship != null) {
-			signal.apply(ship);
-		}
+		game.handleShipSignal(player, signal);
 	}
 	
 	@Override

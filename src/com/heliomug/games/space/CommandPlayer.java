@@ -20,14 +20,14 @@ public class CommandPlayer implements Consumer<SpaceGame>, Serializable {
 	
 	@Override
 	public void accept(SpaceGame game) {
-		SpaceGame space = (SpaceGame)game;
 		if (isAdding) {
-			space.addPlayer(player);
+			game.addPlayer(player);
 		} else {
-			space.removePlayer(player);
+			game.removePlayer(player);
 		}
 	}
 	
+	@Override
 	public String toString() {
 		if (isAdding) {
 			return "add " + player;

@@ -13,9 +13,31 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	private static final long serialVersionUID = -4501673998714242701L;
 	private static final int SLEEP_TIME = 1;
 	
+	private static final boolean DEFAULT_AUTO_ZOOM = true;
+	
+	boolean isAutoZoom;
+	
 	public PanelGame() {
 		super(640, 480, - SpaceGame.WIDTH / 2, SpaceGame.WIDTH / 2, - SpaceGame.HEIGHT / 2, SpaceGame.HEIGHT / 2);
 		
+
+		this.isAutoZoom = DEFAULT_AUTO_ZOOM;
+		
+		setupGUI();
+		
+		Thread t = new Thread(this);
+		t.start();
+	}
+
+	public boolean isAutoZoom() {
+		return this.isAutoZoom;
+	}
+	
+	public void setAutoZoom(boolean b) {
+		this.isAutoZoom = b;
+	}
+	
+	public void setupGUI() {
 		setFocusable(true);
 		setDoubleBuffered(true);
 		this.addKeyListener(new KeyListener() {
@@ -36,11 +58,8 @@ public class PanelGame extends WeidertPanel implements Runnable {
 			
 		});
 		setBackground(Color.BLACK);
-		
-		Thread t = new Thread(this);
-		t.start();
 	}
-
+	
 	public void run() {
 		while(true) {
 			repaint();
@@ -60,7 +79,9 @@ public class PanelGame extends WeidertPanel implements Runnable {
 		SpaceGame game = SpaceFrame.getClient().getThing();
 		if (game != null) {
 			Graphics2D g2 = (Graphics2D)g;
-			super.setScreenBounds(game.getBounds());
+			if (isAutoZoom) {
+				setScreenBounds(game.getBounds());
+			}
 			game.draw(g2);
 		}
 	}
