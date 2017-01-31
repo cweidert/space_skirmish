@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 import com.heliomug.game.server.ThingClient;
 import com.heliomug.game.server.ThingHost;
-import com.heliomug.games.space.SpaceGame;
+import com.heliomug.games.space.Game;
 import com.heliomug.games.space.server.CommandAddHost;
 import com.heliomug.games.space.server.MasterHost;
 import com.heliomug.utils.gui.UpdatingPanel;
@@ -39,17 +39,17 @@ public class TabConnections extends UpdatingPanel {
 			}
 		};
 		hostButton.addActionListener((ActionEvent e) -> {
-			ThingClient<ArrayList<ThingHost<SpaceGame>>> masterClient = SpaceFrame.getMasterClient(); 
-			ThingHost<SpaceGame> server = SpaceFrame.getServer(); 
-			ThingClient<SpaceGame> client = SpaceFrame.getClient(); 
+			ThingClient<ArrayList<ThingHost<Game>>> masterClient = SpaceFrame.getMasterClient(); 
+			ThingHost<Game> server = SpaceFrame.getServer(); 
+			ThingClient<Game> client = SpaceFrame.getClient(); 
 			if (server == null && client == null) {
-				ThingHost<SpaceGame> myServer = new ThingHost<SpaceGame>(new SpaceGame("[nom]"), MasterHost.GAME_PORT); 
+				ThingHost<Game> myServer = new ThingHost<Game>(new Game("[nom]"), MasterHost.GAME_PORT); 
 				SpaceFrame.setServer(myServer);
 				myServer.start();
 				if (masterClient != null) {
 					masterClient.sendCommand(new CommandAddHost(myServer));
 				}
-				ThingClient<SpaceGame> myClient = new ThingClient<SpaceGame>(myServer);
+				ThingClient<Game> myClient = new ThingClient<Game>(myServer);
 				SpaceFrame.setClient(myClient);
 				myClient.start((Boolean b) -> {});
 			}
@@ -59,13 +59,13 @@ public class TabConnections extends UpdatingPanel {
 	
 	public void update() {
         others.removeAll();
-		ThingClient<ArrayList<ThingHost<SpaceGame>>> masterClient = SpaceFrame.getMasterClient(); 
-		ThingClient<SpaceGame> client = SpaceFrame.getClient(); 
+		ThingClient<ArrayList<ThingHost<Game>>> masterClient = SpaceFrame.getMasterClient(); 
+		ThingClient<Game> client = SpaceFrame.getClient(); 
 
 		if (masterClient != null) {
-			List<ThingHost<SpaceGame>> li = masterClient.getThing();
+			List<ThingHost<Game>> li = masterClient.getThing();
 			if (li != null && li.size() > 0) {
-				for (ThingHost<SpaceGame> host : li) {
+				for (ThingHost<Game> host : li) {
 					String gameString = host.getThing().toString();
 					String addr = host.getAddress().toString();
 					int port = host.getPort();
@@ -77,7 +77,7 @@ public class TabConnections extends UpdatingPanel {
 			        JButton button = new JButton("Join Game");
 			        button.addActionListener((ActionEvent e) -> {
 			        	if (client == null) {
-			        		ThingClient<SpaceGame> newClient = new ThingClient<>(host);
+			        		ThingClient<Game> newClient = new ThingClient<>(host);
 			        		SpaceFrame.setClient(newClient);
 			        		newClient.start();
 			        	}

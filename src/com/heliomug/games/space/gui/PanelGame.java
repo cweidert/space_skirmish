@@ -7,19 +7,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import com.heliomug.game.server.ThingClient;
-import com.heliomug.games.space.SpaceGame;
+import com.heliomug.games.space.Game;
 import com.heliomug.utils.gui.WeidertPanel;
 
 public class PanelGame extends WeidertPanel implements Runnable {
 	private static final long serialVersionUID = -4501673998714242701L;
 	private static final int SLEEP_TIME = 1;
 	
+	private static final int WIDTH = 640;
+	private static final int HEIGHT = 480;
+	
 	private static final boolean DEFAULT_AUTO_ZOOM = true;
 	
 	boolean isAutoZoom;
 	
 	public PanelGame() {
-		super(640, 480, - SpaceGame.WIDTH / 2, SpaceGame.WIDTH / 2, - SpaceGame.HEIGHT / 2, SpaceGame.HEIGHT / 2);
+		super(WIDTH, HEIGHT);
 
 		this.isAutoZoom = DEFAULT_AUTO_ZOOM;
 		
@@ -76,13 +79,13 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		ThingClient<SpaceGame> client = SpaceFrame.getClient();
+		ThingClient<Game> client = SpaceFrame.getClient();
 		if (client != null) {
-			SpaceGame game = client.getThing();
+			Game game = client.getThing();
 			if (game != null && game.isActive()) {
 				Graphics2D g2 = (Graphics2D)g;
-				if (game.isWrap()) {
-					setScreenBounds(SpaceGame.ORIGINAL_BOUNDS);
+				if (game.getOptions().isWrap()) {
+					setScreenBounds(game.getOptions().getOriginalBounds());
 				} else if (isAutoZoom) {
 					setScreenBounds(game.getBounds());
 				}

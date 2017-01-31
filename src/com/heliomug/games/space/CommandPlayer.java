@@ -3,7 +3,7 @@ package com.heliomug.games.space;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class CommandPlayer implements Consumer<SpaceGame>, Serializable {
+public class CommandPlayer implements Consumer<Game>, Serializable {
 	private static final long serialVersionUID = 8350563567725970336L;
 
 	private Player player;
@@ -19,7 +19,7 @@ public class CommandPlayer implements Consumer<SpaceGame>, Serializable {
 	}
 	
 	@Override
-	public void accept(SpaceGame game) {
+	public void accept(Game game) {
 		if (isAdding) {
 			game.addPlayer(player);
 		} else {

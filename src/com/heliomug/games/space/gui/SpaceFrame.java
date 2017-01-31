@@ -17,7 +17,7 @@ import com.heliomug.games.space.CommandPlayer;
 import com.heliomug.games.space.CommandShip;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
-import com.heliomug.games.space.SpaceGame;
+import com.heliomug.games.space.Game;
 import com.heliomug.games.space.server.MasterHost;
 import com.heliomug.utils.gui.MessageDisplayer;
 
@@ -32,23 +32,23 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		return theFrame;
 	}
 
-	public static ThingClient<ArrayList<ThingHost<SpaceGame>>> getMasterClient() {
+	public static ThingClient<ArrayList<ThingHost<Game>>> getMasterClient() {
 		return getFrame().masterClient;
 	}
 	
-	public static ThingClient<SpaceGame> getClient() {
+	public static ThingClient<Game> getClient() {
 		return getFrame().client;
 	}
 
-	public static void setClient(ThingClient<SpaceGame> client) {
+	public static void setClient(ThingClient<Game> client) {
 		getFrame().client = client;
 	}
 	
-	public static ThingHost<SpaceGame> getServer() {
+	public static ThingHost<Game> getServer() {
 		return getFrame().server;
 	}
 	
-	public static void setServer(ThingHost<SpaceGame> server) {
+	public static void setServer(ThingHost<Game> server) {
 		getFrame().server = server;
 	}
 	
@@ -64,10 +64,10 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		return getFrame().localPlayers;
 	}
 	
-	private ThingClient<ArrayList<ThingHost<SpaceGame>>> masterClient;
+	private ThingClient<ArrayList<ThingHost<Game>>> masterClient;
 	
-	private ThingHost<SpaceGame> server;
-	private ThingClient<SpaceGame> client;
+	private ThingHost<Game> server;
+	private ThingClient<Game> client;
 	
 	private Map<Player, ControlConfig> controlMap;
 	private List<Player> localPlayers;

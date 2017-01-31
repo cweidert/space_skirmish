@@ -3,7 +3,7 @@ package com.heliomug.games.space;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class CommandShip implements Consumer<SpaceGame>, Serializable {
+public class CommandShip implements Consumer<Game>, Serializable {
 	private static final long serialVersionUID = -1189353728178342673L;
 
 	private Player player;
@@ -15,7 +15,7 @@ public class CommandShip implements Consumer<SpaceGame>, Serializable {
 	}
 	
 	@Override
-	public void accept(SpaceGame game) {
+	public void accept(Game game) {
 		game.handleShipSignal(player, signal);
 	}
 	

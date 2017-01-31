@@ -34,6 +34,15 @@ public class WeidertPanel extends JPanel  {
 	
 	private boolean isZoomable, isDraggable;
 	
+	public WeidertPanel(int pixelWidth, int pixelHeight) {
+		this(pixelWidth, pixelHeight, -10, 10, -10, 10);
+	}
+
+		
+	public WeidertPanel(int pixelWidth, int pixelHeight, Rectangle2D bounds) {
+		this(pixelWidth, pixelHeight, bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY());
+	}
+	
 	/**
 	 * 
 	 * Makes a new panel that you can scroll with your mouse and display shapes on an arbitrarily-sized canvas

@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import com.heliomug.game.server.ThingHost;
 import com.heliomug.games.space.Player;
-import com.heliomug.games.space.SpaceGame;
+import com.heliomug.games.space.Game;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 import com.heliomug.utils.gui.UpdatingPanel;
 
@@ -32,33 +32,33 @@ public class TabOptions extends UpdatingPanel {
 		
 		box = new UpdatingCheckBox("Planet", (Boolean b) -> {
 			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().setPlanet(b);
+				SpaceFrame.getServer().getThing().getOptions().setPlanet(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().isPlanet();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isPlanet();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
 			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().setGravity(b);
+				SpaceFrame.getServer().getThing().getOptions().setGravity(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().isGravity();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isGravity();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
 			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().setWrap(b);
+				SpaceFrame.getServer().getThing().getOptions().setWrap(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().isWrap();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isWrap();
 		});
 		optionPanel.add(box);
 		add(optionPanel, BorderLayout.SOUTH);
 	}
 	
 	public void update() {
-		ThingHost<SpaceGame> server = SpaceFrame.getServer();
+		ThingHost<Game> server = SpaceFrame.getServer();
         totalPlayers.removeAll();
         if (server != null) {
         	List<Player> players = server.getThing().getPlayers();
