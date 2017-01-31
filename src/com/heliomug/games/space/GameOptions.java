@@ -14,12 +14,14 @@ public class GameOptions implements Serializable {
 	public static final double DEFAULT_BIG_G = 10000;
 	public static final boolean DEFAULT_IS_WRAP = true;
 	public static final boolean DEFAULT_IS_PLANET = true; 
-	private static final boolean DEFAULT_IS_GRAVITY = true;
+	public static final boolean DEFAULT_IS_GRAVITY = true;
+	public static final boolean DEFAULT_IS_AUTO_RESTART = true;
 	
-	private double bigG;
-	private boolean isGravity;
+	private boolean isAutoRestart;
 	private boolean isWrap;
 	private boolean isPlanet;
+	private boolean isGravity;
+	private double bigG;
 	private double width;
 	private double height;
 	
@@ -27,6 +29,7 @@ public class GameOptions implements Serializable {
 		isGravity = DEFAULT_IS_GRAVITY;
 		isWrap = DEFAULT_IS_WRAP;
 		isPlanet = DEFAULT_IS_PLANET;
+		isAutoRestart = DEFAULT_IS_AUTO_RESTART;
 		bigG = DEFAULT_BIG_G;
 		setWidth(DEFAULT_WIDTH);
 		setHeight(DEFAULT_HEIGHT);
@@ -55,6 +58,14 @@ public class GameOptions implements Serializable {
 	
 	public void setGravity(boolean b) {
 		isGravity = b;
+	}
+
+	public boolean isAutoRestart() {
+		return isAutoRestart;
+	}
+
+	public void setAutoRestart(boolean isAutoRestart) {
+		this.isAutoRestart = isAutoRestart;
 	}
 
 	public double getBigG() {

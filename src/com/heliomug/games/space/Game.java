@@ -31,7 +31,7 @@ public class Game implements Serializable, ActionListener {
 	
 	private List<Player> players;
 	
-	private Map<Player, Ship> playerAssignments;
+	private Map<Player, Ship> shipAssignments;
 	
 	private long lastUpdated;
 	private long timeStarted;
@@ -49,10 +49,13 @@ public class Game implements Serializable, ActionListener {
 		options = new GameOptions();
 		sprites = new CopyOnWriteArrayList<>();
 		players = new CopyOnWriteArrayList<>();
-		playerAssignments = new ConcurrentHashMap<>();
+		shipAssignments = new ConcurrentHashMap<>();
 		updates = 0;
 		this.name = name;
 		isActive = false;
+		
+		Timer timer = new Timer(1000/FRAME_RATE, this);
+		timer.start();
 	}
 
 	public GameOptions getOptions() {
@@ -82,7 +85,7 @@ public class Game implements Serializable, ActionListener {
 		double maxX = options.getRight();
 		double minY = - options.getBottom();
 		double maxY = options.getTop();
-		for (Ship ship : playerAssignments.values()) {
+		for (Ship ship : shipAssignments.values()) {
 			double x = ship.getPosition().getX();
 			double y = ship.getPosition().getY();
 			if (x < minX) minX = x;
@@ -104,18 +107,18 @@ public class Game implements Serializable, ActionListener {
 	
 	public void addPlayer(Player player) {
 		players.add(player);
-		playerAssignments.put(player, new Ship());
+		shipAssignments.put(player, new Ship());
 	}
 
 	public void removePlayer(Player player) {
-		Ship ship = playerAssignments.remove(player);
+		Ship ship = shipAssignments.remove(player);
 		players.remove(player);
 		sprites.remove(ship);
 	}
 	
 	
 	public void handleShipSignal(Player player, ShipSignal signal) {
-		Ship ship = playerAssignments.get(player);
+		Ship ship = shipAssignments.get(player);
 		if (signal == ShipSignal.TURN_LEFT) {
 			ship.setTurnDirection(TurnDirection.LEFT);
 		} else if (signal == ShipSignal.TURN_RIGHT) {
@@ -138,12 +141,8 @@ public class Game implements Serializable, ActionListener {
 	}
 	
 	public void reset() {
-		if (!isActive) {
-			Timer timer = new Timer(1000/FRAME_RATE, this);
-			timer.start();
-			isActive = true;
-		}
-
+		isActive = true;
+		
 		sprites.clear();
 		if (options.isPlanet()) {
 			sprites.add(new Planet(new Vec(0, 0)));
@@ -151,7 +150,7 @@ public class Game implements Serializable, ActionListener {
 		isActive = true;
 		int size = players.size();
 		for (int i = 0 ; i < size ; i++) {
-			Ship ship = playerAssignments.get(players.get(i));
+			Ship ship = shipAssignments.get(players.get(i));
 			double theta = Math.PI * 2 * i / size;
 			Vec position = new Vec(theta).mult(START_RAD);
 			double theta2 = theta + Math.PI / 2;
@@ -164,20 +163,41 @@ public class Game implements Serializable, ActionListener {
 	
 	
 	public void update() {
-		long now = System.currentTimeMillis();
-		double dt = (now - lastUpdated) / 1000.0;
-
-		if (options.isWrap()) wrapAll();
-		collideAll(dt);
-		removeDead();
-		if (options.isGravity()) gravitateAll();
-
-		for (Sprite sprite : sprites) {
-			sprite.update(dt);
+		if (isActive) {
+			long now = System.currentTimeMillis();
+			double dt = (now - lastUpdated) / 1000.0;
+	
+			if (options.isWrap()) {
+				wrapAll();
+			}
+			
+			collideAll(dt);
+			
+			removeDead();
+			
+			if (options.isGravity()) {
+				gravitateAll();
+			}
+			
+			for (Sprite sprite : sprites) {
+				sprite.update(dt);
+			}
+			
+			if (isRoundOver()) {
+				isActive = false;
+				Player winner = getWinner();
+				if (winner != null) {
+					winner.addWin();
+				}
+				if (options.isAutoRestart()) {
+					reset();
+				}
+			}
+			
+			lastUpdated = now;
+			
+			updates++;
 		}
-		lastUpdated = now;
-		
-		updates++;
 	}
 	
 	private void wrapAll() {
@@ -222,6 +242,46 @@ public class Game implements Serializable, ActionListener {
 			if (!sprite.isAlive()) {
 				sprites.remove(sprite);
 			}
+		}
+	}
+	
+	private Player getWinner() {
+		if (players.size() < 2) {
+			return null;
+		}
+		
+		int count = 0;
+		Player winner = null;
+		for (Player player : players) {
+			if (shipAssignments.get(player).isAlive()) {
+				count++;
+				winner = player;
+			}
+		}
+		if (count == 1) {
+			return winner;
+		} 
+		
+		return null;
+	}
+	
+	private int numberOfLivingPlayers() {
+		int tot = 0;
+		for (Ship ship : shipAssignments.values()) {
+			if (ship.isAlive()) {
+				tot++;
+			}
+		}
+		return tot;
+	}
+	
+	private boolean isRoundOver() {
+		if (players.size() == 0) {
+			return false;
+		} else if (players.size() == 1) {
+			return numberOfLivingPlayers() == 0;
+		} else {
+			return numberOfLivingPlayers() == 1;
 		}
 	}
 	

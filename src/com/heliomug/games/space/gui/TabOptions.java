@@ -54,6 +54,14 @@ public class TabOptions extends UpdatingPanel {
 			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isWrap();
 		});
 		optionPanel.add(box);
+		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setAutoRestart(b);
+			}
+		}, () -> {
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isAutoRestart();
+		});
+		optionPanel.add(box);
 		add(optionPanel, BorderLayout.SOUTH);
 	}
 	
