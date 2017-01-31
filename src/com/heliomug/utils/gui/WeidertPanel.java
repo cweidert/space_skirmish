@@ -1,4 +1,4 @@
-package com.heliomug.gui.utils;
+package com.heliomug.utils.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

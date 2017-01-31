@@ -1,4 +1,4 @@
-package com.heliomug.game.utils;
+package com.heliomug.utils.games;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

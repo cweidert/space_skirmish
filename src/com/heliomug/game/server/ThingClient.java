@@ -66,8 +66,12 @@ public class ThingClient<T extends Serializable> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void start() {
+		start((Boolean b) -> {});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void start(Consumer<Boolean> callback) {
 		if (servable == null) {
 			Thread gameReceiver = new Thread(() -> {
 				try (Socket socket = new Socket(host, port)) {
@@ -78,6 +82,7 @@ public class ThingClient<T extends Serializable> {
 						) {
 						timeStarted = System.currentTimeMillis();
 						commandSender = new ObjectOutputStream(outStream);
+						callback.accept(true);
 						while (true) {
 							try {
 								servable = (T) in.readObject();
@@ -98,11 +103,11 @@ public class ThingClient<T extends Serializable> {
 						e2.printStackTrace();
 					}
 				} catch (UnknownHostException e3) {
-					// TODO Auto-generated catch block
-					e3.printStackTrace();
+					callback.accept(false);
+					//e3.printStackTrace();
 				} catch (IOException e3) {
-					// TODO Auto-generated catch block
-					e3.printStackTrace();
+					callback.accept(false);
+					//e3.printStackTrace();
 				}
 			});
 			gameReceiver.setDaemon(true);

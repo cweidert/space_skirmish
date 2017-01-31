@@ -1,4 +1,4 @@
-package com.heliomug.gui.utils;
+package com.heliomug.utils.gui;
 
 import java.io.Serializable;
 

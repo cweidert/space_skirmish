@@ -6,7 +6,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-import com.heliomug.game.utils.Boundable;
+import com.heliomug.utils.games.Boundable;
 
 public class Sprite implements Boundable, Serializable {
 	private static final long serialVersionUID = -6488981465597378521L;
@@ -18,6 +18,7 @@ public class Sprite implements Boundable, Serializable {
 	
 	private static final double DEFAULT_RADIUS = 2;
 	private static final double DEFAULT_MASS = 1;
+	private static final boolean DEFAULT_IS_STATIONARY = false;	
 	
 	private Vec position; 
 	private Vec velocity;
@@ -27,6 +28,7 @@ public class Sprite implements Boundable, Serializable {
 	private double mass;
 	
 	private boolean isAlive;
+	private boolean isStationary;	
 	
 	private long birthday;
 	
@@ -53,6 +55,7 @@ public class Sprite implements Boundable, Serializable {
 		this.mass = mass;
 		this.isAlive = true;
 		this.sumForce = new Vec();
+		this.isStationary = DEFAULT_IS_STATIONARY;
 		this.birthday = System.currentTimeMillis();
 	}
 	
@@ -72,8 +75,24 @@ public class Sprite implements Boundable, Serializable {
 		return mass; 
 	}
 	
+	public void setMass(double m) {
+		mass = m;
+	}
+
+	public double getRadius() {
+		return r;
+	}
+	
+	public void setRadius(double r) {
+		this.r = r;
+	}
+	
 	public boolean isAlive() {
 		return isAlive;
+	}
+	
+	public void setAlive(boolean b) {
+		isAlive = b;
 	}
 	
 	public double getSpeed() {
@@ -86,9 +105,12 @@ public class Sprite implements Boundable, Serializable {
 	}
 	
 	public boolean intersects(Sprite other) {
-		return getBounds().intersects(other.getBounds());
+		return position.sub(other.position).mag() < r + other.r;
 	}
 	
+	public void setStationary(boolean b) {
+		this.isStationary = b;
+	}
 	
 	public void setVelocity(Vec velocity) {
 		this.velocity = velocity;
@@ -98,13 +120,6 @@ public class Sprite implements Boundable, Serializable {
 		this.position = position;
 	}
 
-	/*
-	public void accelerate(double ddx, double ddy) {
-		dx += ddx;
-		dy += ddy;
-	}
-	*/
-	
 	public void setSpeed(double newSpeed) {
 		velocity = velocity.norm().mult(newSpeed);
 	}
@@ -114,10 +129,12 @@ public class Sprite implements Boundable, Serializable {
 	}
 	
 	public void update(double dt) {
-		double scalar = dt / mass;
-		velocity = velocity.add(sumForce.mult(scalar));
+		if (!isStationary) {
+			double scalar = dt / mass;
+			velocity = velocity.add(sumForce.mult(scalar));
+			position = position.add(velocity.mult(dt));
+		}
 		sumForce = new Vec();
-		position = position.add(velocity.mult(dt));
 	}
 	
 	public void dieIfOutSide(Rectangle2D bounds) {
@@ -130,7 +147,7 @@ public class Sprite implements Boundable, Serializable {
 		position = position.wrapTo(bounds);
 	}
 	
-	public void getHitBy(Sprite other) {
+	public void getHitBy(Sprite other, double dt) {
 		die();
 	}
 	

@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Ship extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
-	private static final double BOOST_FORCE = 300.0;
+	private static final double BOOST_FORCE = 1000.0;
 	private static final double MAX_SPEED = 100.0;
 	private static final double TURN_SPEED = 2.0;
 	
@@ -19,7 +19,6 @@ public class Ship extends Sprite implements Serializable {
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
 	
 	private static final double BULLET_SPEED = 75;
-	private static final double BULLET_DAMAGE = 20;
 
 	private static final double STARTING_HEALTH = 100;
 	private static final long BLINK_CYCLE = 1000;
@@ -56,6 +55,7 @@ public class Ship extends Sprite implements Serializable {
 	public void reset(Vec pos, Vec velo, double heading) {
 		setPosition(pos);
 		setVelocity(velo);
+		setAlive(true);
 		this.heading = heading;
 		turnDirection = TurnDirection.NONE;
 		accelerating = false;
@@ -100,11 +100,12 @@ public class Ship extends Sprite implements Serializable {
 	}
 
 	@Override
-	public void getHitBy(Sprite other) {
+	public void getHitBy(Sprite other, double dt) {
 		if (other instanceof Ship) {
 			die();
-		} else {
-			health -= BULLET_DAMAGE;
+		} else if (other instanceof Bullet) {
+			Bullet b = (Bullet) other;
+			health -= b.getPunch();
 		}
 		if (health < 0) {
 			health = 0;

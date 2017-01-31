@@ -13,25 +13,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.Timer;
 
-import com.heliomug.game.utils.QuadTree;
+import com.heliomug.utils.games.QuadTree;
 
 public class SpaceGame implements Serializable, ActionListener {
 	private static final long serialVersionUID = 1451293503897747642L;
 
-	private static final boolean DEFAULT_GRAVITY_ON = true;
+	private static final boolean DEFAULT_IS_GRAVITY = true;
 	
 	private static final int FRAME_RATE = 24;
 
 	public static final double WIDTH = 192;
 	public static final double HEIGHT = 144;
-	public static final double START_RAD = 36;
-	public static final double START_SPEED = 10;
+	public static final double START_RAD = 64;
+	public static final double START_SPEED = 27;
 	
 	public static final double BUFFER_WIDTH = 6;
 	public static final Color BOUNDS_COLOR = Color.RED;
 	public static final Rectangle2D ORIGINAL_BOUNDS = new Rectangle2D.Double(- WIDTH / 2, - HEIGHT / 2,	WIDTH, HEIGHT);
 	
 	public static final double DEFAULT_BIG_G = 10000;
+	public static final boolean DEFAULT_IS_WRAP = true;
+	public static final boolean DEFAULT_IS_PLANET = true; 
+	
 	
 	private List<Sprite> sprites; 
 	
@@ -48,6 +51,8 @@ public class SpaceGame implements Serializable, ActionListener {
 	private double bigG;
 	private boolean isGravity;
 	private boolean isActive;
+	private boolean isWrap;
+	private boolean isPlanet;
 	
 	public SpaceGame() {
 		this("[no name]");
@@ -57,7 +62,9 @@ public class SpaceGame implements Serializable, ActionListener {
 		sprites = new CopyOnWriteArrayList<>();
 		players = new CopyOnWriteArrayList<>();
 		playerAssignments = new ConcurrentHashMap<>();
-		isGravity = DEFAULT_GRAVITY_ON;
+		isGravity = DEFAULT_IS_GRAVITY;
+		isWrap = DEFAULT_IS_WRAP;
+		isPlanet = DEFAULT_IS_PLANET;
 		isActive = false;
 		bigG = DEFAULT_BIG_G;
 		updates = 0;
@@ -67,6 +74,38 @@ public class SpaceGame implements Serializable, ActionListener {
 	public boolean isActive() {
 		return this.isActive;
 	}
+	
+	
+	public boolean isWrap() {
+		return this.isWrap;
+	}
+	
+	public void setWrap(boolean b) {
+		isWrap = b;
+	}
+	
+	
+	public boolean isPlanet() {
+		return isPlanet;
+	}
+	
+	public void setPlanet(boolean b) {
+		isPlanet = b;
+	}
+	
+	public boolean isGravity() {
+		return isGravity;
+	}
+	
+	public void setGravity(boolean b) {
+		isGravity = b;
+	}
+	
+	
+	public void setBigG(double g) {
+		bigG = g;
+	}
+	
 	
 	public int getUpdates() {
 		return updates;
@@ -79,6 +118,7 @@ public class SpaceGame implements Serializable, ActionListener {
 	public double getUpdatesPerSec() {
 		return getUpdates() / getAge();
 	}
+	
 	
 	public Rectangle2D getBounds() {
 		double minX = - WIDTH / 2;
@@ -100,15 +140,14 @@ public class SpaceGame implements Serializable, ActionListener {
 		return new Rectangle2D.Double(minX - buf * rat, minY - buf, maxX - minX + buf * 2 * rat, maxY - minY + buf * 2);
 	}
 	
+	
 	public List<Player> getPlayers() {
 		return players;
 	}
 	
 	public void addPlayer(Player player) {
-		Ship ship = new Ship();
-		sprites.add(ship);
 		players.add(player);
-		playerAssignments.put(player, ship);
+		playerAssignments.put(player, new Ship());
 	}
 
 	public void removePlayer(Player player) {
@@ -116,6 +155,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		players.remove(player);
 		sprites.remove(ship);
 	}
+	
 	
 	public void handleShipSignal(Player player, ShipSignal signal) {
 		Ship ship = playerAssignments.get(player);
@@ -135,7 +175,18 @@ public class SpaceGame implements Serializable, ActionListener {
 		}
 	}
 	
+	
 	public void start() {
+		Timer timer = new Timer(1000/FRAME_RATE, this);
+		timer.start();
+		reset();
+	}
+	
+	public void reset() {
+		sprites.clear();
+		if (isPlanet) {
+			sprites.add(new Planet(new Vec(0, 0)));
+		}
 		isActive = true;
 		int size = players.size();
 		for (int i = 0 ; i < size ; i++) {
@@ -145,20 +196,21 @@ public class SpaceGame implements Serializable, ActionListener {
 			double theta2 = theta + Math.PI / 2;
 			Vec velocity = new Vec(theta2).mult(START_SPEED);
 			ship.reset(position, velocity, theta + Math.PI / 2);
+			sprites.add(ship);
 		}
 		lastUpdated = timeStarted = System.currentTimeMillis();
-		Timer timer = new Timer(1000/FRAME_RATE, this);
-		timer.start();
 	}
 	
+	
 	public void update() {
-		wrapAll();
-		collideAll();
+		long now = System.currentTimeMillis();
+		double dt = (now - lastUpdated) / 1000.0;
+
+		if (isWrap) wrapAll();
+		collideAll(dt);
 		removeDead();
 		gravitateAll();
 
-		long now = System.currentTimeMillis();
-		double dt = (now - lastUpdated) / 1000.0;
 		for (Sprite sprite : sprites) {
 			sprite.update(dt);
 		}
@@ -173,12 +225,14 @@ public class SpaceGame implements Serializable, ActionListener {
 		}
 	}
 	
-	private void collideAll() {
+	private void collideAll(double dt) {
 		QuadTree<Sprite> tree = QuadTree.<Sprite>getTreeOf(sprites);
 		for (Sprite sprite : sprites) {
 			List<Sprite> overlappers = tree.getOverlappers(sprite);
 			for (Sprite s : overlappers) {
-				sprite.getHitBy(s);
+				if (sprite.intersects(s)) {
+					sprite.getHitBy(s, dt);
+				}
 			}
 		}
 		
@@ -203,7 +257,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		return diff.norm().mult(mag);
 	}
 	
-	public void removeDead() {
+	private void removeDead() {
 		for (int i = sprites.size() - 1 ; i >= 0 ; i--) {
 			Sprite sprite = sprites.get(i);
 			if (!sprite.isAlive()) {
@@ -212,6 +266,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		}
 	}
 	
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		update();
 	}
@@ -238,6 +293,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		return sb.toString();
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("Game %s", name);
 	}

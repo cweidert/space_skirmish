@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
 
 import com.heliomug.game.server.ThingClient;
 import com.heliomug.games.space.SpaceGame;
-import com.heliomug.gui.utils.WeidertPanel;
+import com.heliomug.utils.gui.WeidertPanel;
 
 public class PanelGame extends WeidertPanel implements Runnable {
 	private static final long serialVersionUID = -4501673998714242701L;
@@ -79,17 +79,15 @@ public class PanelGame extends WeidertPanel implements Runnable {
 		ThingClient<SpaceGame> client = SpaceFrame.getClient();
 		if (client != null) {
 			SpaceGame game = client.getThing();
-			if (game != null) {
+			if (game != null && game.isActive()) {
 				Graphics2D g2 = (Graphics2D)g;
-				if (isAutoZoom) {
+				if (game.isWrap()) {
+					setScreenBounds(SpaceGame.ORIGINAL_BOUNDS);
+				} else if (isAutoZoom) {
 					setScreenBounds(game.getBounds());
 				}
 				game.draw(g2);
-			} else {
-				System.out.println("game null");
-			}
-		} else {
-			System.out.println("client null");
-		}
+			} 
+		} 
 	}
 }

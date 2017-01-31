@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.heliomug.gui.utils.MessageDisplayer;
+import com.heliomug.utils.gui.MessageDisplayer;
 
 public class ThingHost<T extends Serializable> implements Serializable {
 	private static final long serialVersionUID = 5661598726684673199L;
