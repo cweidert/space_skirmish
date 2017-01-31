@@ -6,8 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import com.heliomug.game.utils.WeidertPanel;
+import com.heliomug.game.server.ThingClient;
 import com.heliomug.games.space.SpaceGame;
+import com.heliomug.gui.utils.WeidertPanel;
 
 public class PanelGame extends WeidertPanel implements Runnable {
 	private static final long serialVersionUID = -4501673998714242701L;
@@ -19,7 +20,6 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	
 	public PanelGame() {
 		super(640, 480, - SpaceGame.WIDTH / 2, SpaceGame.WIDTH / 2, - SpaceGame.HEIGHT / 2, SpaceGame.HEIGHT / 2);
-		
 
 		this.isAutoZoom = DEFAULT_AUTO_ZOOM;
 		
@@ -73,16 +73,23 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	}
 	
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-		SpaceGame game = SpaceFrame.getClient().getThing();
-		if (game != null) {
-			Graphics2D g2 = (Graphics2D)g;
-			if (isAutoZoom) {
-				setScreenBounds(game.getBounds());
+		ThingClient<SpaceGame> client = SpaceFrame.getClient();
+		if (client != null) {
+			SpaceGame game = client.getThing();
+			if (game != null) {
+				Graphics2D g2 = (Graphics2D)g;
+				if (isAutoZoom) {
+					setScreenBounds(game.getBounds());
+				}
+				game.draw(g2);
+			} else {
+				System.out.println("game null");
 			}
-			game.draw(g2);
+		} else {
+			System.out.println("client null");
 		}
 	}
 }

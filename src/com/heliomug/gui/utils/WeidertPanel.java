@@ -1,4 +1,4 @@
-package com.heliomug.game.utils;
+package com.heliomug.gui.utils;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -123,8 +123,8 @@ public class WeidertPanel extends JPanel  {
 	 * Override to paint.  Don't forget to call super.paint(g);
 	 */
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setTransform(getTransform());
 	}

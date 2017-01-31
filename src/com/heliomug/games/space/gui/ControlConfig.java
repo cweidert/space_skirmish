@@ -79,6 +79,11 @@ public class ControlConfig {
 		fireKey = key;
 	}
 
+	public String getKeyString() {
+		return String.format("Left: %s, Right: %s, Boost: %s, Fire %s", getKeyString(leftKey), getKeyString(rightKey), getKeyString(boostKey), getKeyString(fireKey));   
+	}
+
+	/*
 	public String getLeftString() {
 		return getKeyString(leftKey);
 	}
@@ -94,6 +99,7 @@ public class ControlConfig {
 	public String getFireString() {
 		return getKeyString(fireKey);
 	}
+	*/
 	
 	public String getKeyString(int key) {
 		return KeyEvent.getKeyText(key);

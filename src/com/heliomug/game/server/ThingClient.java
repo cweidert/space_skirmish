@@ -10,40 +10,49 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
-public class Client<S extends Serializable, D extends MessageDisplayer> {
+public class ThingClient<T extends Serializable> {
 	private static final int THREAD_SLEEP_TIME = 1;
 	
-	private S servable;
+	private T servable;
 	
 	private ObjectOutputStream commandSender;
 
 	private long timeStarted;
-	private int gamesPulled, commandsSent;
+	private int thingsPulled, commandsSent;
 	
-	public Client() {
+	private String host;
+	private int port;
+	
+	public ThingClient(ThingHost<T> host) {
+		this(host.getAddress().getHostAddress(), host.getPort());
+	}
+	
+	public ThingClient(String host, int port) {
+		this.host = host;
+		this.port = port;
 		commandSender = null;
 		servable = null;
-		gamesPulled = commandsSent = 0;
+		thingsPulled = commandsSent = 0;
 	}
 
-	public S getThing() {
+	public T getThing() {
 		return servable;
 	}
 	
-	public int getGamesPulled() {
-		return gamesPulled;
+	public int getThingsPulled() {
+		return thingsPulled;
 	}
 	
 	public int getCommandsSent() {
 		return commandsSent;
 	}
 	
-	public double getGamesPulledPerSec() {
+	public double getThingsPulledPerSec() {
 		double sec = (System.currentTimeMillis() - timeStarted) / 1000.0;
-		return gamesPulled / sec;
+		return thingsPulled / sec;
 	}
 	
-	public void sendCommand(Consumer<S> command) {
+	public void sendCommand(Consumer<T> command) {
 		if (commandSender == null) {
 			System.err.println("no command sending connection!");
 		} else {
@@ -58,10 +67,10 @@ public class Client<S extends Serializable, D extends MessageDisplayer> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void start(String host, int portNumber) {
+	public void start() {
 		if (servable == null) {
 			Thread gameReceiver = new Thread(() -> {
-				try (Socket socket = new Socket(host, portNumber)) {
+				try (Socket socket = new Socket(host, port)) {
 					try (
 						InputStream inStream = socket.getInputStream();
 						ObjectInputStream in = new ObjectInputStream(inStream);
@@ -71,12 +80,12 @@ public class Client<S extends Serializable, D extends MessageDisplayer> {
 						commandSender = new ObjectOutputStream(outStream);
 						while (true) {
 							try {
-								servable = (S) in.readObject();
+								servable = (T) in.readObject();
 							} catch (ClassNotFoundException | IOException e1) {
 								e1.printStackTrace();
 								System.exit(1);
 							}
-							gamesPulled++;
+							thingsPulled++;
 							try {
 								Thread.sleep(THREAD_SLEEP_TIME);
 							} catch (InterruptedException e) {

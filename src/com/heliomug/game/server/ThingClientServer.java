@@ -9,25 +9,25 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.function.Consumer;
 
-public class GuestServer<S extends Serializable, D extends MessageDisplayer> {
+public class ThingClientServer<S extends Serializable> {
 	private static final int THREAD_SLEEP_TIME = 1;
 	private static final int GAME_SEND_SLEEP_TIME = 42;
 
 	private long timeStarted;
-	private int gamesSent, commandsPulled;
+	private int thingsSent, commandsPulled;
 	
-	private Socket incoming;
+	private Socket guestSocket;
 	
 	private S servable;
 	
-	public GuestServer(Socket incoming, S thing) {
-		this.incoming = incoming;
-		gamesSent = commandsPulled = 0;
+	public ThingClientServer(Socket incoming, S thing) {
+		this.guestSocket = incoming;
+		thingsSent = commandsPulled = 0;
 		this.servable = thing;
 	}
 
-	public int getGamesSent() {
-		return gamesSent;
+	public int getThingsSent() {
+		return thingsSent;
 	}
 	
 	public int getCommandsPulled() {
@@ -36,21 +36,21 @@ public class GuestServer<S extends Serializable, D extends MessageDisplayer> {
 	
 	public double getServedPerSec() {
 		double time = System.currentTimeMillis() - timeStarted;
-		return gamesSent * 1000 / time;
+		return thingsSent * 1000 / time;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void start() {
 		timeStarted = System.currentTimeMillis();
-		Thread gameSender = new Thread(() -> {
+		Thread thingSender = new Thread(() -> {
 			try (
-					OutputStream outStream = incoming.getOutputStream();
+					OutputStream outStream = guestSocket.getOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(outStream);
 					) {
 				while (true) {
 				    out.reset(); // jeez, don't forget this
 					out.writeObject(servable);
-					gamesSent++;
+					thingsSent++;
 					try {
 						Thread.sleep(GAME_SEND_SLEEP_TIME);
 					} catch (InterruptedException e) {
@@ -62,12 +62,12 @@ public class GuestServer<S extends Serializable, D extends MessageDisplayer> {
 				e.printStackTrace();
 			}
 		});
-		gameSender.setDaemon(true);
-		gameSender.start();
+		thingSender.setDaemon(true);
+		thingSender.start();
 		
 		Thread commandReceiver = new Thread(() -> {
 			try (
-					InputStream inStream = incoming.getInputStream();
+					InputStream inStream = guestSocket.getInputStream();
 					ObjectInputStream in = new ObjectInputStream(inStream);
 					) {
 				while (true) {

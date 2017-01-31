@@ -39,6 +39,8 @@ public class SpaceGame implements Serializable, ActionListener {
 	
 	private Map<Player, Ship> playerAssignments;
 	
+	private String name;
+	
 	private long lastUpdated;
 	private long timeStarted;
 	private int updates;
@@ -48,6 +50,10 @@ public class SpaceGame implements Serializable, ActionListener {
 	private boolean isActive;
 	
 	public SpaceGame() {
+		this("[no name]");
+	}
+	
+	public SpaceGame(String name) {
 		sprites = new CopyOnWriteArrayList<>();
 		players = new CopyOnWriteArrayList<>();
 		playerAssignments = new ConcurrentHashMap<>();
@@ -55,6 +61,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		isActive = false;
 		bigG = DEFAULT_BIG_G;
 		updates = 0;
+		this.name = name;
 	}
 
 	public boolean isActive() {
@@ -217,7 +224,7 @@ public class SpaceGame implements Serializable, ActionListener {
 		}
 	}
 	
-	public String toString() {
+	public String longString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("Game (%.3f)\n", getAge()));
 		sb.append("----Players----\n");
@@ -229,5 +236,9 @@ public class SpaceGame implements Serializable, ActionListener {
 			sb.append(sprite.toString() + "\n");
 		}
 		return sb.toString();
+	}
+	
+	public String toString() {
+		return String.format("Game %s", name);
 	}
 }
