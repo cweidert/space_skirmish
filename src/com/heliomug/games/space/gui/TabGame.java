@@ -34,19 +34,6 @@ public class TabGame extends JPanel {
 			}
 		});
 		optionPanel.add(button);
-		button = new WeidertButton("Reset Game!") {
-			@Override
-			public void paintComponent(Graphics g) {
-				setEnabled(SpaceFrame.getServer() != null);
-				super.paintComponent(g);
-			}
-		};
-		button.addActionListener((ActionEvent e) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().reset();
-			}
-		});
-		optionPanel.add(button);
 
 		add(optionPanel, BorderLayout.SOUTH);
 

@@ -1,8 +1,6 @@
 package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.Timer;
 
 import com.heliomug.game.server.ThingClient;
 import com.heliomug.game.server.ThingHost;
@@ -102,18 +99,14 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
-		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
+		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 		
-		TabConnections conTab = new TabConnections();
-		Timer t = new Timer(1000, (ActionEvent e) -> {
-			conTab.repaint();
-		});
-		t.start();
-		tabbedPane.addTab("Connections", conTab);
+		tabbedPane.addTab("Connections", new TabConnections());
+		tabbedPane.addTab("Players", new TabLocalPlayers());
 		tabbedPane.addTab("Game", new TabGame());
+		tabbedPane.addTab("Options", new TabOptions());
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
-		
 		messageLabel = new JLabel("Messages");
 		panel.add(messageLabel, BorderLayout.SOUTH);
 		
@@ -141,14 +134,5 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	@Override
 	public void accept(String message) {
 		this.messageLabel.setText(message);
-	}
-
-	
-	public static void main(String[] args) {
-		MasterHost.startMasterServer();
-		EventQueue.invokeLater(() -> {
-			SpaceFrame frame = SpaceFrame.getFrame();
-			frame.setVisible(true);
-		});
 	}
 }

@@ -69,6 +69,8 @@ public class SpaceGame implements Serializable, ActionListener {
 		bigG = DEFAULT_BIG_G;
 		updates = 0;
 		this.name = name;
+		Timer timer = new Timer(1000/FRAME_RATE, this);
+		timer.start();
 	}
 
 	public boolean isActive() {
@@ -177,8 +179,6 @@ public class SpaceGame implements Serializable, ActionListener {
 	
 	
 	public void start() {
-		Timer timer = new Timer(1000/FRAME_RATE, this);
-		timer.start();
 		reset();
 	}
 	

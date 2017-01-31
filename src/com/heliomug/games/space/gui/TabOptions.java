@@ -13,12 +13,13 @@ import com.heliomug.game.server.ThingHost;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.SpaceGame;
 import com.heliomug.utils.gui.UpdatingCheckBox;
+import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
-public class PanelHost extends JPanel {
+public class TabOptions extends UpdatingPanel {
 	JPanel totalPlayers;
 	
-	public PanelHost() {
+	public TabOptions() {
 		super(new BorderLayout());
 		
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));

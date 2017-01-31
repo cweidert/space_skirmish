@@ -12,13 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heliomug.games.space.Player;
+import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
-public class PanelLocalPlayers extends JPanel {
+public class TabLocalPlayers extends UpdatingPanel {
 	JButton addPlayerButton;
 	JPanel playerList;
 	
-	public PanelLocalPlayers() {
+	public TabLocalPlayers() {
 		super(new BorderLayout());
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		playerList = new JPanel(new GridLayout(0, 1));
