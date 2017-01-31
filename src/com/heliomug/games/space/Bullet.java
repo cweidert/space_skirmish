@@ -1,5 +1,7 @@
 package com.heliomug.games.space;
 
+import java.awt.Color;
+
 public class Bullet extends Sprite {
 	private static final long serialVersionUID = -7116875414850194040L;
 
@@ -17,6 +19,12 @@ public class Bullet extends Sprite {
 	
 	public double getPunch() {
 		return this.punch;
+	}
+	
+	@Override
+	public Color getColor() {
+		int green = (int) Math.max(0, 255 - 3 * (punch - 10));
+		return new Color(255, green, 0);
 	}
 	
 	@Override

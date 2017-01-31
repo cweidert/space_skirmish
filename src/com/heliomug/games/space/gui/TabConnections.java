@@ -3,7 +3,8 @@ package com.heliomug.games.space.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,8 @@ public class TabConnections extends UpdatingPanel {
 		super(new BorderLayout());
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-		others = new JPanel(new GridLayout(0, 2));
+		others = new JPanel(new GridBagLayout());
+		others.setBackground(Color.RED);
 		add(others, BorderLayout.CENTER);
 		
 		JButton hostButton = new JButton("Host My Own Game") {
@@ -62,6 +64,10 @@ public class TabConnections extends UpdatingPanel {
 		ThingClient<ArrayList<ThingHost<Game>>> masterClient = SpaceFrame.getMasterClient(); 
 		ThingClient<Game> client = SpaceFrame.getClient(); 
 
+		GridBagConstraints cons = new GridBagConstraints();
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.gridy = 0;
+		
 		if (masterClient != null) {
 			List<ThingHost<Game>> li = masterClient.getThing();
 			if (li != null && li.size() > 0) {
@@ -69,11 +75,19 @@ public class TabConnections extends UpdatingPanel {
 					String gameString = host.getThing().toString();
 					String addr = host.getAddress().toString();
 					int port = host.getPort();
+					String fmt = "%s @ %s:%s";
+					/*
 					String fmt = "<html><table>" + 
 					"<tr><td>Game</td><td>%s</td></tr>" +
 					"<tr><td>IP</td><td>%s</td></tr>" + 
 					"<tr><td>Port</td><td>%d</td></tr></table></html>";
-					others.add(new JLabel(String.format(fmt, gameString, addr, port)));
+					*/
+					cons.gridx = 0;
+					cons.weightx = 1;
+					JLabel label = new JLabel(String.format(fmt, gameString, addr, port));
+					label.setBackground(Color.GREEN);
+					label.setOpaque(true);
+					others.add(label, cons);
 			        JButton button = new JButton("Join Game");
 			        button.addActionListener((ActionEvent e) -> {
 			        	if (client == null) {
@@ -83,7 +97,10 @@ public class TabConnections extends UpdatingPanel {
 			        	}
 			        });
 			        button.setEnabled(client == null);
-			        others.add(button);
+			        cons.gridx = 1;
+			        cons.weightx = .5;
+			        others.add(button, cons);
+			        cons.gridy++;
 				}
 			} else {
 				others.add(new JLabel("no games available online"));

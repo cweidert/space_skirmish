@@ -18,6 +18,7 @@ public class MasterHost extends ThingHost<ArrayList<ThingHost<Game>>> {
 
 	public static void startMasterServer() {
 		ArrayList<ThingHost<Game>> hostList = new ArrayList<>();
+		hostList.add(new ThingHost<Game>(new Game(), 1234));
 		MasterHost masterHost = new MasterHost(hostList);
 		masterHost.start();
 		System.out.println("master server started");
