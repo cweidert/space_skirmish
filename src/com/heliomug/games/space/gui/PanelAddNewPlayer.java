@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 import com.heliomug.games.space.Player;
 import com.heliomug.utils.gui.ColorButton;
-import com.heliomug.utils.gui.EtchedPanel;
+import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 
 @SuppressWarnings("serial")
@@ -21,7 +21,7 @@ public class PanelAddNewPlayer extends JPanel {
 	public PanelAddNewPlayer() {
 		super(new BorderLayout());
 		
-		EtchedPanel.addEtch(this, "Add New Player");
+		PanelUtils.addEtch(this, "Add New Player");
 
 		add(getOptionsPanel(), BorderLayout.CENTER);
 		add(getButtonPanel(), BorderLayout.SOUTH);
@@ -43,12 +43,12 @@ public class PanelAddNewPlayer extends JPanel {
 	
 	public JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
-		JButton button = new UpdatingButton("Add Player", () -> Frame.getClient() != null, () -> {
-			if (Frame.getClient() != null) {
+		JButton button = new UpdatingButton("Add Player", () -> SpaceFrame.getClient() != null, () -> {
+			if (SpaceFrame.getClient() != null) {
 				String name = nameBox.getText();
 				name = name.length() == 0 ? "Joe Schmoe" : name;
 				Color color = colorButton.getColor();
-				Frame.addLocalPlayer(new Player(name, color));
+				SpaceFrame.addLocalPlayer(new Player(name, color));
 				colorButton.resetColor();
 			}
 		});

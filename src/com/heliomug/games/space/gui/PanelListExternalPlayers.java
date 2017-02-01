@@ -10,22 +10,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heliomug.games.space.Player;
-import com.heliomug.utils.gui.EtchedPanel;
+import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
 public class PanelListExternalPlayers extends UpdatingPanel {
 	public PanelListExternalPlayers() {
 		super(new GridBagLayout());
-		EtchedPanel.addEtch(this, "External Players");
+		PanelUtils.addEtch(this, "External Players");
 	}
 	
 	@Override
 	public void update() {
         removeAll();
-        if (Frame.getClient() != null && Frame.getClient().getThing() != null) {
-    		List<Player> externalPlayers = Frame.getClient().getThing().getPlayers();
-    		externalPlayers.removeAll(Frame.getLocalPlayers());
+        if (SpaceFrame.getClient() != null && SpaceFrame.getClient().getThing() != null) {
+    		List<Player> externalPlayers = SpaceFrame.getClient().getThing().getPlayers();
+    		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
         	if (externalPlayers != null & externalPlayers.size() > 0) {
 	        	JLabel label;
 	    		GridBagConstraints cons = new GridBagConstraints();
@@ -35,17 +35,17 @@ public class PanelListExternalPlayers extends UpdatingPanel {
 	    		
 	    		cons.gridx = 0;
 	    		add(new JLabel("Name", JLabel.CENTER), cons);
-	    		cons.gridx = 1;
+	    		cons.gridx++;
 	    		add(new JLabel("Color", JLabel.CENTER), cons);
 	    		
 	    		cons.gridy++;
 	    		
 				for (Player player : externalPlayers) {
 					cons.gridx = 0;
-					label = new JLabel(player.toString(), JLabel.CENTER);
+					label = new JLabel(player.getName(), JLabel.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					add(label, cons);
-					cons.gridx = 1;
+		    		cons.gridx++;
 					JPanel panel = new JPanel();
 					panel.setBackground(player.getColor());
 					add(panel, cons);
@@ -59,5 +59,4 @@ public class PanelListExternalPlayers extends UpdatingPanel {
 		}
         revalidate();
 	}
-
 }

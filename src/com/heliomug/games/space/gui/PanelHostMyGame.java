@@ -2,6 +2,7 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 import java.net.InetAddress;
 
 import javax.swing.JButton;
@@ -11,23 +12,24 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import com.heliomug.game.server.ThingClient;
-import com.heliomug.game.server.ThingHost;
 import com.heliomug.games.space.Game;
 import com.heliomug.games.space.server.CommandAddHost;
 import com.heliomug.games.space.server.CommandRemoveHost;
 import com.heliomug.games.space.server.MasterClient;
-import com.heliomug.games.space.server.MasterHost;
-import com.heliomug.utils.gui.EtchedPanel;
+import com.heliomug.games.space.server.MasterServer;
+import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
+import com.heliomug.utils.server.Client;
+import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
-public class PanelHostMyGame extends EtchedPanel {
+public class PanelHostMyGame extends JPanel {
 	private JTextField nameBox;
 	private JSpinner portBox;
 	
 	public PanelHostMyGame() {
-		super("Host My Own Game", new BorderLayout());
+		super(new BorderLayout());
+		PanelUtils.addEtch(this, "Host My Game");
 		
 		setupGUI();
 	}
@@ -48,7 +50,7 @@ public class PanelHostMyGame extends EtchedPanel {
 		label = new JLabel("Port: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
-		portBox = new JSpinner(new SpinnerNumberModel(MasterHost.GAME_PORT, 1, 65535, 1));
+		portBox = new JSpinner(new SpinnerNumberModel(MasterServer.GAME_PORT, 1, 65535, 1));
 		portBox.setEditor(new JSpinner.NumberEditor(portBox, "#"));
 		panel.add(portBox);
 		
@@ -60,40 +62,48 @@ public class PanelHostMyGame extends EtchedPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host My Own Game", () -> Frame.getServer() == null, () -> {
-			MasterClient masterClient = Frame.getMasterClient(); 
-			ThingHost<Game> server = Frame.getServer(); 
-			ThingClient<Game> client = Frame.getClient(); 
+		button = new UpdatingButton("Host My Own Game", () -> SpaceFrame.getServer() == null, () -> {
+			MasterClient masterClient = SpaceFrame.getMasterClient(); 
+			Server<Game> server = SpaceFrame.getServer(); 
+			Client<Game> client = SpaceFrame.getClient(); 
 			if (server == null && client == null) {
 				String name = nameBox.getText();
 				name = name.length() == 0 ? "[no name]" : name;
 				int port = (int) portBox.getValue();
-				ThingHost<Game> myServer = new ThingHost<Game>(new Game(name), port); 
-				Frame.setServer(myServer);
+				Server<Game> myServer = new Server<Game>(new Game(name), port); 
+				SpaceFrame.setServer(myServer);
 				myServer.start();
 				if (masterClient != null) {
 					masterClient.sendCommand(new CommandAddHost(myServer));
 				}
 				InetAddress address = InetAddress.getLoopbackAddress();
-				ThingClient<Game> myClient = new ThingClient<Game>(address, port);
-				Frame.setClient(myClient);
-				myClient.start((Boolean b) -> {});
+				Client<Game> myClient;
+				try {
+					myClient = new Client<Game>(address, port);
+					SpaceFrame.setClient(myClient);
+					myClient.start();
+				} catch (IOException e) {
+					System.err.println("could not connect to my own game");
+					e.printStackTrace();
+				}
 			}
 		});
 		panel.add(button);
 
-		button = new UpdatingButton("Remove My Hosted Game", () -> Frame.getServer() != null, () -> {
-			MasterClient masterClient = Frame.getMasterClient(); 
-			ThingHost<Game> server = Frame.getServer(); 
-			ThingClient<Game> client = Frame.getClient(); 
+		button = new UpdatingButton("Remove My Hosted Game", () -> SpaceFrame.getServer() != null, () -> {
+			MasterClient masterClient = SpaceFrame.getMasterClient(); 
+			Server<Game> server = SpaceFrame.getServer(); 
 			if (server != null) {
-				server.kill();
-				client.kill();
+				server.stop();
+				SpaceFrame.setServer(null);
 				if (masterClient != null) {
 					masterClient.sendCommand(new CommandRemoveHost(server));
 				}
-				Frame.setServer(null);
-				Frame.setClient(null);
+			}
+			Client<Game> client = SpaceFrame.getClient(); 
+			if (client != null) {
+				client.stop();
+				SpaceFrame.setClient(null);
 			}
 		});
 		panel.add(button);

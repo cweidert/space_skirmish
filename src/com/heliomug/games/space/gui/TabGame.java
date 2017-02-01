@@ -13,12 +13,12 @@ import com.heliomug.utils.gui.UpdatingCheckBox;
 public class TabGame extends JPanel { 
 	private static final long serialVersionUID = -4501673998714242701L;
 	
-	private Board board;
+	private PanelGame board;
 	
 	public TabGame() {
 		super(new BorderLayout());
 
-		board = new Board();
+		board = new PanelGame();
 		
 		setupGUI();
 	}
@@ -31,9 +31,18 @@ public class TabGame extends JPanel {
 	public JPanel getOptionPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 0));
 
-		JButton button = new UpdatingButton("Start Game!", () -> Frame.getServer() != null, () -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().start();
+		JButton button; 
+		
+		button = new UpdatingButton("Start Local Game!", () -> SpaceFrame.getClient() != null, () -> {
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().start();
+			}
+		});
+		panel.add(button);
+
+		button = new UpdatingButton("Start Round!", () -> SpaceFrame.getServer() != null, () -> {
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().start();
 			}
 		});
 		panel.add(button);

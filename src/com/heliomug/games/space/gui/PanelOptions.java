@@ -7,68 +7,77 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heliomug.games.space.GameOptions;
-import com.heliomug.utils.gui.EtchedPanel;
+import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 import com.heliomug.utils.gui.UpdatingSlider;
 
 @SuppressWarnings("serial")
-public class PanelOptions extends EtchedPanel {
+public class PanelOptions extends JPanel {
 	public PanelOptions() {
-		super("Game Options", new BorderLayout());
-		
+		super(new BorderLayout());
+		PanelUtils.addEtch(this, "Game Settings");
+
 		JPanel optionPanel = new JPanel(new GridLayout(0, 1));
 		
 		UpdatingCheckBox box;
 		
 		box = new UpdatingCheckBox("Planet", (Boolean b) -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().getOptions().setPlanet(b);
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setPlanet(b);
 			}
 		}, () -> {
-			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isPlanet();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isPlanet();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().getOptions().setPlanetStationary(b);
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setPlanetStationary(b);
 			}
 		}, () -> {
-			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isPlanetStationary();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isPlanetStationary();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().getOptions().setGravity(b);
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setGravity(b);
 			}
 		}, () -> {
-			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isGravity();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isGravity();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().getOptions().setWrap(b);
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setWrap(b);
 			}
 		}, () -> {
-			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isWrap();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isWrap();
+		});
+		optionPanel.add(box);
+		box = new UpdatingCheckBox("Kill Zone", (Boolean b) -> {
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setKillZone(b);
+			}
+		}, () -> {
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isKillZone();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
-			if (Frame.getServer() != null) {
-				Frame.getServer().getThing().getOptions().setAutoRestart(b);
+			if (SpaceFrame.getServer() != null) {
+				SpaceFrame.getServer().getThing().getOptions().setAutoRestart(b);
 			}
 		}, () -> {
-			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isAutoRestart();
+			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isAutoRestart();
 		});
 		optionPanel.add(box);
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
-		UpdatingSlider slider = new UpdatingSlider(0, 50000, 10000, (Integer i) -> {
-			Frame.getServer().getThing().getOptions().setBigG(i);
+		UpdatingSlider slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
+			SpaceFrame.getServer().getThing().getOptions().setBigG(i);
 		}, () -> {
-			if (Frame.getServer() == null) {
+			if (SpaceFrame.getServer() == null) {
 				return GameOptions.DEFAULT_BIG_G;
 			} else {
-				return Frame.getServer().getThing().getOptions().getBigG();
+				return SpaceFrame.getServer().getThing().getOptions().getBigG();
 			}
 		});
 		panel.add(slider, BorderLayout.CENTER);

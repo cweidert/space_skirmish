@@ -57,7 +57,15 @@ public class Player implements Serializable {
 		}
 	}
 	
+	public String getWinString() {
+		String winString = "wins";
+		if (wins == 1) {
+			winString = "win";
+		}
+		return String.format("%d " + winString, wins);
+	}
+	
 	public String toString() {
-		return getName();
+		return String.format("%s %s", getName(), getWinString());
 	}
 }

@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
-import com.heliomug.games.space.gui.Frame;
+import com.heliomug.games.space.gui.SpaceFrame;
 
 @SuppressWarnings("serial")
 public class ColorButton extends JButton {
@@ -19,7 +19,7 @@ public class ColorButton extends JButton {
 		resetColor();
 		addActionListener((ActionEvent e) -> {
 			Color newColor = JColorChooser.showDialog(
-                    Frame.getFrame(),
+                    SpaceFrame.getFrame(),
                     "Choose Player Color",
                     color);
 			setColor(newColor);

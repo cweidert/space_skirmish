@@ -6,12 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import com.heliomug.game.server.ThingClient;
 import com.heliomug.games.space.Game;
 import com.heliomug.utils.gui.WeidertPanel;
 
 @SuppressWarnings("serial")
-public class Board extends WeidertPanel implements Runnable {
+public class PanelGame extends WeidertPanel implements Runnable {
 	private static final int BOARD_WIDTH = 640;
 	private static final int BOARD_HEIGHT = 480;
 
@@ -21,7 +20,7 @@ public class Board extends WeidertPanel implements Runnable {
 
 	private boolean isAutoZoom;
 
-	public Board() {
+	public PanelGame() {
 		super(BOARD_WIDTH, BOARD_HEIGHT);
 		
 		isAutoZoom = DEFAULT_AUTO_ZOOM;
@@ -40,12 +39,12 @@ public class Board extends WeidertPanel implements Runnable {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Frame.getFrame().handleKey(e.getKeyCode(), true);
+				SpaceFrame.getFrame().handleKey(e.getKeyCode(), true);
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				Frame.getFrame().handleKey(e.getKeyCode(), false);
+				SpaceFrame.getFrame().handleKey(e.getKeyCode(), false);
 			}
 
 			@Override
@@ -65,23 +64,20 @@ public class Board extends WeidertPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 
-		ThingClient<Game> client = Frame.getClient();
-		if (client != null) {
-			Game game = client.getThing();
-			if (game != null && game.isActive()) {
-				if (isAutoZoom && !game.allDead()) {
-					if (game.getOptions().isWrap()) {
-						setScreenBounds(game.getOptions().getWrapBounds());
-					} else { 
-						setScreenBounds(game.getBounds());
-					}
+		Game game = SpaceFrame.getClientGame();
+		if (game != null && game.isActive()) {
+			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {
+				if (game.getOptions().isWrap()) {
+					setScreenBounds(game.getOptions().getWrapBounds());
+				} else { 
+					setScreenBounds(game.getBounds());
 				}
-				super.paintComponent(g);
-				
-				Graphics2D g2 = (Graphics2D)g;
-				game.draw(g2);
-			} 
-		}
+			}
+			super.paintComponent(g);
+			
+			Graphics2D g2 = (Graphics2D)g;
+			game.draw(g2);
+		} 
 	}
 	
 	public void run() {

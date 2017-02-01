@@ -24,6 +24,7 @@ public class Game implements Serializable, ActionListener {
 	public static final double START_SPEED = 27;
 	
 	public static final Color BOUNDS_COLOR = Color.RED;
+	public static final Color KILL_ZONE_COLOR = Color.RED;
 	
 	private String name;
 	
@@ -38,6 +39,7 @@ public class Game implements Serializable, ActionListener {
 	private int updates;
 
 	private boolean isActive;
+	private boolean isRoundEnded;
 
 	private GameOptions options;
 	
@@ -53,6 +55,7 @@ public class Game implements Serializable, ActionListener {
 		updates = 0;
 		this.name = name;
 		isActive = false;
+		isRoundEnded = true;
 		
 		Timer timer = new Timer(1000/FRAME_RATE, this);
 		timer.start();
@@ -154,6 +157,7 @@ public class Game implements Serializable, ActionListener {
 			sprites.add(new Planet(new Vec(0, 0), options.isPlanetStationary()));
 		}
 		isActive = true;
+		isRoundEnded = false;
 		int size = players.size();
 		for (int i = 0 ; i < size ; i++) {
 			Ship ship = shipAssignments.get(players.get(i));
@@ -177,6 +181,10 @@ public class Game implements Serializable, ActionListener {
 				wrapAll();
 			}
 			
+			if (options.isKillZone()) {
+				killZoneAll();
+			}
+			
 			collideAll(dt);
 			
 			removeDead();
@@ -190,10 +198,7 @@ public class Game implements Serializable, ActionListener {
 			}
 			
 			if (isRoundOver()) {
-				Player winner = getWinner();
-				if (winner != null) {
-					winner.addWin();
-				}
+				endRound();
 				if (options.isAutoRestart()) {
 					isActive = false;
 					reset();
@@ -203,6 +208,25 @@ public class Game implements Serializable, ActionListener {
 			lastUpdated = now;
 			
 			updates++;
+		}
+	}
+
+	private void endRound() {
+		if (!isRoundEnded) {
+			Player winner = getWinner();
+			if (winner != null) {
+				winner.addWin();
+			}
+			isRoundEnded = true;
+		}
+	}
+	
+	private void killZoneAll() {
+		Rectangle2D killZone = options.getKillBounds();
+		for (Sprite sprite : sprites) {
+			if (!sprite.getBounds().intersects(killZone)) {
+				sprite.die();
+			}
 		}
 	}
 	
@@ -275,6 +299,10 @@ public class Game implements Serializable, ActionListener {
 		return numberOfLivingPlayers() == 0;
 	}
 	
+	public int numberOfPlayers() {
+		return players.size();
+	}
+	
 	private int numberOfLivingPlayers() {
 		int tot = 0;
 		for (Ship ship : shipAssignments.values()) {
@@ -303,6 +331,10 @@ public class Game implements Serializable, ActionListener {
 	public void draw(Graphics2D g) {
 		g.setColor(BOUNDS_COLOR);
 		g.draw(options.getWrapBounds());
+		if (options.isKillZone()) {
+			g.setColor(KILL_ZONE_COLOR);
+			g.draw(options.getKillBounds());
+		}
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
 		}

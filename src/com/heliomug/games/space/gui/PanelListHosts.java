@@ -3,6 +3,7 @@ package com.heliomug.games.space.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -10,26 +11,26 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import com.heliomug.game.server.ThingClient;
-import com.heliomug.game.server.ThingHost;
-import com.heliomug.game.server.NetworkUtils;
 import com.heliomug.games.space.Game;
 import com.heliomug.games.space.server.MasterClient;
-import com.heliomug.utils.gui.EtchedPanel;
+import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingPanel;
+import com.heliomug.utils.server.Client;
+import com.heliomug.utils.server.NetworkUtils;
+import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
 public class PanelListHosts extends UpdatingPanel {
 	public PanelListHosts() {
 		super(new GridBagLayout());
-		EtchedPanel.addEtch(this, "Host List");
+		PanelUtils.addEtch(this, "Host List");
 	}
 	
 	public void update() {
 		removeAll();
-		MasterClient masterClient = Frame.getMasterClient(); 
-		ThingClient<Game> client = Frame.getClient(); 
+		MasterClient masterClient = SpaceFrame.getMasterClient(); 
+		Client<Game> client = SpaceFrame.getClient(); 
 
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -37,7 +38,7 @@ public class PanelListHosts extends UpdatingPanel {
 		cons.weightx = 1;
 		
 		if (masterClient != null) {
-			List<ThingHost<Game>> li = masterClient.getThing();
+			List<Server<Game>> li = masterClient.getThing();
 			if (li != null && li.size() > 0) {
 				JLabel label;
 				cons.gridx = 0;
@@ -53,11 +54,11 @@ public class PanelListHosts extends UpdatingPanel {
 				label = new JLabel("Port", JLabel.CENTER);
 				add(label, cons);
 				cons.gridy++;
-				for (ThingHost<Game> host : li) {
-					String gameString = host.getThing().getName();
-					String externalAddress = host.getExternalAddress().toString();
-					String lanAddress = host.getLanAddress().toString();
-					int port = host.getPort();
+				for (Server<Game> server : li) {
+					String gameString = server.getThing().getName();
+					String externalAddress = server.getAddress().getExternalAddress().toString();
+					String lanAddress = server.getAddress().getLanAddress().toString();
+					int port = server.getPort();
 					cons.gridx = 0;
 					label = new JLabel(gameString, JLabel.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -76,14 +77,21 @@ public class PanelListHosts extends UpdatingPanel {
 					add(label, cons);
 			        JButton button = new UpdatingButton("Join Game", () -> client == null, () -> {
 			        	if (client == null) {
-			        		InetAddress hostAddress = host.getExternalAddress();
+			        		InetAddress hostAddress = server.getAddress().getExternalAddress();
 			        		if (hostAddress.equals(NetworkUtils.getExternalAddress())) {
 			        			hostAddress = NetworkUtils.getLanAddress();
 			        		}
-			        		int hostPort = host.getPort();
-			        		ThingClient<Game> newClient = new ThingClient<>(hostAddress, hostPort);
-			        		Frame.setClient(newClient);
-			        		newClient.start();
+			        		int hostPort = server.getPort();
+			        		System.out.println("port: " + hostPort);
+			        		Client<Game> newClient;
+							try {
+								newClient = new Client<>(hostAddress, hostPort);
+				        		SpaceFrame.setClient(newClient);
+				        		newClient.start();
+							} catch (IOException e) {
+								System.err.println("could not connect to game");
+								e.printStackTrace();
+							}
 			        	}
 			        });
 			        cons.gridx = 4;

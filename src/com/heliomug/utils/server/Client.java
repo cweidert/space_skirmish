@@ -1,4 +1,4 @@
-package com.heliomug.game.server;
+package com.heliomug.utils.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,15 +7,13 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.channels.Channels;
-import java.nio.channels.SocketChannel;
+import java.net.Socket;
 import java.util.function.Consumer;
 
 public class Client<T extends Serializable> {
 	private static final int INCOMING_SLEEP_TIME = 20;
 
-	private SocketChannel socketChannel;
+	private Socket socket;
 	
 	private ObjectOutputStream out;
 	
@@ -26,11 +24,11 @@ public class Client<T extends Serializable> {
 	private T thing;
 	
 	public Client(InetAddress address, int port) throws IOException {
-		this(SocketChannel.open(new InetSocketAddress(address, port)));
+		this(new Socket(address, port));
 	}
 		
-	public Client(SocketChannel socketChannel) {
-		this.socketChannel = socketChannel;
+	public Client(Socket socket) {
+		this.socket = socket;
 		this.isActive = false;
 		this.out = null;
 		this.thing = null;
@@ -48,25 +46,37 @@ public class Client<T extends Serializable> {
 		clientThread = new Thread(new ClientRunner());
 		clientThread.setDaemon(true);
 		clientThread.start();
+		isActive = true;
+		System.out.println("-Started client on \n\t" + socket);
 	}
 	
 	public void stop() {
+		System.out.println("-Stopping client \n\t" + this);
 		if (clientThread != null) {
 			clientThread.interrupt();
 			clientThread = null;
 		}
 		try {
-			out.close();
+			if (out == null) {
+				System.err.println("out was null in \n\t" + this);
+			} else {
+				out.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		isActive = false;
 	}
 	
 	public void sendCommand(Consumer<T> command) {
 		if (isActive) {
 			try {
-				out.writeObject(command);
+				if (out != null) { 
+					out.writeObject(command);
+				} else {
+					System.err.println("out is null");
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,9 +91,9 @@ public class Client<T extends Serializable> {
 		public void run() {
 			try {
 				try (
-						OutputStream outStream = Channels.newOutputStream(socketChannel);
-						InputStream inStream = Channels.newInputStream(socketChannel);
+						InputStream inStream = socket.getInputStream();
 						ObjectInputStream in = new ObjectInputStream(inStream);
+						OutputStream outStream = socket.getOutputStream();
 				) {
 					out = new ObjectOutputStream(outStream);
 					while (!Thread.currentThread().isInterrupted()) {
@@ -91,8 +101,8 @@ public class Client<T extends Serializable> {
 						try {
 							Thread.sleep(INCOMING_SLEEP_TIME);
 						} catch (InterruptedException e) {
-							System.out.println("Interruption for client " + Client.this);
-							e.printStackTrace();
+							System.out.println("-Interruption for client \n\t" + Client.this);
+							break;
 						}
 					}
 				}
@@ -102,13 +112,13 @@ public class Client<T extends Serializable> {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				stop();
 			}
-			
-			stop();
 		}
 	}
 	
 	public String toString() {
-		return String.format("Client for %s on %s", thing, socketChannel);
+		return String.format("Client on %s for %s", socket, thing);
 	}
 }

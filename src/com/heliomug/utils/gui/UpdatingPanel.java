@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import com.heliomug.games.space.gui.Frame;
+import com.heliomug.games.space.gui.SpaceFrame;
 
 @SuppressWarnings("serial")
 public abstract class UpdatingPanel extends JPanel {
@@ -30,7 +30,7 @@ public abstract class UpdatingPanel extends JPanel {
 		for (UpdatingPanel panel : panels) {
 			panel.update();
 		}
-		Frame.getFrame().repaint();
+		SpaceFrame.getFrame().repaint();
 	}
 	
 	public UpdatingPanel(LayoutManager layout) {
