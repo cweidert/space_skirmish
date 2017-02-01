@@ -35,7 +35,7 @@ public class PanelJoinCustomGame extends EtchedPanel {
 	public JPanel getOptionsPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 0));
 		JLabel label;
-		label = new JLabel("IP Address: ");
+		label = new JLabel("Host Name / IP Address: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
 		nameBox = new JTextField("");

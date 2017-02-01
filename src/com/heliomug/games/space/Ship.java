@@ -16,9 +16,10 @@ public class Ship extends Sprite implements Serializable {
 	
 	private static final double TUR_RAD = 5;
 	private static final double SHIP_RAD = 3;
-	//private static final Color TUR_COLOR = Color.YELLOW;
+
 	private static final double BOOST_FORCE = 100;
 	private static final double BOOST_RAD = 3;
+	private static final float BOOST_WIDTH = 2;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
 	
 	private static final double BULLET_SPEED = 75;
@@ -162,12 +163,9 @@ public class Ship extends Sprite implements Serializable {
 	public void draw(Graphics2D g) {
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		//g.setColor(TUR_COLOR);
-		//g.setStroke(new BasicStroke(1));
-		//g.draw(new Line2D.Double(x, y, x + Math.cos(heading) * TUR_RAD, y + Math.sin(heading) * TUR_RAD));
 		if (accelerating) {
 			g.setColor(BOOST_COLOR);
-			g.setStroke(new BasicStroke(2));
+			g.setStroke(new BasicStroke(BOOST_WIDTH));
 			g.draw(new Line2D.Double(x, y, x - Math.cos(heading) * BOOST_RAD, y - Math.sin(heading) * BOOST_RAD));
 		}
 

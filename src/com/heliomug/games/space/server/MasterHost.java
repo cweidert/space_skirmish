@@ -16,10 +16,8 @@ public class MasterHost extends ThingHost<CopyOnWriteArrayList<ThingHost<Game>>>
 		super(hostList, MASTER_PORT);
 	}
 
-	public static void startMasterServer() {
+	public static void startMasterHost() {
 		CopyOnWriteArrayList<ThingHost<Game>> hostList = new CopyOnWriteArrayList<>();
-
-		hostList.add(new ThingHost<Game>(new Game(), 1234));
 		MasterHost masterHost = new MasterHost(hostList);
 		masterHost.start();
 		System.out.println("master server started");

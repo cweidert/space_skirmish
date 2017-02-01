@@ -3,8 +3,10 @@ package com.heliomug.games.space.gui;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.heliomug.games.space.GameOptions;
 import com.heliomug.utils.gui.EtchedPanel;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 import com.heliomug.utils.gui.UpdatingSlider;
@@ -14,7 +16,7 @@ public class PanelOptions extends EtchedPanel {
 	public PanelOptions() {
 		super("Game Options", new BorderLayout());
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0, 2));
+		JPanel optionPanel = new JPanel(new GridLayout(0, 1));
 		
 		UpdatingCheckBox box;
 		
@@ -58,12 +60,19 @@ public class PanelOptions extends EtchedPanel {
 			return Frame.getServer() != null && Frame.getServer().getThing().getOptions().isAutoRestart();
 		});
 		optionPanel.add(box);
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
 		UpdatingSlider slider = new UpdatingSlider(0, 50000, 10000, (Integer i) -> {
-			num = i ; System.out.println(i);
-		}, () -> num);
-		optionPanel.add(slider);
+			Frame.getServer().getThing().getOptions().setBigG(i);
+		}, () -> {
+			if (Frame.getServer() == null) {
+				return GameOptions.DEFAULT_BIG_G;
+			} else {
+				return Frame.getServer().getThing().getOptions().getBigG();
+			}
+		});
+		panel.add(slider, BorderLayout.CENTER);
+		optionPanel.add(panel);
 		add(optionPanel, BorderLayout.SOUTH);
 	}
-	
-	int num = 50;
 }

@@ -89,12 +89,14 @@ public class Game implements Serializable, ActionListener {
 		double minY = options.getBottom();
 		double maxY = options.getTop();
 		for (Ship ship : shipAssignments.values()) {
-			double x = ship.getPosition().getX();
-			double y = ship.getPosition().getY();
-			if (x < minX) minX = x;
-			if (y < minY) minY = y;
-			if (x > maxX) maxX = x;
-			if (y > maxY) maxY = y;
+			if (ship.isAlive()) {
+				double x = ship.getPosition().getX();
+				double y = ship.getPosition().getY();
+				if (x < minX) minX = x;
+				if (y < minY) minY = y;
+				if (x > maxX) maxX = x;
+				if (y > maxY) maxY = y;
+			}
 		}
 		
 		double w = options.getBufferWidth();
@@ -267,6 +269,10 @@ public class Game implements Serializable, ActionListener {
 		} 
 		
 		return null;
+	}
+	
+	public boolean allDead() {
+		return numberOfLivingPlayers() == 0;
 	}
 	
 	private int numberOfLivingPlayers() {

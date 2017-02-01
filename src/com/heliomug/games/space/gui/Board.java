@@ -69,7 +69,7 @@ public class Board extends WeidertPanel implements Runnable {
 		if (client != null) {
 			Game game = client.getThing();
 			if (game != null && game.isActive()) {
-				if (isAutoZoom) {
+				if (isAutoZoom && !game.allDead()) {
 					if (game.getOptions().isWrap()) {
 						setScreenBounds(game.getOptions().getWrapBounds());
 					} else { 

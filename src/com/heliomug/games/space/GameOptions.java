@@ -11,7 +11,7 @@ public class GameOptions implements Serializable {
 	public static final Rectangle2D ORIGINAL_BOUNDS = new Rectangle2D.Double(- DEFAULT_WIDTH / 2, - DEFAULT_HEIGHT / 2,	DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	public static final double BUFFER_WIDTH = 6;
 
-	public static final double DEFAULT_BIG_G = 10000;
+	public static final int DEFAULT_BIG_G = 10000;
 	public static final boolean DEFAULT_IS_WRAP = true;
 	public static final boolean DEFAULT_IS_PLANET = true; 
 	public static final boolean DEFAULT_IS_GRAVITY = true;
@@ -23,7 +23,8 @@ public class GameOptions implements Serializable {
 	private boolean isPlanet;
 	private boolean isPlanetStationary;
 	private boolean isGravity;
-	private double bigG;
+	
+	private int bigG;
 	private double width;
 	private double height;
 	
@@ -71,11 +72,11 @@ public class GameOptions implements Serializable {
 		this.isAutoRestart = isAutoRestart;
 	}
 
-	public double getBigG() {
+	public int getBigG() {
 		return bigG;
 	}
 	
-	public void setBigG(double g) {
+	public void setBigG(int g) {
 		bigG = g;
 	}
 
