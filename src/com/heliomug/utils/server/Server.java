@@ -73,6 +73,12 @@ public class Server<T extends Serializable> implements Runnable, Serializable {
 		}
 	}
 	
+	@Override
+	public void finalize() {
+		stop();
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Server on %s (port %d) for %s", address, port, thing);
 	}

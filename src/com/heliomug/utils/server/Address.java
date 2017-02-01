@@ -22,6 +22,14 @@ public class Address implements Serializable {
 		return lanAddress;
 	}
 	
+	public InetAddress getIP() {
+		if (externalAddress.equals(NetworkUtils.getExternalAddress())) {
+			return lanAddress;
+		} else {
+			return externalAddress;
+		}
+	}
+	
 	public String toString() {
 		return String.format("lan:%s, ext:%s", lanAddress, externalAddress);
 	}

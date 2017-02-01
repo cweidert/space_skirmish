@@ -118,6 +118,12 @@ public class Client<T extends Serializable> {
 		}
 	}
 	
+	@Override
+	public void finalize() {
+		stop();
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Client on %s for %s", socket, thing);
 	}

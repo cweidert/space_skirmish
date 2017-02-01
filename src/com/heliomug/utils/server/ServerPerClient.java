@@ -136,6 +136,12 @@ public class ServerPerClient<T extends Serializable> {
 		}
 	}
 	
+	@Override
+	public void finalize() {
+		stop();
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Server Per Client for %s on %s", thing, socket);
 	}
