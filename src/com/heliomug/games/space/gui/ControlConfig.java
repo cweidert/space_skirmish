@@ -29,12 +29,10 @@ import com.heliomug.games.space.ShipSignal;
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {
 		new int[] { VK_A, VK_D, VK_W, VK_S},
-		/*
 		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN },
 		new int[] { VK_J, VK_L, VK_I, VK_K},
 		new int[] { VK_F, VK_H, VK_T, VK_G},
 		new int[] { VK_NUMPAD4, VK_NUMPAD6, VK_NUMPAD8, VK_NUMPAD5},
-		*/
 //		new int[] { VK_, VK_, VK_, VK_},
 	};
 	

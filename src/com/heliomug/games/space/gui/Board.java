@@ -15,7 +15,7 @@ public class Board extends WeidertPanel implements Runnable {
 	private static final int BOARD_WIDTH = 640;
 	private static final int BOARD_HEIGHT = 480;
 
-	private static final int SLEEP_TIME = 24;
+	private static final int SLEEP_TIME = 1;
 	
 	private static final boolean DEFAULT_AUTO_ZOOM = true;
 

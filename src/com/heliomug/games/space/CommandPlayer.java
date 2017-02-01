@@ -9,6 +9,7 @@ public class CommandPlayer implements Consumer<Game>, Serializable {
 	private Player player;
 	private boolean isAdding;
 	
+	
 	public CommandPlayer(Player player) {
 		this(player, true);
 	}

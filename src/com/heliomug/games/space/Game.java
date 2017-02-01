@@ -110,7 +110,7 @@ public class Game implements Serializable, ActionListener {
 	
 	public void addPlayer(Player player) {
 		players.add(player);
-		shipAssignments.put(player, new Ship());
+		shipAssignments.put(player, new Ship(player));
 	}
 
 	public void removePlayer(Player player) {

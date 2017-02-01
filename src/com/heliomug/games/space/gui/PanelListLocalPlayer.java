@@ -48,6 +48,8 @@ public class PanelListLocalPlayer extends UpdatingPanel {
     		add(new JLabel("Boost", JLabel.CENTER), cons);
     		cons.gridx = 4;
     		add(new JLabel("Fire", JLabel.CENTER), cons);
+    		cons.gridx = 5;
+    		add(new JLabel("Color", JLabel.CENTER), cons);
     		
     		cons.gridy++;
     		
@@ -64,6 +66,10 @@ public class PanelListLocalPlayer extends UpdatingPanel {
 				add(new KeyDisplay(player, ShipSignal.ACCEL_ON), cons);
 				cons.gridx = 4;
 				add(new KeyDisplay(player, ShipSignal.FIRE), cons);
+				cons.gridx = 5;
+				JPanel panel = new JPanel();
+				panel.setBackground(player.getColor());
+				add(panel, cons);
 				cons.gridy++;
 			}
 		} else {
@@ -78,8 +84,7 @@ public class PanelListLocalPlayer extends UpdatingPanel {
 			ControlConfig controls = Frame.getControlConfig(player);
 
 			setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			add(new JLabel(controls.getKeyString(sig), JLabel.CENTER), BorderLayout.CENTER);
-			JButton button = new UpdatingButton("\u270E", () -> true, () -> {
+			JButton button = new UpdatingButton(controls.getKeyString(sig), () -> true, () -> {
 				JDialog dialog = new JDialog(Frame.getFrame(), "Key Assignment");
 				String prompt = String.format("Press %s's button for %s", player.getName(), sig);
 				dialog.add(new JLabel(prompt));
@@ -94,7 +99,7 @@ public class PanelListLocalPlayer extends UpdatingPanel {
 				dialog.pack();
 				dialog.setVisible(true);
 			});
-			add(button, BorderLayout.EAST);
+			add(button, BorderLayout.CENTER);
 		}
 	}
 }

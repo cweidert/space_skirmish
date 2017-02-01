@@ -2,7 +2,10 @@ package com.heliomug.games.space;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.io.Serializable;
 
 public class Ship extends Sprite implements Serializable {
@@ -12,8 +15,8 @@ public class Ship extends Sprite implements Serializable {
 	private static final double TURN_SPEED = 2.0;
 	
 	private static final double TUR_RAD = 5;
-	private static final double SHIP_RAD = 2;
-	private static final Color TUR_COLOR = Color.YELLOW;
+	private static final double SHIP_RAD = 3;
+	//private static final Color TUR_COLOR = Color.YELLOW;
 	private static final double BOOST_FORCE = 100;
 	private static final double BOOST_RAD = 3;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
@@ -36,15 +39,11 @@ public class Ship extends Sprite implements Serializable {
 	private double health;
 	private Color color;
 	
-	public Ship() {
-		this(DEFAULT_HEADING);
-	}
 	
-	public Ship(double heading) {
+	public Ship(Player player) {
 		super(SHIP_RAD);
-		Color c = Color.getHSBColor((float)Math.random(), 1.0f, 1.0f);
-		//Color c = new Color(randInt(256), randInt(256), randInt(256));
-		this.color = c;
+		heading = DEFAULT_HEADING;
+		this.color = player.getColor();
 		reset(DEFAULT_POSITION, heading);
 	}
 
@@ -130,18 +129,48 @@ public class Ship extends Sprite implements Serializable {
 		}
 	}
 	
+	public void drawFancy(Graphics2D g) {
+		double r = getRadius();
+		double r2 = r / 2;
+		Vec position = getPosition();
+		double x = position.getX();
+		double y = position.getY();
+		
+		Path2D shape = new Path2D.Double();
+		shape.moveTo(x, y);
+		shape.lineTo(x + Math.cos(heading + Math.PI * 2 / 3) * r, y + Math.sin(heading + Math.PI * 2 / 3) * r);
+		shape.lineTo(x + Math.cos(heading) * r, y + Math.sin(heading) * r);
+		shape.lineTo(x + Math.cos(heading - Math.PI * 2 / 3) * r, y + Math.sin(heading - Math.PI * 2 / 3) * r);
+		shape.lineTo(x, y);
+		g.setColor(getColor());
+		g.fill(shape);
+
+		
+		Path2D cockpit = new Path2D.Double();
+		cockpit.moveTo(x + Math.cos(heading) * r, y + Math.sin(heading) * r);
+		cockpit.lineTo(x + Math.cos(heading - Math.PI / 3) * r2, y + Math.sin(heading - Math.PI / 3) * r2);
+		cockpit.lineTo(x + Math.cos(heading + Math.PI / 3) * r2, y + Math.sin(heading + Math.PI / 3) * r2);
+		cockpit.lineTo(x + Math.cos(heading) * r, y + Math.sin(heading) * r);
+		g.setColor(Color.WHITE);
+		g.fill(cockpit);
+		
+		g.setColor(Color.BLACK);
+		g.fill(new Ellipse2D.Double(x + Math.cos(heading) * r2 - r / 6, y + Math.sin(heading) * r2 - r / 6, r / 3, r / 3));
+	}
+	
 	@Override
-	public void draw(java.awt.Graphics2D g) {
+	public void draw(Graphics2D g) {
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		g.setColor(TUR_COLOR);
-		g.setStroke(new BasicStroke(1));
-		g.draw(new Line2D.Double(x, y, x + Math.cos(heading) * TUR_RAD, y + Math.sin(heading) * TUR_RAD));
+		//g.setColor(TUR_COLOR);
+		//g.setStroke(new BasicStroke(1));
+		//g.draw(new Line2D.Double(x, y, x + Math.cos(heading) * TUR_RAD, y + Math.sin(heading) * TUR_RAD));
 		if (accelerating) {
 			g.setColor(BOOST_COLOR);
 			g.setStroke(new BasicStroke(2));
 			g.draw(new Line2D.Double(x, y, x - Math.cos(heading) * BOOST_RAD, y - Math.sin(heading) * BOOST_RAD));
 		}
-		super.draw(g);
+
+		drawFancy(g);
 	}
 }
