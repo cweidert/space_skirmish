@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -15,24 +14,25 @@ import com.heliomug.game.server.ThingClient;
 import com.heliomug.game.server.ThingHost;
 import com.heliomug.games.space.CommandPlayer;
 import com.heliomug.games.space.CommandShip;
+import com.heliomug.games.space.Game;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
-import com.heliomug.games.space.Game;
+import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.games.space.server.MasterHost;
 import com.heliomug.utils.gui.MessageDisplayer;
 
 @SuppressWarnings("serial")
-public class SpaceFrame extends JFrame implements MessageDisplayer {
-	private static SpaceFrame theFrame;
+public class Frame extends JFrame implements MessageDisplayer {
+	private static Frame theFrame;
 	
-	public static SpaceFrame getFrame() {
+	public static Frame getFrame() {
 		if (theFrame == null) {
-			theFrame = new SpaceFrame();
+			theFrame = new Frame();
 		}
 		return theFrame;
 	}
 
-	public static ThingClient<ArrayList<ThingHost<Game>>> getMasterClient() {
+	public static MasterClient getMasterClient() {
 		return getFrame().masterClient;
 	}
 	
@@ -55,7 +55,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	public static void addLocalPlayer(Player player) {
 		if (getClient() != null) {
 			getFrame().localPlayers.add(player);
-			getFrame().controlMap.put(player, new ControlConfig(player));
+			getFrame().controlAssignments.put(player, new ControlConfig(player));
 			getClient().sendCommand(new CommandPlayer(player));
 		}
 	}
@@ -64,20 +64,22 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		return getFrame().localPlayers;
 	}
 	
-	private ThingClient<ArrayList<ThingHost<Game>>> masterClient;
+	public static ControlConfig getControlConfig(Player player) {
+		return getFrame().controlAssignments.get(player);
+	}
+	
+	private MasterClient masterClient;
 	
 	private ThingHost<Game> server;
 	private ThingClient<Game> client;
 	
-	private Map<Player, ControlConfig> controlMap;
+	private Map<Player, ControlConfig> controlAssignments;
 	private List<Player> localPlayers;
 	
-	private JLabel messageLabel;
-	
-	private SpaceFrame() {
+	private Frame() {
 		super("Networked Space Game");
 		
-		masterClient = new ThingClient<>(MasterHost.MASTER_HOST, MasterHost.MASTER_PORT);
+		masterClient = new MasterClient(MasterHost.MASTER_HOST, MasterHost.MASTER_PORT);
 		masterClient.start((Boolean b) -> {
 			if (!b) {
 				masterClient = null;
@@ -86,7 +88,7 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		
 		server = null;
 		client = null;
-		controlMap = new HashMap<>();
+		controlAssignments = new HashMap<>();
 		localPlayers = new ArrayList<>();
 		
 		setupGUI();
@@ -99,32 +101,29 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
 		
-		tabbedPane.addTab("Connections", new TabConnections());
-		tabbedPane.addTab("Players", new TabLocalPlayers());
 		tabbedPane.addTab("Game", new TabGame());
-		tabbedPane.addTab("Options", new TabOptions());
+		tabbedPane.addTab("Local Players", new TabLocalPlayers());
+		tabbedPane.addTab("Game Options", new PanelOptions());
+		tabbedPane.addTab("Internet Games", new TabConnections());
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
-		messageLabel = new JLabel("Messages");
-		panel.add(messageLabel, BorderLayout.SOUTH);
-		
 		this.add(panel);
 		pack();
 	}
 	
 	public void handleKey(int key, boolean down) {
 		for (Player player : localPlayers) {
-			ShipSignal signal = controlMap.get(player).getSignal(key, down);
+			ShipSignal signal = controlAssignments.get(player).getSignal(key, down);
 			if (signal != null) {
-				SpaceFrame.getClient().sendCommand(new CommandShip(player, signal));
+				Frame.getClient().sendCommand(new CommandShip(player, signal));
 			}
 		}
 	}
 	
 	public ControlConfig getControls(Player player) {
-		return controlMap.get(player);
+		return controlAssignments.get(player);
 	}
 	
 	public void update() {
@@ -133,6 +132,6 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	
 	@Override
 	public void accept(String message) {
-		this.messageLabel.setText(message);
+		//this.messageLabel.setText(message);
 	}
 }

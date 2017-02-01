@@ -8,9 +8,9 @@ public class Planet extends Sprite {
 	private static final double DEFAULT_RADIUS = 8.0;
 	private static final double DEFAULT_MASS = 5.0;
 	
-	public Planet(Vec position) {
+	public Planet(Vec position, boolean isStationary) {
 		super(position, new Vec(), DEFAULT_RADIUS, DEFAULT_MASS);
-		setStationary(true);
+		setStationary(isStationary);
 	}
 
 	@Override

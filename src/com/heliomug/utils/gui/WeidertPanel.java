@@ -238,7 +238,6 @@ public class WeidertPanel extends JPanel  {
 	 * @param e This is a mouse event that contains things like which button was pushed, if you were holding shift, etc.  
 	 */
 	public void handleMouseClick(double x, double y, MouseEvent e) {
-		System.out.println(String.format("Click at (%f, %f)", x, y)); 
 	}
 
 	private Point2D getLocation(int px, int py) { 

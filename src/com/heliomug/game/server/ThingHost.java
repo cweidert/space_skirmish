@@ -79,8 +79,8 @@ public class ThingHost<T extends Serializable> implements Serializable {
 
 	public void start() {
 		Thread t = new Thread(() -> {
-			clientServers = new ArrayList<>();
 			try (ServerSocket serverSocket = new ServerSocket(port)) {
+				clientServers = new ArrayList<>();
 				displayer.accept("starting server for " + thing);
 				while (true) {
 					Socket incoming = serverSocket.accept();
@@ -101,6 +101,10 @@ public class ThingHost<T extends Serializable> implements Serializable {
 		});
 		t.setDaemon(true);
 		t.start();
+	}
+
+	public void kill() {
+		
 	}
 	
 	public String toString() {

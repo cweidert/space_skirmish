@@ -66,6 +66,9 @@ public class Game implements Serializable, ActionListener {
 		return this.isActive;
 	}
 	
+	public String getName() {
+		return name;
+	}
 	
 	public int getUpdates() {
 		return updates;
@@ -81,9 +84,9 @@ public class Game implements Serializable, ActionListener {
 	
 	
 	public Rectangle2D getBounds() {
-		double minX = - options.getLeft();
+		double minX = options.getLeft();
 		double maxX = options.getRight();
-		double minY = - options.getBottom();
+		double minY = options.getBottom();
 		double maxY = options.getTop();
 		for (Ship ship : shipAssignments.values()) {
 			double x = ship.getPosition().getX();
@@ -131,7 +134,9 @@ public class Game implements Serializable, ActionListener {
 			ship.setBoostOn(false);
 		} else if (signal == ShipSignal.FIRE) {
 			Bullet bullet = ship.getBullet();
-			sprites.add(bullet);
+			if (bullet != null) {
+				sprites.add(bullet);
+			}
 		}
 	}
 	
@@ -145,7 +150,7 @@ public class Game implements Serializable, ActionListener {
 		
 		sprites.clear();
 		if (options.isPlanet()) {
-			sprites.add(new Planet(new Vec(0, 0)));
+			sprites.add(new Planet(new Vec(0, 0), options.isPlanetStationary()));
 		}
 		isActive = true;
 		int size = players.size();
@@ -184,12 +189,12 @@ public class Game implements Serializable, ActionListener {
 			}
 			
 			if (isRoundOver()) {
-				isActive = false;
 				Player winner = getWinner();
 				if (winner != null) {
 					winner.addWin();
 				}
 				if (options.isAutoRestart()) {
+					isActive = false;
 					reset();
 				}
 			}
@@ -202,7 +207,7 @@ public class Game implements Serializable, ActionListener {
 	
 	private void wrapAll() {
 		for (Sprite sprite : sprites) {
-			sprite.wrapTo(options.getOriginalBounds());
+			sprite.wrapTo(options.getWrapBounds());
 		}
 	}
 	
@@ -281,7 +286,7 @@ public class Game implements Serializable, ActionListener {
 		} else if (players.size() == 1) {
 			return numberOfLivingPlayers() == 0;
 		} else {
-			return numberOfLivingPlayers() == 1;
+			return numberOfLivingPlayers() < 2;
 		}
 	}
 	
@@ -292,7 +297,7 @@ public class Game implements Serializable, ActionListener {
 	
 	public void draw(Graphics2D g) {
 		g.setColor(BOUNDS_COLOR);
-		g.draw(options.getOriginalBounds());
+		g.draw(options.getWrapBounds());
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
 		}

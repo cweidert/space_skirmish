@@ -90,4 +90,8 @@ public class ThingClientServer<S extends Serializable> {
 		commandReceiver.setDaemon(true);
 		commandReceiver.start();
 	}
+	
+	public void kill() {
+		
+	}
 }

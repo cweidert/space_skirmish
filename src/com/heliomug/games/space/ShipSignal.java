@@ -3,7 +3,7 @@ package com.heliomug.games.space;
 public enum ShipSignal {
 	TURN_LEFT("left"),
 	TURN_RIGHT("right"),
-	TURN_NONE("forward"),
+	TURN_NONE("straight ahead"),
 	ACCEL_ON("boost"),
 	ACCEL_OFF("chill"),
 	FIRE("fire");

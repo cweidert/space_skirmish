@@ -11,6 +11,10 @@ import static java.awt.event.KeyEvent.VK_J;
 import static java.awt.event.KeyEvent.VK_K;
 import static java.awt.event.KeyEvent.VK_L;
 import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_NUMPAD4;
+import static java.awt.event.KeyEvent.VK_NUMPAD5;
+import static java.awt.event.KeyEvent.VK_NUMPAD6;
+import static java.awt.event.KeyEvent.VK_NUMPAD8;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_S;
 import static java.awt.event.KeyEvent.VK_T;
@@ -24,11 +28,13 @@ import com.heliomug.games.space.ShipSignal;
 
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {
-		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN },
 		new int[] { VK_A, VK_D, VK_W, VK_S},
+		/*
+		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN },
 		new int[] { VK_J, VK_L, VK_I, VK_K},
 		new int[] { VK_F, VK_H, VK_T, VK_G},
-//		new int[] { VK_, VK_, VK_, VK_},
+		new int[] { VK_NUMPAD4, VK_NUMPAD6, VK_NUMPAD8, VK_NUMPAD5},
+		*/
 //		new int[] { VK_, VK_, VK_, VK_},
 	};
 	
@@ -57,52 +63,40 @@ public class ControlConfig {
 	}
 	
 	public void setAll(int left, int right, int boost, int fire) {
-		setLeftKey(left);
-		setRightKey(right);
-		setBoostKey(boost);
-		setFireKey(fire);
+		this.leftKey = left;
+		this.rightKey = right;
+		this.boostKey = boost;
+		this.fireKey = fire;
 	}
 	
-	public void setLeftKey(int key) {
-		leftKey = key;
-	}
-	
-	public void setRightKey(int key) {
-		rightKey = key;
-	}
-	
-	public void setBoostKey(int key) {
-		boostKey = key;
-	}
-	
-	public void setFireKey(int key) {
-		fireKey = key;
-	}
-
-	public String getKeyString() {
-		return String.format("Left: %s, Right: %s, Boost: %s, Fire %s", getKeyString(leftKey), getKeyString(rightKey), getKeyString(boostKey), getKeyString(fireKey));   
-	}
-
-	/*
-	public String getLeftString() {
-		return getKeyString(leftKey);
-	}
-	
-	public String getRightString() {
-		return getKeyString(rightKey);
-	}
-	
-	public String getBoostString() {
-		return getKeyString(boostKey);
-	}
-	
-	public String getFireString() {
-		return getKeyString(fireKey);
-	}
-	*/
-	
-	public String getKeyString(int key) {
+	public String keyToString(int key) {
 		return KeyEvent.getKeyText(key);
+	}
+	
+	public String getKeyString(ShipSignal sig) {
+		if (sig == ShipSignal.TURN_LEFT) {
+			return keyToString(leftKey);
+		} else if (sig == ShipSignal.TURN_RIGHT) {
+			return keyToString(rightKey);
+		} else if (sig == ShipSignal.ACCEL_ON) {
+			return keyToString(boostKey);
+		} else if (sig == ShipSignal.FIRE) {
+			return keyToString(fireKey);
+		} else {
+			return "";
+		}
+	}
+	
+	public void setKey(ShipSignal sig, int key) {
+		if (sig == ShipSignal.TURN_LEFT) {
+			leftKey = key;
+		} else if (sig == ShipSignal.TURN_RIGHT) {
+			rightKey = key;
+		} else if (sig == ShipSignal.ACCEL_ON) {
+			boostKey = key;
+		} else if (sig == ShipSignal.FIRE) {
+			fireKey = key;
+		} 
 	}
 	
 	public ShipSignal getSignal(int key, boolean isDown) {

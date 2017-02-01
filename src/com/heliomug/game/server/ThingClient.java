@@ -115,4 +115,7 @@ public class ThingClient<T extends Serializable> {
 		}
 	}
 
+	public void kill() {
+		
+	}
 }

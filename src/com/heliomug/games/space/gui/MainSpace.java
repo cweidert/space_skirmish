@@ -8,7 +8,7 @@ public class MainSpace {
 	public static void main(String[] args) {
 		MasterHost.startMasterServer();
 		EventQueue.invokeLater(() -> {
-			SpaceFrame frame = SpaceFrame.getFrame();
+			Frame frame = Frame.getFrame();
 			frame.setVisible(true);
 		});
 	}

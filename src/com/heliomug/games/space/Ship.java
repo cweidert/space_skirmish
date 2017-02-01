@@ -8,13 +8,13 @@ import java.io.Serializable;
 public class Ship extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
-	private static final double BOOST_FORCE = 1000.0;
-	private static final double MAX_SPEED = 100.0;
+	private static final double MAX_SPEED = 150.0;
 	private static final double TURN_SPEED = 2.0;
 	
 	private static final double TUR_RAD = 5;
 	private static final double SHIP_RAD = 2;
 	private static final Color TUR_COLOR = Color.YELLOW;
+	private static final double BOOST_FORCE = 100;
 	private static final double BOOST_RAD = 3;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
 	
@@ -42,8 +42,8 @@ public class Ship extends Sprite implements Serializable {
 	
 	public Ship(double heading) {
 		super(SHIP_RAD);
-		//Color c = Color.getHSBColor((float)Math.random(), 1.0f, 1.0f);
-		Color c = new Color(randInt(256), randInt(256), randInt(256));
+		Color c = Color.getHSBColor((float)Math.random(), 1.0f, 1.0f);
+		//Color c = new Color(randInt(256), randInt(256), randInt(256));
 		this.color = c;
 		reset(DEFAULT_POSITION, heading);
 	}
@@ -62,20 +62,19 @@ public class Ship extends Sprite implements Serializable {
 		health = STARTING_HEALTH;
 	}
 	
-	private int randInt(int lim) {
-		return (int)(Math.random() * lim);
-	}
-	
 	public double getHeading() {
 		return heading;
 	}
 
 	public Bullet getBullet() {
-		Vec position = getPosition().add(new Vec(heading).mult(SHIP_RAD + TUR_RAD));
-		Vec velocity = getVelocity().add(new Vec(heading).mult(BULLET_SPEED));
-		Bullet bullet = new Bullet(position, velocity);
-		setVelocity(getVelocity().sub(velocity.mult(bullet.getMass()))); 
-		return bullet;
+		if (isAlive()) {
+			Vec position = getPosition().add(new Vec(heading).mult(SHIP_RAD + TUR_RAD));
+			Vec velocity = getVelocity().add(new Vec(heading).mult(BULLET_SPEED));
+			Bullet bullet = new Bullet(position, velocity);
+			setVelocity(getVelocity().sub(velocity.mult(bullet.getMass()))); 
+			return bullet;
+		}
+		return null;
 	}
 	
 	public void setTurnDirection(TurnDirection dir) {
@@ -89,9 +88,7 @@ public class Ship extends Sprite implements Serializable {
 	public void update(double dt) {
 		heading += turnDirection.getValue() * TURN_SPEED * dt;
 		if (accelerating) {
-			Vec force = new Vec(heading);
-			force = force.mult(BOOST_FORCE * dt);
-			addForce(force);
+			addForce(new Vec(heading).mult(BOOST_FORCE));
 		}
 		super.update(dt);
 		if (getSpeed() > MAX_SPEED) {
@@ -138,6 +135,7 @@ public class Ship extends Sprite implements Serializable {
 		double x = getPosition().getX();
 		double y = getPosition().getY();
 		g.setColor(TUR_COLOR);
+		g.setStroke(new BasicStroke(1));
 		g.draw(new Line2D.Double(x, y, x + Math.cos(heading) * TUR_RAD, y + Math.sin(heading) * TUR_RAD));
 		if (accelerating) {
 			g.setColor(BOOST_COLOR);
