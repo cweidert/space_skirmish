@@ -75,7 +75,7 @@ public class PanelHostMyGame extends EtchedPanel {
 					masterClient.sendCommand(new CommandAddHost(myServer));
 				}
 				InetAddress address = InetAddress.getLoopbackAddress();
-				ThingClient<Game> myClient = new ThingClient<Game>(address.getHostAddress(), port);
+				ThingClient<Game> myClient = new ThingClient<Game>(address, port);
 				Frame.setClient(myClient);
 				myClient.start((Boolean b) -> {});
 			}

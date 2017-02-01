@@ -2,6 +2,10 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -54,11 +58,16 @@ public class PanelJoinCustomGame extends EtchedPanel {
 		JPanel panel = new JPanel();
 		JButton button = new UpdatingButton("Join Custom Game", () -> Frame.getClient() == null, () -> {
 			if (Frame.getClient() == null) {
-				String host = nameBox.getText();
-				int port = (int)portBox.getValue();
-				ThingClient<Game> myClient = new ThingClient<Game>(host, port);
-				Frame.setClient(myClient);
-				myClient.start((Boolean b) -> {});
+				InetAddress host;
+				try {
+					host = InetAddress.getByName(new URL(nameBox.getText()).getHost());
+					int port = (int)portBox.getValue();
+					ThingClient<Game> myClient = new ThingClient<Game>(host, port);
+					Frame.setClient(myClient);
+					myClient.start((Boolean b) -> {});
+				} catch (UnknownHostException | MalformedURLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		panel.add(button);

@@ -12,7 +12,7 @@ public class Ship extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
 	private static final double MAX_SPEED = 150.0;
-	private static final double TURN_SPEED = 2.0;
+	private static final double TURN_SPEED = Math.PI;
 	
 	private static final double TUR_RAD = 5;
 	private static final double SHIP_RAD = 3;

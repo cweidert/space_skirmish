@@ -81,12 +81,12 @@ public class PanelListHosts extends UpdatingPanel {
 			        			hostAddress = NetworkUtils.getLanAddress();
 			        		}
 			        		int hostPort = host.getPort();
-			        		ThingClient<Game> newClient = new ThingClient<>(hostAddress.toString(), hostPort);
+			        		ThingClient<Game> newClient = new ThingClient<>(hostAddress, hostPort);
 			        		Frame.setClient(newClient);
 			        		newClient.start();
 			        	}
 			        });
-			        cons.gridx = 3;
+			        cons.gridx = 4;
 			        add(button, cons);
 			        cons.gridy++;
 				}

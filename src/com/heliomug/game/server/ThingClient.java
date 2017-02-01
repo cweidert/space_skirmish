@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
@@ -20,7 +21,7 @@ public class ThingClient<T extends Serializable> {
 	private long timeStarted;
 	private int thingsPulled, commandsSent;
 	
-	private String host;
+	private InetAddress host;
 	private int port;
 
 	/*
@@ -29,7 +30,7 @@ public class ThingClient<T extends Serializable> {
 	}
 	*/
 	
-	public ThingClient(String host, int port) {
+	public ThingClient(InetAddress host, int port) {
 		this.host = host;
 		this.port = port;
 		commandSender = null;
@@ -101,15 +102,14 @@ public class ThingClient<T extends Serializable> {
 							}
 						}
 					} catch (IOException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} catch (UnknownHostException e3) {
 					callback.accept(false);
-					//e3.printStackTrace();
+					e3.printStackTrace();
 				} catch (IOException e3) {
 					callback.accept(false);
-					//e3.printStackTrace();
+					e3.printStackTrace();
 				}
 			});
 			gameReceiver.setDaemon(true);

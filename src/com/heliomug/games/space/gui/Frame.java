@@ -1,6 +1,10 @@
 package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,12 +91,19 @@ public class Frame extends JFrame implements MessageDisplayer {
 	private Frame() {
 		super("Networked Space Game");
 		
-		masterClient = new MasterClient(MasterHost.MASTER_HOST, MasterHost.MASTER_PORT);
-		masterClient.start((Boolean b) -> {
-			if (!b) {
-				masterClient = null;
-			}
-		});
+		InetAddress masterAddress;
+		try {
+			masterAddress = InetAddress.getByName(new URL(MasterHost.MASTER_HOST).getHost());
+			masterClient = new MasterClient(masterAddress, MasterHost.MASTER_PORT);
+			masterClient.start((Boolean b) -> {
+				if (!b) {
+					masterClient = null;
+				}
+			});
+		} catch (UnknownHostException | MalformedURLException e) {
+			e.printStackTrace();
+			masterClient = null;
+		}
 		
 		server = null;
 		client = null;

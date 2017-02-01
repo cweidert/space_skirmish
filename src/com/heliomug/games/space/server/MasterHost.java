@@ -8,7 +8,7 @@ import com.heliomug.games.space.Game;
 public class MasterHost extends ThingHost<CopyOnWriteArrayList<ThingHost<Game>>> {
 	private static final long serialVersionUID = 9150953071039679780L;
 
-	public static final String MASTER_HOST = "home.heliomug.com";
+	public static final String MASTER_HOST = "http://home.heliomug.com";
 	public static final int MASTER_PORT = 27961;
 	public static final int GAME_PORT = 27960;
 	
