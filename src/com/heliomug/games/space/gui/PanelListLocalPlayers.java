@@ -45,7 +45,9 @@ public class PanelListLocalPlayers extends UpdatingPanel {
     		cons.gridx++;
     		add(new JLabel("Right", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Boost", JLabel.CENTER), cons);
+    		add(new JLabel("Forward", JLabel.CENTER), cons);
+    		cons.gridx++;
+    		add(new JLabel("Back", JLabel.CENTER), cons);
     		cons.gridx++;
     		add(new JLabel("Fire", JLabel.CENTER), cons);
     		cons.gridx++;
@@ -65,7 +67,9 @@ public class PanelListLocalPlayers extends UpdatingPanel {
 	    		cons.gridx++;
 				add(new KeyDisplay(player, ShipSignal.TURN_RIGHT), cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.ACCEL_ON), cons);
+				add(new KeyDisplay(player, ShipSignal.FORWARD), cons);
+	    		cons.gridx++;
+				add(new KeyDisplay(player, ShipSignal.BACKWARDS), cons);
 	    		cons.gridx++;
 				add(new KeyDisplay(player, ShipSignal.FIRE), cons);
 	    		cons.gridx++;

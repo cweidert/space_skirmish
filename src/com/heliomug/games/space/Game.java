@@ -132,10 +132,12 @@ public class Game implements Serializable, ActionListener {
 			ship.setTurnDirection(TurnDirection.RIGHT);
 		} else if (signal == ShipSignal.TURN_NONE) {
 			ship.setTurnDirection(TurnDirection.NONE);
-		} else if (signal == ShipSignal.ACCEL_ON) {
-			ship.setBoostOn(true);
+		} else if (signal == ShipSignal.FORWARD) {
+			ship.setAccel(1);
+		} else if (signal == ShipSignal.BACKWARDS) {
+			ship.setAccel(-1);
 		} else if (signal == ShipSignal.ACCEL_OFF) {
-			ship.setBoostOn(false);
+			ship.setAccel(0);
 		} else if (signal == ShipSignal.FIRE) {
 			Bullet bullet = ship.getBullet();
 			if (bullet != null) {

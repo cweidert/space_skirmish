@@ -6,8 +6,8 @@ import java.io.Serializable;
 public class GameOptions implements Serializable {
 	private static final long serialVersionUID = 7655574152522563536L;
 
-	public static final double DEFAULT_WIDTH = 192;
-	public static final double DEFAULT_HEIGHT = 144;
+	public static final double DEFAULT_WIDTH = 256;
+	public static final double DEFAULT_HEIGHT = 192;
 	public static final Rectangle2D ORIGINAL_BOUNDS = new Rectangle2D.Double(- DEFAULT_WIDTH / 2, - DEFAULT_HEIGHT / 2,	DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	public static final double BUFFER_WIDTH = 12;
 

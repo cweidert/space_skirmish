@@ -60,7 +60,7 @@ public class PanelJoinCustomGame extends JPanel {
 			if (SpaceFrame.getClient() == null) {
 				InetAddress host;
 				try {
-					host = InetAddress.getByName(new URL(nameBox.getText()).getHost());
+					host = InetAddress.getByName(new URL("http://" + nameBox.getText()).getHost());
 					int port = (int)portBox.getValue();
 					Client<Game> myClient = new Client<Game>(host, port);
 					SpaceFrame.setClient(myClient);

@@ -2,8 +2,6 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
-import java.net.InetAddress;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,8 +11,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import com.heliomug.games.space.Game;
-import com.heliomug.games.space.server.CommandAddHost;
-import com.heliomug.games.space.server.CommandRemoveHost;
+import com.heliomug.games.space.server.CommandServer;
+import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.gui.PanelUtils;
@@ -62,30 +60,17 @@ public class PanelHostMyGame extends JPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host My Own Game", () -> SpaceFrame.getServer() == null, () -> {
+		button = new UpdatingButton("Host My Game", () -> SpaceFrame.getServer() == null, () -> {
 			MasterClient masterClient = SpaceFrame.getMasterClient(); 
 			Server<Game> server = SpaceFrame.getServer(); 
-			Client<Game> client = SpaceFrame.getClient(); 
-			if (server == null && client == null) {
+			if (server == null) {
 				String name = nameBox.getText();
-				name = name.length() == 0 ? "[no name]" : name;
 				int port = (int) portBox.getValue();
-				Server<Game> myServer = new Server<Game>(new Game(name), port); 
-				SpaceFrame.setServer(myServer);
-				myServer.start();
-				if (masterClient != null) {
-					masterClient.sendCommand(new CommandAddHost(myServer));
-				}
-				InetAddress address = InetAddress.getLoopbackAddress();
-				Client<Game> myClient;
-				try {
-					myClient = new Client<Game>(address, port);
-					SpaceFrame.setClient(myClient);
-					myClient.start();
-				} catch (IOException e) {
-					System.err.println("could not connect to my own game");
-					e.printStackTrace();
-				}
+				server = SpaceFrame.makeMyOwnServer(name, port);
+			}
+			if (masterClient != null) {
+				GameAddress gameAddress = new GameAddress(server);
+				masterClient.sendCommand(new CommandServer(gameAddress));
 			}
 		});
 		panel.add(button);
@@ -97,7 +82,8 @@ public class PanelHostMyGame extends JPanel {
 				server.stop();
 				SpaceFrame.setServer(null);
 				if (masterClient != null) {
-					masterClient.sendCommand(new CommandRemoveHost(server));
+					GameAddress gameAddress = new GameAddress(server);
+					masterClient.sendCommand(new CommandServer(gameAddress, false));
 				}
 			}
 			Client<Game> client = SpaceFrame.getClient(); 

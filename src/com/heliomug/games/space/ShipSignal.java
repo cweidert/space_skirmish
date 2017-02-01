@@ -4,8 +4,9 @@ public enum ShipSignal {
 	TURN_LEFT("left"),
 	TURN_RIGHT("right"),
 	TURN_NONE("straight ahead"),
-	ACCEL_ON("boost"),
+	FORWARD("forward"),
 	ACCEL_OFF("chill"),
+	BACKWARDS("back"),
 	FIRE("fire");
 	
 	private String name;

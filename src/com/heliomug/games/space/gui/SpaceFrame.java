@@ -47,6 +47,14 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 		getFrame().client = client;
 	}
 	
+	public static Server<Game> makeMyOwnServer(String name, int port) {
+		name = name.length() == 0 ? "[no name]" : name;
+		Server<Game> myServer = new Server<Game>(new Game(name), port); 
+		SpaceFrame.setServer(myServer);
+		myServer.start();
+		return myServer;
+	}
+	
 	public static Server<Game> getServer() {
 		return getFrame().server;
 	}

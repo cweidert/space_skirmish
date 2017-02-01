@@ -2,6 +2,7 @@ package com.heliomug.utils.server;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.Objects;
 
 public class Address implements Serializable {
 	private static final long serialVersionUID = 3019317116610656760L;
@@ -28,6 +29,26 @@ public class Address implements Serializable {
 		} else {
 			return externalAddress;
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(lanAddress, externalAddress);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if (other == this) {
+			return true;
+		}
+		if (other instanceof Address) {
+			Address oa = (Address) other;
+			return oa.lanAddress.equals(lanAddress) && oa.externalAddress.equals(externalAddress);
+		}
+		return false;
 	}
 	
 	public String toString() {

@@ -35,7 +35,7 @@ public class Ship extends Sprite implements Serializable {
 	private TurnDirection turnDirection;
 	private double heading;
 	
-	private boolean accelerating; 
+	private int accel; 
 
 	private double health;
 	private Color color;
@@ -46,6 +46,7 @@ public class Ship extends Sprite implements Serializable {
 		heading = DEFAULT_HEADING;
 		this.color = player.getColor();
 		reset(DEFAULT_POSITION, heading);
+		this.accel = 0;
 	}
 
 	public void reset(Vec pos, double heading) {
@@ -58,7 +59,7 @@ public class Ship extends Sprite implements Serializable {
 		setAlive(true);
 		this.heading = heading;
 		turnDirection = TurnDirection.NONE;
-		accelerating = false;
+		accel = 0;
 		health = STARTING_HEALTH;
 	}
 	
@@ -81,14 +82,14 @@ public class Ship extends Sprite implements Serializable {
 		turnDirection = dir;
 	}
 	
-	public void setBoostOn(boolean b) {
-		accelerating = b;
+	public void setAccel(int i) {
+		accel = i;
 	}
 
 	public void update(double dt) {
 		heading += turnDirection.getValue() * TURN_SPEED * dt;
-		if (accelerating) {
-			addForce(new Vec(heading).mult(BOOST_FORCE));
+		if (accel != 0) {
+			addForce(new Vec(heading).mult(BOOST_FORCE * accel));
 		}
 		super.update(dt);
 		if (getSpeed() > MAX_SPEED) {
@@ -163,10 +164,10 @@ public class Ship extends Sprite implements Serializable {
 	public void draw(Graphics2D g) {
 		double x = getPosition().getX();
 		double y = getPosition().getY();
-		if (accelerating) {
+		if (accel != 0) {
 			g.setColor(BOOST_COLOR);
 			g.setStroke(new BasicStroke(BOOST_WIDTH));
-			g.draw(new Line2D.Double(x, y, x - Math.cos(heading) * BOOST_RAD, y - Math.sin(heading) * BOOST_RAD));
+			g.draw(new Line2D.Double(x, y, x - accel * Math.cos(heading) * BOOST_RAD, y - accel * Math.sin(heading) * BOOST_RAD));
 		}
 
 		drawFancy(g);

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -12,13 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import com.heliomug.games.space.Game;
+import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingPanel;
 import com.heliomug.utils.server.Client;
-import com.heliomug.utils.server.NetworkUtils;
-import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
 public class PanelListHosts extends UpdatingPanel {
@@ -38,7 +36,7 @@ public class PanelListHosts extends UpdatingPanel {
 		cons.weightx = 1;
 		
 		if (masterClient != null) {
-			List<Server<Game>> li = masterClient.getThing();
+			List<GameAddress> li = masterClient.getThing();
 			if (li != null && li.size() > 0) {
 				JLabel label;
 				cons.gridx = 0;
@@ -54,11 +52,11 @@ public class PanelListHosts extends UpdatingPanel {
 				label = new JLabel("Port", JLabel.CENTER);
 				add(label, cons);
 				cons.gridy++;
-				for (Server<Game> server : li) {
-					String gameString = server.getThing().getName();
-					String externalAddress = server.getAddress().getExternalAddress().toString();
-					String lanAddress = server.getAddress().getLanAddress().toString();
-					int port = server.getPort();
+				for (GameAddress gameAddress : li) {
+					String gameString = gameAddress.getName();
+					String externalAddress = gameAddress.getAddress().getExternalAddress().toString();
+					String lanAddress = gameAddress.getAddress().getLanAddress().toString();
+					int port = gameAddress.getPort();
 					cons.gridx = 0;
 					label = new JLabel(gameString, JLabel.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -77,15 +75,8 @@ public class PanelListHosts extends UpdatingPanel {
 					add(label, cons);
 			        JButton button = new UpdatingButton("Join Game", () -> client == null, () -> {
 			        	if (client == null) {
-			        		InetAddress hostAddress = server.getAddress().getExternalAddress();
-			        		if (hostAddress.equals(NetworkUtils.getExternalAddress())) {
-			        			hostAddress = NetworkUtils.getLanAddress();
-			        		}
-			        		int hostPort = server.getPort();
-			        		System.out.println("port: " + hostPort);
-			        		Client<Game> newClient;
 							try {
-								newClient = new Client<>(hostAddress, hostPort);
+				        		Client<Game> newClient = gameAddress.getClientFor();
 				        		SpaceFrame.setClient(newClient);
 				        		newClient.start();
 							} catch (IOException e) {
