@@ -119,7 +119,6 @@ public class Game implements Serializable, ActionListener {
 		sprites.remove(ship);
 	}
 	
-	
 	public void handleShipSignal(Player player, ShipSignal signal) {
 		Ship ship = shipAssignments.get(player);
 		if (signal == ShipSignal.TURN_LEFT) {

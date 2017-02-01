@@ -10,10 +10,15 @@ public class Player implements Serializable {
 	private int wins;
 	private Color color;
 	
+	// id is for serialization / matching purposes
+	@SuppressWarnings("unused")
+	private long id;
+	
 	public Player(String name, Color color) {
 		this.name = name;
 		this.wins = 0;
 		this.color = color;
+		this.id = (long)(Math.random() * Long.MAX_VALUE);
 	}
 	
 	public Color getColor() {

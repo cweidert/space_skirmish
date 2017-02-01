@@ -50,6 +50,8 @@ public class PanelListLocalPlayer extends UpdatingPanel {
     		add(new JLabel("Fire", JLabel.CENTER), cons);
     		cons.gridx = 5;
     		add(new JLabel("Color", JLabel.CENTER), cons);
+    		cons.gridx = 6;
+    		add(new JLabel("Remove", JLabel.CENTER), cons);
     		
     		cons.gridy++;
     		
@@ -70,6 +72,11 @@ public class PanelListLocalPlayer extends UpdatingPanel {
 				JPanel panel = new JPanel();
 				panel.setBackground(player.getColor());
 				add(panel, cons);
+				cons.gridx = 6;
+				JButton button = new UpdatingButton("X", () -> true, () -> {
+					Frame.removeLocalPlayer(player);
+				});
+				add(button, cons);
 				cons.gridy++;
 			}
 		} else {

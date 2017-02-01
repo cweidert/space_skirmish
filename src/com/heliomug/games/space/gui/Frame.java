@@ -59,6 +59,14 @@ public class Frame extends JFrame implements MessageDisplayer {
 			getClient().sendCommand(new CommandPlayer(player));
 		}
 	}
+
+	public static void removeLocalPlayer(Player player) {
+		if (getClient() != null) {
+			getFrame().localPlayers.remove(player);
+			getFrame().controlAssignments.remove(player);
+			getClient().sendCommand(new CommandPlayer(player, false));
+		}
+	}
 	
 	public static List<Player> getLocalPlayers() {
 		return getFrame().localPlayers;
