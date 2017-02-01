@@ -21,8 +21,8 @@ import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
-public class PanelListLocalPlayer extends UpdatingPanel {
-	public PanelListLocalPlayer() {
+public class PanelListLocalPlayers extends UpdatingPanel {
+	public PanelListLocalPlayers() {
 		super(new GridBagLayout());
 		EtchedPanel.addEtch(this, "Local Player List");
 	}

@@ -16,7 +16,8 @@ public class ThingHost<T extends Serializable> implements Serializable {
 	private static final int THREAD_SLEEP_TIME = 1;
 	
 	private int port;
-	private InetAddress address;
+	private InetAddress externalAddress;
+	private InetAddress lanAddress;
 	private T thing;
 	private MessageDisplayer displayer; 
 	
@@ -38,11 +39,16 @@ public class ThingHost<T extends Serializable> implements Serializable {
 		this.displayer = displayer;
 		this.port = port;
 		clientServers = new ArrayList<>();
-		address = Utils.getExternalAddress();//serverSocket.getInetAddress();
+		externalAddress = NetworkUtils.getExternalAddress();
+		lanAddress = NetworkUtils.getLanAddress();
 	}
 
-	public InetAddress getAddress() {
-		return address;
+	public InetAddress getExternalAddress() {
+		return externalAddress;
+	}
+	
+	public InetAddress getLanAddress() {
+		return lanAddress;
 	}
 	
 	public int getPort() {
@@ -81,7 +87,7 @@ public class ThingHost<T extends Serializable> implements Serializable {
 		Thread t = new Thread(() -> {
 			try (ServerSocket serverSocket = new ServerSocket(port)) {
 				clientServers = new ArrayList<>();
-				displayer.accept("starting server for " + thing);
+				displayer.accept("starting " + toString());
 				while (true) {
 					Socket incoming = serverSocket.accept();
 					ThingClientServer<T> clientServer = new ThingClientServer<>(incoming, this.thing);
@@ -108,6 +114,6 @@ public class ThingHost<T extends Serializable> implements Serializable {
 	}
 	
 	public String toString() {
-		return String.format("%s @ %s:%d", thing.toString(), address, port);
+		return String.format("Server of %s @ %s or %s port %d", thing.toString(), lanAddress, externalAddress, port);
 	}
 }

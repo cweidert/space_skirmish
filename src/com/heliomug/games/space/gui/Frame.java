@@ -112,7 +112,7 @@ public class Frame extends JFrame implements MessageDisplayer {
 		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
 		
 		tabbedPane.addTab("Game", new TabGame());
-		tabbedPane.addTab("Local Players", new TabLocalPlayers());
+		tabbedPane.addTab("Local Players", new TabPlayers());
 		tabbedPane.addTab("Game Options", new PanelOptions());
 		tabbedPane.addTab("Internet Games", new TabConnections());
 		panel.add(tabbedPane, BorderLayout.CENTER);

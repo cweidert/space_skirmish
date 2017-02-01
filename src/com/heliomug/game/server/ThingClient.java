@@ -22,10 +22,12 @@ public class ThingClient<T extends Serializable> {
 	
 	private String host;
 	private int port;
-	
+
+	/*
 	public ThingClient(ThingHost<T> host) {
 		this(host.getAddress().getHostAddress(), host.getPort());
 	}
+	*/
 	
 	public ThingClient(String host, int port) {
 		this.host = host;

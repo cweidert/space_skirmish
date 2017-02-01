@@ -2,6 +2,7 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.net.InetAddress;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -73,7 +74,8 @@ public class PanelHostMyGame extends EtchedPanel {
 				if (masterClient != null) {
 					masterClient.sendCommand(new CommandAddHost(myServer));
 				}
-				ThingClient<Game> myClient = new ThingClient<Game>(myServer);
+				InetAddress address = InetAddress.getLoopbackAddress();
+				ThingClient<Game> myClient = new ThingClient<Game>(address.getHostAddress(), port);
 				Frame.setClient(myClient);
 				myClient.start((Boolean b) -> {});
 			}

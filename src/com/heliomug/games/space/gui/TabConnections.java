@@ -9,7 +9,7 @@ public class TabConnections extends JPanel {
 	public TabConnections() {
 		super(new BorderLayout());
 
-		add(new PanelListHost(), BorderLayout.NORTH);
+		add(new PanelListHosts(), BorderLayout.NORTH);
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new PanelJoinCustomGame(), BorderLayout.NORTH);

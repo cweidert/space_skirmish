@@ -21,12 +21,16 @@ public abstract class UpdatingPanel extends JPanel {
 	static {
 		panels = new ArrayList<>();
 		timer = new Timer(CYCLE_LENGTH, (ActionEvent e) -> {
-			for (UpdatingPanel panel : panels) {
-				panel.update();
-			}
-			Frame.getFrame().repaint();
+			updateAll();
 		});
 		timer.start();
+	}
+	
+	public static void updateAll() {
+		for (UpdatingPanel panel : panels) {
+			panel.update();
+		}
+		Frame.getFrame().repaint();
 	}
 	
 	public UpdatingPanel(LayoutManager layout) {

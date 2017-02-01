@@ -17,6 +17,7 @@ public class UpdatingButton extends JButton {
 		setFocusable(false);
 		addActionListener((ActionEvent e) -> {
 			command.run();
+			UpdatingPanel.updateAll();
 		});
 	}
 	
