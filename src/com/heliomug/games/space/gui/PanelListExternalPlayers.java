@@ -24,8 +24,8 @@ public class PanelListExternalPlayers extends UpdatingPanel {
 	public void update() {
         removeAll();
         
-        List<Player> externalPlayers = SpaceFrame.getExternalPlayers();
-		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
+        List<Player> externalPlayers = Manager.getExternalPlayers();
+		externalPlayers.removeAll(Manager.getLocalPlayers());
     	if (externalPlayers != null & externalPlayers.size() > 0) {
         	JLabel label;
     		GridBagConstraints cons = new GridBagConstraints();

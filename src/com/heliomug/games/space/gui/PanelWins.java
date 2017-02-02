@@ -20,10 +20,11 @@ public class PanelWins extends UpdatingPanel {
 	@Override
 	public void update() {
         removeAll();
-   		List<Player> players = SpaceFrame.getAllPlayers();
+   		List<Player> players = Manager.getAllPlayers();
     	if (players != null & players.size() > 0) {
 			for (Player player : players) {
-				JLabel label = new JLabel(player.getWinString(), JLabel.CENTER);
+				String winString = players.size() > 8 ? String.valueOf(player.getWins()) : player.getWinString();
+				JLabel label = new JLabel(winString, JLabel.CENTER);
 				label.setOpaque(true);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				label.setBackground(player.getColor());

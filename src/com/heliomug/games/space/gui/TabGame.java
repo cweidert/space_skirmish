@@ -2,6 +2,8 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,6 +28,24 @@ public class TabGame extends JPanel {
 	public void setupGUI() {
 		add(board, BorderLayout.CENTER);
 		add(getOptionPanel(), BorderLayout.SOUTH);
+		
+		setFocusable(true);
+		this.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				Manager.handleKey(e.getKeyCode(), true);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				Manager.handleKey(e.getKeyCode(), false);
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+		});
 	}
 
 	public JPanel getOptionPanel() {
@@ -33,9 +53,9 @@ public class TabGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().start();
+		button = new UpdatingButton("Start Round!", () -> Manager.hasOwnGame(), () -> {
+			if (Manager.hasOwnGame()) {
+				Manager.getGame().start();
 			}
 		});
 		panel.add(button);

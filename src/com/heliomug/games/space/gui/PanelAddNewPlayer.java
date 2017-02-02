@@ -47,7 +47,7 @@ public class PanelAddNewPlayer extends JPanel {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "Joe Schmoe" : name;
 			Color color = colorButton.getColor();
-			SpaceFrame.addLocalPlayer(new Player(name, color));
+			Manager.addLocalPlayer(new Player(name, color));
 			colorButton.resetColor();
 		});
 		panel.add(button);

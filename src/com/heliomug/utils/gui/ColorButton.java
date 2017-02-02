@@ -9,17 +9,16 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
-import com.heliomug.games.space.gui.SpaceFrame;
+import com.heliomug.games.space.gui.FrameSpace;
+import com.heliomug.games.space.gui.Manager;
 
 @SuppressWarnings("serial")
 public class ColorButton extends JButton {
 	private static final List<Color> coolColors = Arrays.asList(new Color[] {
 			Color.ORANGE,
 			Color.YELLOW,
-			new Color(127, 127, 0),
 			Color.GREEN,
 			new Color(0, 127, 0),
-			new Color(0, 127, 127),
 			Color.CYAN,
 			Color.BLUE,
 			new Color(127, 0, 127),
@@ -37,7 +36,7 @@ public class ColorButton extends JButton {
 		resetColor();
 		addActionListener((ActionEvent e) -> {
 			Color newColor = JColorChooser.showDialog(
-                    SpaceFrame.getFrame(),
+					FrameSpace.getFrame(),
                     "Choose Player Color",
                     color);
 			setColor(newColor);
@@ -47,9 +46,9 @@ public class ColorButton extends JButton {
 	public void resetColor() {
 		List<Color> colors = new ArrayList<>();
 		colors.addAll(coolColors);
-		colors.removeAll(SpaceFrame.getPlayerColors());
+		colors.removeAll(Manager.getPlayerColors());
 		if (colors.size() == 0) {
-			setColor(Color.getHSBColor((float) Math.random(), 1.0f, 1.0f));
+			setColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()));
 		} else {
 			setColor(colors.get((int)(Math.random() * colors.size())));
 		}

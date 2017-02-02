@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.heliomug.games.space.ControlConfig;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
 import com.heliomug.utils.gui.PanelUtils;
@@ -30,7 +31,7 @@ public class PanelListLocalPlayers extends UpdatingPanel {
 	@Override
 	public void update() {
         removeAll();
-		List<Player> players = SpaceFrame.getLocalPlayers();
+		List<Player> players = Manager.getLocalPlayers();
         if (players != null & players.size() > 0) {
         	JLabel label;
     		GridBagConstraints cons = new GridBagConstraints();
@@ -78,7 +79,7 @@ public class PanelListLocalPlayers extends UpdatingPanel {
 				add(panel, cons);
 	    		cons.gridx++;
 	    		JButton button = new UpdatingButton("X", () -> true, () -> {
-					SpaceFrame.removeLocalPlayer(player);
+					Manager.removeLocalPlayer(player);
 				});
 				add(button, cons);
 				cons.gridy++;
@@ -92,11 +93,11 @@ public class PanelListLocalPlayers extends UpdatingPanel {
 	private class KeyDisplay extends JPanel {
 		public KeyDisplay(Player player, ShipSignal sig) {
 			super(new BorderLayout());
-			ControlConfig controls = SpaceFrame.getControlConfig(player);
+			ControlConfig controls = Manager.getControlConfig(player);
 
 			setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			JButton button = new UpdatingButton(controls.getKeyString(sig), () -> true, () -> {
-				JDialog dialog = new JDialog(SpaceFrame.getFrame(), "Key Assignment");
+				JDialog dialog = new JDialog(FrameSpace.getFrame(), "Key Assignment");
 				String prompt = String.format("Press %s's button for %s", player.getName(), sig);
 				dialog.add(new JLabel(prompt));
 				dialog.setFocusable(true);

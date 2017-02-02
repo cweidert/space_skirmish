@@ -10,7 +10,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 
@@ -43,7 +42,7 @@ public class PanelHostMyGame extends JPanel {
 		label = new JLabel("Port: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
-		portBox = new JSpinner(new SpinnerNumberModel(MasterServer.GAME_PORT, 1, 65535, 1));
+		portBox = new JSpinner(new SpinnerNumberModel(Manager.GAME_PORT, 1, 65535, 1));
 		portBox.setEditor(new JSpinner.NumberEditor(portBox, "#"));
 		panel.add(portBox);
 		
@@ -55,16 +54,16 @@ public class PanelHostMyGame extends JPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host My Game", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Host My Game", () -> Manager.hasOwnGame(), () -> {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "[no name]" : name;
 			int port = (int) portBox.getValue();
-			SpaceFrame.hostMyGame(name, port);
+			Manager.hostMyGame(name, port);
 		});
 		panel.add(button);
 
-		button = new UpdatingButton("Remove My Hosted Game", () -> SpaceFrame.hasOwnGame(), () -> {
-			SpaceFrame.deleteHostedGame();
+		button = new UpdatingButton("Remove My Hosted Game", () -> Manager.hasOwnGame(), () -> {
+			Manager.deleteHostedGame();
 		});
 		panel.add(button);
 		return panel;

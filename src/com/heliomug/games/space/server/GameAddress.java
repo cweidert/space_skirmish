@@ -55,7 +55,7 @@ public class GameAddress implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, port, name);
+		return Objects.hash(address, port);
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public class GameAddress implements Serializable {
 		}
 		if (other instanceof GameAddress) {
 			GameAddress ga = (GameAddress) other;
-			return ga.address.equals(address) && ga.name.equals(name) && ga.port == port;
+			return ga.address.equals(address) && ga.port == port;
 		}
 		return false;
 	}

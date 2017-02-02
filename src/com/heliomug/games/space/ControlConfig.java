@@ -1,4 +1,4 @@
-package com.heliomug.games.space.gui;
+package com.heliomug.games.space;
 
 import static java.awt.event.KeyEvent.VK_A;
 import static java.awt.event.KeyEvent.VK_D;
@@ -27,9 +27,6 @@ import static java.awt.event.KeyEvent.VK_W;
 import static java.awt.event.KeyEvent.VK_Y;
 
 import java.awt.event.KeyEvent;
-
-import com.heliomug.games.space.Player;
-import com.heliomug.games.space.ShipSignal;
 
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {

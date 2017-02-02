@@ -3,8 +3,6 @@ package com.heliomug.games.space.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import com.heliomug.games.space.Game;
 import com.heliomug.utils.gui.WeidertPanel;
@@ -33,24 +31,7 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	
 	private void setupGUI() {
 		setBackground(Color.BLACK);
-		setFocusable(true);
 		setDoubleBuffered(true);
-		this.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				SpaceFrame.handleKey(e.getKeyCode(), true);
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				SpaceFrame.handleKey(e.getKeyCode(), false);
-			}
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-		});
 	}
 	
 	public void setAutoZoom(boolean b) {
@@ -64,7 +45,7 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 
-		Game game = SpaceFrame.getGame();
+		Game game = Manager.getGame();
 		if (game != null && game.isActive()) {
 			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {
 				if (game.getOptions().isWrap()) {
