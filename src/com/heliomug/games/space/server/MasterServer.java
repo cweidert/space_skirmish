@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.heliomug.utils.server.Server;
 
 public class MasterServer extends Server<CopyOnWriteArrayList<GameAddress>> {
-	public static final String MASTER_HOST = "http://192.168.1.6";//http://home.heliomug.com";
+	public static final String MASTER_HOST_HOME = "http://home.heliomug.com";
 	public static final int MASTER_PORT = 27961;
 	public static final int GAME_PORT = 27960;
 	
@@ -13,7 +13,7 @@ public class MasterServer extends Server<CopyOnWriteArrayList<GameAddress>> {
 		super(serverList, MASTER_PORT);
 	}
 
-	public static void startMasterHost() {
+	public static void startMasterServer() {
 		CopyOnWriteArrayList<GameAddress> serverList = new CopyOnWriteArrayList<>();
 		MasterServer masterHost = new MasterServer(serverList);
 		masterHost.start();

@@ -6,7 +6,7 @@ import com.heliomug.games.space.server.MasterServer;
 
 public class MainSpace {
 	public static void main(String[] args) {
-		MasterServer.startMasterHost();
+		MasterServer.startMasterServer();
 
 		EventQueue.invokeLater(() -> {
 			SpaceFrame frame = SpaceFrame.getFrame();

@@ -25,6 +25,7 @@ import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.server.Client;
+import com.heliomug.utils.server.NetworkUtils;
 import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
@@ -220,12 +221,17 @@ public class SpaceFrame extends JFrame {
 		
 		InetAddress masterAddress;
 		try {
-			masterAddress = InetAddress.getByName(new URL(MasterServer.MASTER_HOST).getHost());
+			masterAddress = InetAddress.getByName(new URL(MasterServer.MASTER_HOST_HOME).getHost());
 			masterClient = new MasterClient(masterAddress, MasterServer.MASTER_PORT);
 			masterClient.start();
 		} catch (IOException e) {
-			// that's okay, no master client then
-			masterClient = null;
+			try {
+				masterAddress = InetAddress.getByName(NetworkUtils.getExternalAddress().getHostAddress());
+				masterClient = new MasterClient(masterAddress, MasterServer.MASTER_PORT);
+				masterClient.start();
+			} catch (IOException e1) {
+				masterClient = null;
+			}
 		}
 		
 		server = null;
