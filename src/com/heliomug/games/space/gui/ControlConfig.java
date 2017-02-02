@@ -86,6 +86,8 @@ public class ControlConfig {
 			return keyToString(rightKey);
 		} else if (sig == ShipSignal.FORWARD) {
 			return keyToString(forwardKey);
+		} else if (sig == ShipSignal.BACKWARDS) {
+			return keyToString(backKey);
 		} else if (sig == ShipSignal.FIRE) {
 			return keyToString(fireKey);
 		} else {
@@ -102,6 +104,8 @@ public class ControlConfig {
 			forwardKey = key;
 		} else if (sig == ShipSignal.FIRE) {
 			fireKey = key;
+		} else if (sig == ShipSignal.BACKWARDS) {
+			backKey = key;
 		} 
 	}
 	
