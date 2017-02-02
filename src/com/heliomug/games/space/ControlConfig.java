@@ -27,6 +27,8 @@ import static java.awt.event.KeyEvent.VK_W;
 import static java.awt.event.KeyEvent.VK_Y;
 
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {
@@ -37,6 +39,16 @@ public class ControlConfig {
 		new int[] { VK_NUMPAD4, VK_NUMPAD6, VK_NUMPAD8, VK_NUMPAD5, VK_NUMPAD7},
 //		new int[] { VK_, VK_, VK_, VK_},
 	};
+	
+	private static Map<String, String> replacements;
+	
+	static {
+		replacements = new HashMap<>();
+		for (int i = 0 ; i < 10 ; i++) {
+			replacements.put("NumPad-" + i, "NP-" + i);
+		}
+		replacements.put("Delete", "Del");
+	}
 	
 	Player player;
 	
@@ -73,7 +85,12 @@ public class ControlConfig {
 	}
 	
 	public String keyToString(int key) {
-		return KeyEvent.getKeyText(key);
+		String s = KeyEvent.getKeyText(key);
+		if (replacements.containsKey(s)) {
+			return replacements.get(s);
+		} else {
+			return s;
+		}
 	}
 	
 	public String getKeyString(ShipSignal sig) {

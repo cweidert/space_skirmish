@@ -39,10 +39,10 @@ public class Game implements Serializable, ActionListener {
 	private boolean isActive;
 	private boolean isRoundEnded;
 
-	private GameOptions options;
+	private GameSettings settings;
 	
 	public Game() {
-		options = new GameOptions();
+		settings = new GameSettings();
 		sprites = new CopyOnWriteArrayList<>();
 		players = new CopyOnWriteArrayList<>();
 		shipAssignments = new ConcurrentHashMap<>();
@@ -54,8 +54,8 @@ public class Game implements Serializable, ActionListener {
 		timer.start();
 	}
 
-	public GameOptions getOptions() {
-		return options;
+	public GameSettings getSettings() {
+		return settings;
 	}
 	
 	public boolean isActive() {
@@ -76,10 +76,10 @@ public class Game implements Serializable, ActionListener {
 	
 	
 	public Rectangle2D getBounds() {
-		double minX = options.getLeft();
-		double maxX = options.getRight();
-		double minY = options.getBottom();
-		double maxY = options.getTop();
+		double minX = settings.getLeft();
+		double maxX = settings.getRight();
+		double minY = settings.getBottom();
+		double maxY = settings.getTop();
 		for (Ship ship : shipAssignments.values()) {
 			if (ship.isAlive()) {
 				double x = ship.getPosition().getX();
@@ -91,8 +91,8 @@ public class Game implements Serializable, ActionListener {
 			}
 		}
 		
-		double w = options.getBufferWidth();
-		double h = options.getBufferHeight();
+		double w = settings.getBufferWidth();
+		double h = settings.getBufferHeight();
 		
 		return new Rectangle2D.Double(minX - w, minY - h, maxX - minX + w * 2, maxY - minY + w * 2);
 	}
@@ -144,8 +144,8 @@ public class Game implements Serializable, ActionListener {
 		isActive = true;
 		
 		sprites.clear();
-		if (options.isPlanet()) {
-			sprites.add(new Planet(new Vec(0, 0), options.isPlanetStationary()));
+		if (settings.isPlanet()) {
+			sprites.add(new Planet(new Vec(0, 0), settings.isPlanetStationary()));
 		}
 		isActive = true;
 		isRoundEnded = false;
@@ -168,7 +168,7 @@ public class Game implements Serializable, ActionListener {
 			long now = System.currentTimeMillis();
 			double dt = (now - lastUpdated) / 1000.0;
 	
-			if (options.isWrap()) {
+			if (settings.isWrap()) {
 				wrapAll();
 			}
 			
@@ -182,7 +182,7 @@ public class Game implements Serializable, ActionListener {
 			
 			removeDead();
 			
-			if (options.isGravity()) {
+			if (settings.isGravity()) {
 				gravitateAll();
 			}
 			
@@ -192,7 +192,7 @@ public class Game implements Serializable, ActionListener {
 			
 			if (isRoundOver()) {
 				endRound();
-				if (options.isAutoRestart()) {
+				if (settings.isAutoRestart()) {
 					isActive = false;
 					reset();
 				}
@@ -227,7 +227,7 @@ public class Game implements Serializable, ActionListener {
 	
 	private void wrapAll() {
 		for (Sprite sprite : sprites) {
-			sprite.wrapTo(options.getWrapBounds());
+			sprite.wrapTo(settings.getWrapBounds());
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class Game implements Serializable, ActionListener {
 	private Vec gForce(Sprite a, Sprite b) {
 		Vec diff = b.getPosition().sub(a.getPosition());
 		double dist = diff.mag();
-		double mag = options.getBigG() * a.getMass() * b.getMass() / (dist * dist);
+		double mag = settings.getBigG() * a.getMass() * b.getMass() / (dist * dist);
 		return diff.norm().mult(mag);
 	}
 	
@@ -325,7 +325,7 @@ public class Game implements Serializable, ActionListener {
 	
 	public void draw(Graphics2D g) {
 		g.setColor(BOUNDS_COLOR);
-		g.draw(options.getWrapBounds());
+		g.draw(settings.getWrapBounds());
 		/*
 		if (options.isKillZone()) {
 			g.setColor(KILL_ZONE_COLOR);

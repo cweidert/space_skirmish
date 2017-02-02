@@ -2,6 +2,7 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,23 +20,23 @@ public class PanelAddNewPlayer extends JPanel {
 	private ColorButton colorButton;
 	
 	public PanelAddNewPlayer() {
-		super(new BorderLayout());
+		super(new FlowLayout());
 		
 		PanelUtils.addEtch(this, "Add New Player");
 
-		add(getOptionsPanel(), BorderLayout.CENTER);
-		add(getButtonPanel(), BorderLayout.SOUTH);
+		add(getOptionsPanel());
+		add(getButtonPanel());
 	}
 	
 	public JPanel getOptionsPanel() {
 		JPanel panel = new JPanel();
 		JLabel label;
-		label = new JLabel("Player Name: ");
+		label = new JLabel("Name: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
-		nameBox = new JTextField(30);
+		nameBox = new JTextField(25);
 		panel.add(nameBox);
-		panel.add(new JLabel("Player Color: "));
+		panel.add(new JLabel("Color: "));
 		colorButton = new ColorButton();
 		panel.add(colorButton);
 		return panel;

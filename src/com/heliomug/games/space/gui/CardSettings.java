@@ -3,56 +3,63 @@ package com.heliomug.games.space.gui;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.heliomug.games.space.GameOptions;
+import com.heliomug.games.space.GameSettings;
 import com.heliomug.utils.gui.PanelUtils;
+import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 import com.heliomug.utils.gui.UpdatingSlider;
 
 @SuppressWarnings("serial")
-public class PanelOptions extends JPanel {
-	public PanelOptions() {
+public class CardSettings extends JPanel {
+	public CardSettings() {
 		super(new BorderLayout());
 		PanelUtils.addEtch(this, "Game Settings");
 
-		JPanel optionPanel = new JPanel(new GridLayout(0, 1));
+		add(getSettingsPanel(), BorderLayout.CENTER);
+		add(getOptionsPanel(), BorderLayout.SOUTH);
+	}
+	
+	public JPanel getSettingsPanel() {
+		JPanel panel = new JPanel(new GridLayout(0, 1));
 		
 		UpdatingCheckBox box;
 		
 		box = new UpdatingCheckBox("Planet", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getOptions().setPlanet(b);
+				SpaceFrame.getGame().getSettings().setPlanet(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanet();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isPlanet();
 		});
-		optionPanel.add(box);
+		panel.add(box);
 		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getOptions().setPlanetStationary(b);
+				SpaceFrame.getGame().getSettings().setPlanetStationary(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanetStationary();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isPlanetStationary();
 		});
-		optionPanel.add(box);
+		panel.add(box);
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getOptions().setGravity(b);
+				SpaceFrame.getGame().getSettings().setGravity(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isGravity();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isGravity();
 		});
-		optionPanel.add(box);
+		panel.add(box);
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getOptions().setWrap(b);
+				SpaceFrame.getGame().getSettings().setWrap(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isWrap();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isWrap();
 		});
-		optionPanel.add(box);
+		panel.add(box);
 		/*
 		box = new UpdatingCheckBox("Kill Zone", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
@@ -65,27 +72,27 @@ public class PanelOptions extends JPanel {
 		*/
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
 			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getOptions().setAutoRestart(b);
+				SpaceFrame.getGame().getSettings().setAutoRestart(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isAutoRestart();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isAutoRestart();
 		});
-		optionPanel.add(box);
-		JPanel panel;
+		panel.add(box);
+		JPanel subpanel;
 		UpdatingSlider slider;
-		panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
-		slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
-			SpaceFrame.getGame().getOptions().setBigG(i);
+		subpanel = new JPanel(new BorderLayout());
+		subpanel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
+		slider = new UpdatingSlider(0, GameSettings.MAX_BIG_G, GameSettings.DEFAULT_BIG_G, (Integer i) -> {
+			SpaceFrame.getGame().getSettings().setBigG(i);
 		}, () -> {
 			if (SpaceFrame.hasOwnGame()) {
-				return GameOptions.DEFAULT_BIG_G;
+				return GameSettings.DEFAULT_BIG_G;
 			} else {
-				return SpaceFrame.getGame().getOptions().getBigG();
+				return SpaceFrame.getGame().getSettings().getBigG();
 			}
 		});
-		panel.add(slider, BorderLayout.CENTER);
-		optionPanel.add(panel);
+		subpanel.add(slider, BorderLayout.CENTER);
+		panel.add(subpanel);
 		/*
 		panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel("Kill Zone Ratio"), BorderLayout.WEST);
@@ -107,6 +114,21 @@ public class PanelOptions extends JPanel {
 		panel.add(slider, BorderLayout.CENTER);
 		optionPanel.add(panel);
 		*/
-		add(optionPanel, BorderLayout.SOUTH);
+		
+		return panel;
+	}
+
+	public JPanel getOptionsPanel() {
+		JPanel panel = new JPanel(new GridLayout(1, 0));
+
+		JButton button; 
+		
+		button = new UpdatingButton("Return to Game", () -> {
+			SpaceFrame.setCard(SpaceFrame.GAME_CARD);
+		});
+		panel.add(button);
+		
+		return panel;
 	}
 }
+

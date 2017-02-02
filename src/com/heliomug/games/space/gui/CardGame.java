@@ -12,12 +12,12 @@ import javax.swing.JPanel;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 
-public class TabGame extends JPanel { 
+public class CardGame extends JPanel { 
 	private static final long serialVersionUID = -4501673998714242701L;
 	
 	private PanelGame board;
 	
-	public TabGame() {
+	public CardGame() {
 		super(new BorderLayout());
 
 		board = new PanelGame();
@@ -53,10 +53,25 @@ public class TabGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Start!", () -> SpaceFrame.hasOwnGame(), () -> {
 			if (SpaceFrame.hasOwnGame()) {
 				SpaceFrame.getGame().start();
 			}
+		});
+		panel.add(button);
+		
+		button = new UpdatingButton("Players", () -> {
+			SpaceFrame.setCard(SpaceFrame.PLAYER_CARD);
+		});
+		panel.add(button);
+		
+		button = new UpdatingButton("Settings", () -> {
+			SpaceFrame.setCard(SpaceFrame.SETTINGS_CARD);
+		});
+		panel.add(button);
+		
+		button = new UpdatingButton("Internet", () -> {
+			SpaceFrame.setCard(SpaceFrame.CONNECTIONS_CARD);
 		});
 		panel.add(button);
 		

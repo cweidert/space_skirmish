@@ -2,7 +2,6 @@ package com.heliomug.games.space.gui;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -10,19 +9,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heliomug.games.space.Player;
-import com.heliomug.utils.gui.PanelUtils;
-import com.heliomug.utils.gui.UpdatingPanel;
+import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
-public class PanelListExternalPlayers extends UpdatingPanel {
+public class PanelListExternalPlayers extends UpdatingScrollPanel {
 	public PanelListExternalPlayers() {
-		super(new GridBagLayout());
-		PanelUtils.addEtch(this, "External Players");
+		super("External Players");
 	}
 	
 	@Override
 	public void update() {
-        removeAll();
+        JPanel panel = getListPanel();
+		panel.removeAll();
         
         List<Player> externalPlayers = SpaceFrame.getExternalPlayers();
 		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
@@ -34,9 +32,9 @@ public class PanelListExternalPlayers extends UpdatingPanel {
     		cons.weightx = 1;
     		
     		cons.gridx = 0;
-    		add(new JLabel("Name", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Name", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Color", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Color", JLabel.CENTER), cons);
     		
     		cons.gridy++;
     		
@@ -44,15 +42,16 @@ public class PanelListExternalPlayers extends UpdatingPanel {
 				cons.gridx = 0;
 				label = new JLabel(player.getName(), JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				panel.add(label, cons);
 	    		cons.gridx++;
-				JPanel panel = new JPanel();
-				panel.setBackground(player.getColor());
-				add(panel, cons);
+				JPanel colorPanel = new JPanel();
+				colorPanel.setBackground(player.getColor());
+				colorPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				panel.add(panel, cons);
 				cons.gridy++;
 			}
     	} else {
-			add(new JLabel("no external players yet!"));
+			panel.add(new JLabel("no external players yet!"));
     	}
         revalidate();
 	}

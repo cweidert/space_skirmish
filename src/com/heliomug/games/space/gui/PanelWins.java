@@ -15,6 +15,12 @@ public class PanelWins extends UpdatingPanel {
 	public PanelWins() {
 		super(new GridLayout(1, 0));
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		setBackground(Color.BLACK);
+		JLabel label = new JLabel("no players yet", JLabel.CENTER);
+		label.setBackground(Color.GRAY);
+		label.setOpaque(true);
+		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		add(label);
 	}
 	
 	@Override
@@ -31,9 +37,14 @@ public class PanelWins extends UpdatingPanel {
 				add(label);
 			}
     	} else {
-			add(new JLabel("no players!"));
+			JLabel label = new JLabel("no players yet", JLabel.CENTER);
+			label.setBackground(Color.GRAY);
+			label.setOpaque(true);
+			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			add(label);
     	}
         revalidate();
+        repaint();
 	}
 
 }

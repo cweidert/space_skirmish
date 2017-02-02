@@ -3,7 +3,7 @@ package com.heliomug.games.space;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-public class GameOptions implements Serializable {
+public class GameSettings implements Serializable {
 	private static final long serialVersionUID = 7655574152522563536L;
 
 	public static final double DEFAULT_WIDTH = 256;
@@ -35,7 +35,7 @@ public class GameOptions implements Serializable {
 	private double height;
 	//private double killZoneRatio;
 	
-	public GameOptions() {
+	public GameSettings() {
 		isGravity = DEFAULT_IS_GRAVITY;
 		isWrap = DEFAULT_IS_WRAP;
 		isPlanet = DEFAULT_IS_PLANET;

@@ -48,8 +48,8 @@ public class PanelGame extends WeidertPanel implements Runnable {
 		Game game = SpaceFrame.getGame();
 		if (game != null && game.isActive()) {
 			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {
-				if (game.getOptions().isWrap()) {
-					setScreenBounds(game.getOptions().getWrapBounds());
+				if (game.getSettings().isWrap()) {
+					setScreenBounds(game.getSettings().getWrapBounds());
 				} else { 
 					setScreenBounds(game.getBounds());
 				}

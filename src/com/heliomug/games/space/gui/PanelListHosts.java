@@ -2,7 +2,6 @@ package com.heliomug.games.space.gui;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,24 +12,24 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import com.heliomug.games.space.server.GameAddress;
-import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
-import com.heliomug.utils.gui.UpdatingPanel;
+import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
-public class PanelListHosts extends UpdatingPanel {
+public class PanelListHosts extends UpdatingScrollPanel {
 	JTextField addressBox;
 	JSpinner portBox;
 	JButton joinCustomButton;
 	
 	public PanelListHosts() {
-		super(new GridBagLayout());
-		PanelUtils.addEtch(this, "Host List");
+		super("Host List");
+		
 		addressBox = new JTextField("");
 		portBox = new JSpinner(new SpinnerNumberModel(SpaceFrame.GAME_PORT, 1, 65535, 1));
         portBox.setEditor(new JSpinner.NumberEditor(portBox, "#"));
@@ -62,7 +61,9 @@ public class PanelListHosts extends UpdatingPanel {
 		boolean isAddressFocused = addressBox.isFocusOwner();
 		boolean isPortBoxFocused = portBox.isFocusOwner();
 				
-		removeAll();
+		JPanel hostPanel = getListPanel(); 
+
+		hostPanel.removeAll();
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
 		cons.gridy = 0;
@@ -71,16 +72,16 @@ public class PanelListHosts extends UpdatingPanel {
 		JLabel label;
 		cons.gridx = 0;
 		label = new JLabel("Game", JLabel.CENTER);
-		add(label, cons);
+		hostPanel.add(label, cons);
 		cons.gridx = 1;
 		label = new JLabel("External IP Address", JLabel.CENTER);
-		add(label, cons);
+		hostPanel.add(label, cons);
 		cons.gridx = 2;
 		label = new JLabel("Lan IP Address", JLabel.CENTER);
-		add(label, cons);
+		hostPanel.add(label, cons);
 		cons.gridx = 3;
 		label = new JLabel("Port", JLabel.CENTER);
-		add(label, cons);
+		hostPanel.add(label, cons);
 		cons.gridy++;
 
 		List<GameAddress> li = SpaceFrame.getGameAddressList();
@@ -93,41 +94,42 @@ public class PanelListHosts extends UpdatingPanel {
 				cons.gridx = 0;
 				label = new JLabel(gameString, JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				hostPanel.add(label, cons);
 				cons.gridx++;
 				label = new JLabel(externalAddress, JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				hostPanel.add(label, cons);
 				cons.gridx++;
 				label = new JLabel(lanAddress, JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				hostPanel.add(label, cons);
 				cons.gridx++;
 				label = new JLabel(String.valueOf(port), JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				hostPanel.add(label, cons);
 				cons.gridx++;
 		        JButton button = new UpdatingButton("Join Game", () -> {
 		        	SpaceFrame.joinGame(gameAddress);
 		        });
-		        add(button, cons);
+		        hostPanel.add(button, cons);
 		        cons.gridy++;
 			}
 		} 
 		cons.gridx = 0;
 		label = new JLabel("[Unlisted]", JLabel.CENTER);
 		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		add(label, cons);
+		hostPanel.add(label, cons);
 		cons.gridx++;
 		cons.gridwidth = 2;
-		add(addressBox, cons);
+		hostPanel.add(addressBox, cons);
 		cons.gridx += 2;
 		cons.gridwidth = 1;
-		add(portBox, cons);
+		hostPanel.add(portBox, cons);
         cons.gridx++;
-        add(joinCustomButton, cons);
+        hostPanel.add(joinCustomButton, cons);
         cons.gridy++;
-		revalidate();
+        hostPanel.revalidate();
+        repaint();
 		
 		if (isAddressFocused) {
 			addressBox.requestFocusInWindow();
