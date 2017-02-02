@@ -73,7 +73,7 @@ public class SpaceFrame extends JFrame {
 	
 
 	public static boolean isServing() {
-		return getFrame().server != null;
+		return server != null;
 	}
 	
 	public static void hostMyGame(String name, int port) {

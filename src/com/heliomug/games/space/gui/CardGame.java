@@ -53,7 +53,7 @@ public class CardGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start!", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
 			if (SpaceFrame.hasOwnGame()) {
 				SpaceFrame.getGame().start();
 			}
@@ -65,7 +65,7 @@ public class CardGame extends JPanel {
 		});
 		panel.add(button);
 		
-		button = new UpdatingButton("Settings", () -> {
+		button = new UpdatingButton("Settings", () -> SpaceFrame.hasOwnGame(), () -> {
 			SpaceFrame.setCard(SpaceFrame.SETTINGS_CARD);
 		});
 		panel.add(button);

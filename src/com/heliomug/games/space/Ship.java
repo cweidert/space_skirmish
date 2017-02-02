@@ -14,12 +14,12 @@ public class Ship extends Sprite implements Serializable {
 	private static final double MAX_SPEED = 150.0;
 	private static final double TURN_SPEED = Math.PI;
 	
-	private static final double TUR_RAD = 5;
-	private static final double SHIP_RAD = 3;
+	private static final double TUR_RAD = 7;
+	private static final double SHIP_RAD = 5;
 
 	private static final double BOOST_FORCE = 100;
-	private static final double BOOST_RAD = 3;
-	private static final float BOOST_WIDTH = 2;
+	private static final double BOOST_RAD = 5;
+	private static final float BOOST_WIDTH = 4;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
 	
 	private static final double BULLET_SPEED = 75;

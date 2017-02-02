@@ -5,7 +5,7 @@ import java.awt.Color;
 public class Bullet extends Sprite {
 	private static final long serialVersionUID = -7116875414850194040L;
 
-	private static final double BULLET_RADIUS = .5;
+	private static final double BULLET_RADIUS = 1;
 	private static final double BULLET_MASS = .01;
 	
 	private static final double DEFAULT_PUNCH = 10;

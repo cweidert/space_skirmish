@@ -17,7 +17,6 @@ import com.heliomug.utils.gui.UpdatingSlider;
 public class CardSettings extends JPanel {
 	public CardSettings() {
 		super(new BorderLayout());
-		PanelUtils.addEtch(this, "Game Settings");
 
 		add(getSettingsPanel(), BorderLayout.CENTER);
 		add(getOptionsPanel(), BorderLayout.SOUTH);
@@ -25,6 +24,7 @@ public class CardSettings extends JPanel {
 	
 	public JPanel getSettingsPanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
+		PanelUtils.addEtch(panel, "Game Settings");
 		
 		UpdatingCheckBox box;
 		
