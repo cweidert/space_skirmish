@@ -44,8 +44,11 @@ public class Address implements Serializable {
 	}
 	
 	public boolean isLocal() {
-		return externalAddress.equals(NetworkUtils.getExternalAddress()) && 
-				lanAddress.equals(NetworkUtils.getLanAddress());
+		if (externalAddress.equals(NetworkUtils.getExternalAddress()) || 
+				externalAddress.isSiteLocalAddress()) {
+				return lanAddress.equals(NetworkUtils.getLanAddress());
+		} 
+		return false;
 	}
 	
 	@Override

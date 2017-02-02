@@ -17,8 +17,14 @@ public class GameAddress implements Serializable {
 	private int port;
 	private String name;
 	
+	
+	
 	public GameAddress(Server<Game> server) {
-		this(server.getAddress(), server.getPort(), server.getThing().getName());
+		this(server, "");
+	}
+	
+	public GameAddress(Server<Game> server, String name) {
+		this(server.getAddress(), server.getPort(), name);
 	}
 	
 	public GameAddress(Address address, int port, String name) {
@@ -72,4 +78,7 @@ public class GameAddress implements Serializable {
 		return client;
 	}
 	
+	public String toString() {
+		return String.format("%s @ %s : %s", name, address, port);
+	}
 }

@@ -34,10 +34,11 @@ public class PanelHostMyGame extends JPanel {
 	public JPanel getOptionsPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 0));
 		JLabel label;
-		label = new JLabel("Game Name: ");
+		label = new JLabel("Name: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
 		nameBox = new JTextField("");
+		nameBox.grabFocus();
 		panel.add(nameBox);
 		label = new JLabel("Port: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);

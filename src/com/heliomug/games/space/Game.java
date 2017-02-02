@@ -26,8 +26,6 @@ public class Game implements Serializable, ActionListener {
 	public static final Color BOUNDS_COLOR = Color.RED;
 	public static final Color KILL_ZONE_COLOR = Color.RED;
 	
-	private String name;
-	
 	private List<Sprite> sprites; 
 	
 	private List<Player> players;
@@ -44,16 +42,11 @@ public class Game implements Serializable, ActionListener {
 	private GameOptions options;
 	
 	public Game() {
-		this("[no name]");
-	}
-	
-	public Game(String name) {
 		options = new GameOptions();
 		sprites = new CopyOnWriteArrayList<>();
 		players = new CopyOnWriteArrayList<>();
 		shipAssignments = new ConcurrentHashMap<>();
 		updates = 0;
-		this.name = name;
 		isActive = false;
 		isRoundEnded = true;
 		
@@ -67,14 +60,6 @@ public class Game implements Serializable, ActionListener {
 	
 	public boolean isActive() {
 		return this.isActive;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getName() {
-		return name;
 	}
 	
 	public int getUpdates() {
@@ -368,6 +353,6 @@ public class Game implements Serializable, ActionListener {
 	
 	@Override
 	public String toString() {
-		return String.format("Game %s", name);
+		return "Game with " + players.size() + " players";
 	}
 }

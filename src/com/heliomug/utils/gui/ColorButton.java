@@ -2,6 +2,9 @@ package com.heliomug.utils.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -10,7 +13,22 @@ import com.heliomug.games.space.gui.SpaceFrame;
 
 @SuppressWarnings("serial")
 public class ColorButton extends JButton {
-
+	private static final List<Color> coolColors = Arrays.asList(new Color[] {
+			Color.ORANGE,
+			Color.YELLOW,
+			new Color(127, 127, 0),
+			Color.GREEN,
+			new Color(0, 127, 0),
+			new Color(0, 127, 127),
+			Color.CYAN,
+			Color.BLUE,
+			new Color(127, 0, 127),
+			Color.MAGENTA,
+			Color.PINK,
+			Color.GRAY,
+			Color.WHITE,
+	});
+	
 	private Color color;
 	
 	public ColorButton() {
@@ -27,7 +45,14 @@ public class ColorButton extends JButton {
 	}
 	
 	public void resetColor() {
-		setColor(Color.getHSBColor((float) Math.random(), 1.0f, 1.0f));
+		List<Color> colors = new ArrayList<>();
+		colors.addAll(coolColors);
+		colors.removeAll(SpaceFrame.getPlayerColors());
+		if (colors.size() == 0) {
+			setColor(Color.getHSBColor((float) Math.random(), 1.0f, 1.0f));
+		} else {
+			setColor(colors.get((int)(Math.random() * colors.size())));
+		}
 	}
 	
 	public void setColor(Color c) {

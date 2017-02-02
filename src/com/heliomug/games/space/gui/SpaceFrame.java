@@ -1,6 +1,7 @@
 package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
@@ -69,11 +70,10 @@ public class SpaceFrame extends JFrame {
 
 	public static void hostMyGame(String name, int port) {
 		setServer(null);
-		ownGame.setName(name);
 		Server<Game> myServer = new Server<Game>(ownGame, port);
 		myServer.start();
 		setServer(myServer);
-		GameAddress gameAddress = new GameAddress(server);
+		GameAddress gameAddress = new GameAddress(server, name);
 		if (masterClient != null) {
 			Thread t = new Thread(() -> {
 				try {
@@ -94,16 +94,19 @@ public class SpaceFrame extends JFrame {
 	public static void joinGame(GameAddress address) {
 		if (address.isLocal() && server != null && address.getPort() == server.getPort()) {
 			String message = "That's your local game, dude.  You're hosting on that bad boy.";
-			JOptionPane.showMessageDialog(theFrame, message, "Whoops", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(theFrame, message, "Whoops", JOptionPane.WARNING_MESSAGE);
 		} else {
-			try {
-				Client<Game> newClient = address.getClientFor();
-				newClient.start();
-				setClient(newClient);
-			} catch (IOException e) {
-				System.err.println("could not connect to game");
-				e.printStackTrace();
-			}
+			Thread t = new Thread(() -> {
+				try {
+					Client<Game> newClient = address.getClientFor();
+					newClient.start();
+					setClient(newClient);
+				} catch (IOException e) {
+					String message = "Couldn't connect to that game.";
+					JOptionPane.showMessageDialog(theFrame, message, "Whoops", JOptionPane.WARNING_MESSAGE);
+				}
+			});
+			t.start();
 		}
 	}
 	
@@ -174,6 +177,14 @@ public class SpaceFrame extends JFrame {
 			all.removeAll(localPlayers);
 			return all;
 		}
+	}
+	
+	public static List<Color> getPlayerColors() {
+		List<Color> colors = new ArrayList<>();
+		for (Player player : getAllPlayers()) {
+			colors.add(player.getColor());
+		}
+		return colors;
 	}
 	
 	public static ControlConfig getControlConfig(Player player) {
