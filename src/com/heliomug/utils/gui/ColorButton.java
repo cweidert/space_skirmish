@@ -13,18 +13,23 @@ import com.heliomug.games.space.gui.SpaceFrame;
 
 @SuppressWarnings("serial")
 public class ColorButton extends JButton {
-	private static final List<Color> coolColors = Arrays.asList(new Color[] {
-			Color.ORANGE,
-			Color.YELLOW,
-			Color.GREEN,
-			new Color(0, 127, 0),
-			Color.CYAN,
-			Color.BLUE,
-			new Color(127, 0, 127),
-			Color.MAGENTA,
-			Color.PINK,
-			Color.GRAY,
-			Color.WHITE,
+	private static final List<Color> primaryColors = Arrays.asList(new Color[] {
+			new Color(0xff, 0xff, 0xff),
+			new Color(0xff, 0xff, 0x00),
+			new Color(0xff, 0x80, 0x00),
+			new Color(0x80, 0xff, 0x00),
+			new Color(0xff, 0x00, 0xff),
+			new Color(0x00, 0xff, 0xff),
+			new Color(0x00, 0x80, 0xff),
+	});
+	
+	private static final List<Color> secondaryColors = Arrays.asList(new Color[] {
+			new Color(0x00, 0x64, 0x00),
+			new Color(0x80, 0x00, 0x00),
+			new Color(0x80, 0x80, 0x00),
+			new Color(0x80, 0x80, 0x80),
+			new Color(0x80, 0x00, 0xff),
+			new Color(0x00, 0x00, 0xff),
 	});
 	
 	private Color color;
@@ -44,8 +49,12 @@ public class ColorButton extends JButton {
 	
 	public void resetColor() {
 		List<Color> colors = new ArrayList<>();
-		colors.addAll(coolColors);
+		colors.addAll(primaryColors);
 		colors.removeAll(SpaceFrame.getPlayerColors());
+		if (colors.size() == 0) {
+			colors.addAll(secondaryColors);
+			colors.removeAll(SpaceFrame.getPlayerColors());
+		}
 		if (colors.size() == 0) {
 			setColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()));
 		} else {

@@ -246,20 +246,23 @@ public class SpaceFrame extends JFrame {
 	private SpaceFrame() {
 		super("Networked Space Game");
 		
-		InetAddress masterAddress;
-		try {
-			masterAddress = InetAddress.getByName(new URL(MASTER_HOST_HOME).getHost());
-			masterClient = new MasterClient(masterAddress, MASTER_PORT);
-			masterClient.start();
-		} catch (IOException e) {
+		Thread t = new Thread(() -> {
+			InetAddress masterAddress;
 			try {
-				masterAddress = InetAddress.getByName(NetworkUtils.getExternalAddress().getHostAddress());
+				masterAddress = InetAddress.getByName(new URL(MASTER_HOST_HOME).getHost());
 				masterClient = new MasterClient(masterAddress, MASTER_PORT);
 				masterClient.start();
-			} catch (IOException e1) {
-				masterClient = null;
+			} catch (IOException e) {
+				try {
+					masterAddress = InetAddress.getByName(NetworkUtils.getExternalAddress().getHostAddress());
+					masterClient = new MasterClient(masterAddress, MASTER_PORT);
+					masterClient.start();
+				} catch (IOException e1) {
+					masterClient = null;
+				}
 			}
-		}
+		});
+		t.start();
 		
 		server = null;
 		client = null;
