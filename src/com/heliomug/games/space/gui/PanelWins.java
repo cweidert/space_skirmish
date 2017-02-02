@@ -20,22 +20,18 @@ public class PanelWins extends UpdatingPanel {
 	@Override
 	public void update() {
         removeAll();
-        if (SpaceFrame.getClient() != null && SpaceFrame.getClient().getThing() != null) {
-    		List<Player> players = SpaceFrame.getClient().getThing().getPlayers();
-        	if (players != null & players.size() > 0) {
-				for (Player player : players) {
-					JLabel label = new JLabel(player.getWinString(), JLabel.CENTER);
-					label.setOpaque(true);
-					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					label.setBackground(player.getColor());
-					add(label);
-				}
-        	} else {
-    			add(new JLabel("no players!"));
-        	}
-		} else {
+   		List<Player> players = SpaceFrame.getAllPlayers();
+    	if (players != null & players.size() > 0) {
+			for (Player player : players) {
+				JLabel label = new JLabel(player.getWinString(), JLabel.CENTER);
+				label.setOpaque(true);
+				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				label.setBackground(player.getColor());
+				add(label);
+			}
+    	} else {
 			add(new JLabel("no players!"));
-		}
+    	}
         revalidate();
 	}
 

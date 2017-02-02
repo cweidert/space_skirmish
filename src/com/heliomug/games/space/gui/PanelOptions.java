@@ -22,53 +22,53 @@ public class PanelOptions extends JPanel {
 		UpdatingCheckBox box;
 		
 		box = new UpdatingCheckBox("Planet", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setPlanet(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setPlanet(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isPlanet();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanet();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setPlanetStationary(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setPlanetStationary(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isPlanetStationary();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanetStationary();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setGravity(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setGravity(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isGravity();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isGravity();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setWrap(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setWrap(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isWrap();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isWrap();
 		});
 		optionPanel.add(box);
 		/*
 		box = new UpdatingCheckBox("Kill Zone", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setKillZone(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().setKillZone(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isKillZone();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().isKillZone();
 		});
 		optionPanel.add(box);
 		*/
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().getOptions().setAutoRestart(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setAutoRestart(b);
 			}
 		}, () -> {
-			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isAutoRestart();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isAutoRestart();
 		});
 		optionPanel.add(box);
 		JPanel panel;
@@ -76,12 +76,12 @@ public class PanelOptions extends JPanel {
 		panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
 		slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
-			SpaceFrame.getServer().getThing().getOptions().setBigG(i);
+			SpaceFrame.getGame().getOptions().setBigG(i);
 		}, () -> {
-			if (SpaceFrame.getServer() == null) {
+			if (SpaceFrame.hasOwnGame()) {
 				return GameOptions.DEFAULT_BIG_G;
 			} else {
-				return SpaceFrame.getServer().getThing().getOptions().getBigG();
+				return SpaceFrame.getGame().getOptions().getBigG();
 			}
 		});
 		panel.add(slider, BorderLayout.CENTER);
@@ -94,13 +94,13 @@ public class PanelOptions extends JPanel {
 				(int)GameOptions.MAX_KILL_ZONE_RATIO * 100, 
 				(int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100, 
 				(Integer i) -> {
-					SpaceFrame.getServer().getThing().getOptions().setKillZoneRatio(i / 100.0);
-					System.out.println(SpaceFrame.getServer().getThing().getOptions().getKillZoneRatio());
+					SpaceFrame.getGame().setKillZoneRatio(i / 100.0);
+					System.out.println(SpaceFrame.getGame().getKillZoneRatio());
 				}, () -> {
 					if (SpaceFrame.getServer() == null) {
 						return (int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100;
 					} else {
-						return (int)(SpaceFrame.getServer().getThing().getOptions().getKillZoneRatio() * 100);
+						return (int)(SpaceFrame.getGame().getKillZoneRatio() * 100);
 					}
 				}
 		);

@@ -69,6 +69,10 @@ public class Game implements Serializable, ActionListener {
 		return this.isActive;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getName() {
 		return name;
 	}

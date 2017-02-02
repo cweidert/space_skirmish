@@ -43,14 +43,12 @@ public class PanelAddNewPlayer extends JPanel {
 	
 	public JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
-		JButton button = new UpdatingButton("Add Player", () -> SpaceFrame.getClient() != null, () -> {
-			if (SpaceFrame.getClient() != null) {
-				String name = nameBox.getText();
-				name = name.length() == 0 ? "Joe Schmoe" : name;
-				Color color = colorButton.getColor();
-				SpaceFrame.addLocalPlayer(new Player(name, color));
-				colorButton.resetColor();
-			}
+		JButton button = new UpdatingButton("Add Player", () -> true, () -> {
+			String name = nameBox.getText();
+			name = name.length() == 0 ? "Joe Schmoe" : name;
+			Color color = colorButton.getColor();
+			SpaceFrame.addLocalPlayer(new Player(name, color));
+			colorButton.resetColor();
 		});
 		panel.add(button);
 		return panel;

@@ -10,9 +10,17 @@ public class Address implements Serializable {
 	private InetAddress lanAddress;
 	private InetAddress externalAddress;
 	
+	public Address(InetAddress lan, InetAddress ext) {
+		lanAddress = lan;
+		externalAddress = ext;
+	}
+	
+	public Address(InetAddress addr) {
+		this(addr, addr);
+	}
+	
 	public Address() {
-		externalAddress = NetworkUtils.getExternalAddress();
-		lanAddress = NetworkUtils.getLanAddress();
+		this(NetworkUtils.getLanAddress(), NetworkUtils.getExternalAddress());
 	}
 	
 	public InetAddress getExternalAddress() {
@@ -25,10 +33,19 @@ public class Address implements Serializable {
 	
 	public InetAddress getIP() {
 		if (externalAddress.equals(NetworkUtils.getExternalAddress())) {
-			return lanAddress;
+			if (lanAddress.equals(NetworkUtils.getLanAddress())) {
+				return InetAddress.getLoopbackAddress();
+			} else {
+				return lanAddress;
+			}
 		} else {
 			return externalAddress;
 		}
+	}
+	
+	public boolean isLocal() {
+		return externalAddress.equals(NetworkUtils.getExternalAddress()) && 
+				lanAddress.equals(NetworkUtils.getLanAddress());
 	}
 	
 	@Override

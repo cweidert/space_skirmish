@@ -2,7 +2,6 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,15 +10,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import com.heliomug.games.space.Game;
-import com.heliomug.games.space.server.CommandServer;
-import com.heliomug.games.space.server.GameAddress;
-import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
-import com.heliomug.utils.server.Client;
-import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
 public class PanelHostMyGame extends JPanel {
@@ -61,45 +54,16 @@ public class PanelHostMyGame extends JPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host My Game", () -> SpaceFrame.getServer() == null, () -> {
-			MasterClient masterClient = SpaceFrame.getMasterClient(); 
-			Server<Game> server = SpaceFrame.getServer(); 
-			if (server == null) {
-				String name = nameBox.getText();
-				int port = (int) portBox.getValue();
-				server = SpaceFrame.makeAndSetServer(name, port);
-			}
-			GameAddress gameAddress = new GameAddress(server);
-			if (masterClient != null) {
-				masterClient.sendCommand(new CommandServer(gameAddress));
-			}
-			try {
-				Client<Game> client = gameAddress.getClientFor();
-				client.start();
-				SpaceFrame.setClient(client);
-			} catch (IOException e) {
-				System.err.println("could not connect to my own game");
-				e.printStackTrace();
-			}
+		button = new UpdatingButton("Host My Game", () -> SpaceFrame.hasOwnGame(), () -> {
+			String name = nameBox.getText();
+			name = name.length() == 0 ? "[no name]" : name;
+			int port = (int) portBox.getValue();
+			SpaceFrame.hostMyGame(name, port);
 		});
 		panel.add(button);
 
-		button = new UpdatingButton("Remove My Hosted Game", () -> SpaceFrame.getServer() != null, () -> {
-			MasterClient masterClient = SpaceFrame.getMasterClient(); 
-			Server<Game> server = SpaceFrame.getServer(); 
-			if (server != null) {
-				server.close();
-				SpaceFrame.setServer(null);
-				if (masterClient != null) {
-					GameAddress gameAddress = new GameAddress(server);
-					masterClient.sendCommand(new CommandServer(gameAddress, false));
-				}
-			}
-			Client<Game> client = SpaceFrame.getClient(); 
-			if (client != null) {
-				client.close();
-				SpaceFrame.setClient(null);
-			}
+		button = new UpdatingButton("Remove My Hosted Game", () -> SpaceFrame.hasOwnGame(), () -> {
+			SpaceFrame.deleteHostedGame();
 		});
 		panel.add(button);
 		return panel;

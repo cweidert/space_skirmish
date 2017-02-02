@@ -2,6 +2,7 @@ package com.heliomug.games.space.server;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.util.Objects;
 
 import com.heliomug.games.space.Game;
@@ -26,6 +27,14 @@ public class GameAddress implements Serializable {
 		this.name = name;
 	}
 
+	public GameAddress(InetAddress address, int port) {
+		this(new Address(address), port, "");
+	}
+	
+	public boolean isLocal() {
+		return address.isLocal();
+	}
+	
 	public String getName() {
 		return name;
 	}

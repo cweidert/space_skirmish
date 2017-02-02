@@ -47,7 +47,7 @@ public class Client<T extends Serializable> {
 		clientThread.setDaemon(true);
 		clientThread.start();
 		isActive = true;
-		System.out.println("-Started client on \n\t" + this);
+		System.out.println("-Started client \n\t" + this);
 	}
 	
 	public void close() {

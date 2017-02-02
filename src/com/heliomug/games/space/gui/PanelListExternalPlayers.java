@@ -23,40 +23,37 @@ public class PanelListExternalPlayers extends UpdatingPanel {
 	@Override
 	public void update() {
         removeAll();
-        if (SpaceFrame.getClient() != null && SpaceFrame.getClient().getThing() != null) {
-    		List<Player> externalPlayers = SpaceFrame.getClient().getThing().getPlayers();
-    		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
-        	if (externalPlayers != null & externalPlayers.size() > 0) {
-	        	JLabel label;
-	    		GridBagConstraints cons = new GridBagConstraints();
-	    		cons.fill = GridBagConstraints.BOTH;
-	    		cons.gridy = 0;
-	    		cons.weightx = 1;
-	    		
-	    		cons.gridx = 0;
-	    		add(new JLabel("Name", JLabel.CENTER), cons);
+        
+        List<Player> externalPlayers = SpaceFrame.getExternalPlayers();
+		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
+    	if (externalPlayers != null & externalPlayers.size() > 0) {
+        	JLabel label;
+    		GridBagConstraints cons = new GridBagConstraints();
+    		cons.fill = GridBagConstraints.BOTH;
+    		cons.gridy = 0;
+    		cons.weightx = 1;
+    		
+    		cons.gridx = 0;
+    		add(new JLabel("Name", JLabel.CENTER), cons);
+    		cons.gridx++;
+    		add(new JLabel("Color", JLabel.CENTER), cons);
+    		
+    		cons.gridy++;
+    		
+			for (Player player : externalPlayers) {
+				cons.gridx = 0;
+				label = new JLabel(player.getName(), JLabel.CENTER);
+				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				add(label, cons);
 	    		cons.gridx++;
-	    		add(new JLabel("Color", JLabel.CENTER), cons);
-	    		
-	    		cons.gridy++;
-	    		
-				for (Player player : externalPlayers) {
-					cons.gridx = 0;
-					label = new JLabel(player.getName(), JLabel.CENTER);
-					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					add(label, cons);
-		    		cons.gridx++;
-					JPanel panel = new JPanel();
-					panel.setBackground(player.getColor());
-					add(panel, cons);
-					cons.gridy++;
-				}
-        	} else {
-    			add(new JLabel("no external players yet!"));
-        	}
-		} else {
+				JPanel panel = new JPanel();
+				panel.setBackground(player.getColor());
+				add(panel, cons);
+				cons.gridy++;
+			}
+    	} else {
 			add(new JLabel("no external players yet!"));
-		}
+    	}
         revalidate();
 	}
 }

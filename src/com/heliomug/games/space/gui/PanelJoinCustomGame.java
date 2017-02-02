@@ -2,9 +2,10 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,11 +14,10 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import com.heliomug.games.space.Game;
+import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
-import com.heliomug.utils.server.Client;
 
 @SuppressWarnings("serial")
 public class PanelJoinCustomGame extends JPanel {
@@ -56,19 +56,16 @@ public class PanelJoinCustomGame extends JPanel {
 	
 	public JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
-		JButton button = new UpdatingButton("Join Custom Game", () -> SpaceFrame.getClient() == null, () -> {
-			if (SpaceFrame.getClient() == null) {
-				InetAddress host;
-				try {
-					host = InetAddress.getByName(new URL("http://" + nameBox.getText()).getHost());
-					int port = (int)portBox.getValue();
-					Client<Game> myClient = new Client<Game>(host, port);
-					SpaceFrame.setClient(myClient);
-					myClient.start();
-				} catch (IOException e) {
-					System.err.println("could not connect to custom game");
-					e.printStackTrace();
-				}
+		JButton button = new UpdatingButton("Join Custom Game", () -> true, () -> {
+			InetAddress address;
+			try {
+				address = InetAddress.getByName(new URL("http://" + nameBox.getText()).getHost());
+				int port = (int)portBox.getValue();
+				GameAddress gameAddress = new GameAddress(address, port); 
+				SpaceFrame.joinGame(gameAddress);
+			} catch (UnknownHostException | MalformedURLException e) {
+				System.err.println("unable to connect to game");
+				e.printStackTrace();
 			}
 		});
 		panel.add(button);

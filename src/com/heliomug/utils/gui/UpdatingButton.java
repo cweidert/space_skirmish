@@ -10,6 +10,10 @@ import javax.swing.JButton;
 public class UpdatingButton extends JButton {
 	private Supplier<Boolean> sup;
 	
+	public UpdatingButton(String text, Runnable command) {
+		this(text, () -> true, command);
+	}
+	
 	public UpdatingButton(String text, Supplier<Boolean> sup, Runnable command) {
 		super(text);
 		this.sup = sup;

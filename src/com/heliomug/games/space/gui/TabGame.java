@@ -2,18 +2,13 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import com.heliomug.games.space.Game;
-import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingCheckBox;
-import com.heliomug.utils.server.Client;
-import com.heliomug.utils.server.Server;
 
 public class TabGame extends JPanel { 
 	private static final long serialVersionUID = -4501673998714242701L;
@@ -38,29 +33,9 @@ public class TabGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Create Local Game!", () -> SpaceFrame.getClient() == null, () -> {
-			if (SpaceFrame.getServer() == null) {
-				Server<Game> server = SpaceFrame.makeAndSetServer("[no name]", 27960);
-				Thread t = new Thread(() -> {
-					try {
-						// give it a second for the game to start up
-						Thread.sleep(250);
-						Client<Game> client = new GameAddress(server).getClientFor();
-						client.start();
-						SpaceFrame.setClient(client);
-					} catch (IOException | InterruptedException e) {
-						System.err.println("couldn't set client to own local game");
-						e.printStackTrace();
-					}
-				});
-				t.start();
-			}
-		});
-		panel.add(button);
-
-		button = new UpdatingButton("Start Round!", () -> SpaceFrame.getServer() != null, () -> {
-			if (SpaceFrame.getServer() != null) {
-				SpaceFrame.getServer().getThing().start();
+		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().start();
 			}
 		});
 		panel.add(button);

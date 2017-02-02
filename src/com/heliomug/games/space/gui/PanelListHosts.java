@@ -3,20 +3,16 @@ package com.heliomug.games.space.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import com.heliomug.games.space.Game;
 import com.heliomug.games.space.server.GameAddress;
-import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingPanel;
-import com.heliomug.utils.server.Client;
 
 @SuppressWarnings("serial")
 public class PanelListHosts extends UpdatingPanel {
@@ -27,16 +23,13 @@ public class PanelListHosts extends UpdatingPanel {
 	
 	public void update() {
 		removeAll();
-		MasterClient masterClient = SpaceFrame.getMasterClient(); 
-		Client<Game> client = SpaceFrame.getClient(); 
-
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
 		cons.gridy = 0;
 		cons.weightx = 1;
 		
-		if (masterClient != null) {
-			List<GameAddress> li = masterClient.getThing();
+		if (SpaceFrame.isConnectedToMasterHost()) {
+			List<GameAddress> li = SpaceFrame.getGameAddressList();
 			if (li != null && li.size() > 0) {
 				JLabel label;
 				cons.gridx = 0;
@@ -73,17 +66,8 @@ public class PanelListHosts extends UpdatingPanel {
 					label = new JLabel(String.valueOf(port), JLabel.CENTER);
 					label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					add(label, cons);
-			        JButton button = new UpdatingButton("Join Game", () -> client == null, () -> {
-			        	if (client == null) {
-							try {
-				        		Client<Game> newClient = gameAddress.getClientFor();
-				        		SpaceFrame.setClient(newClient);
-				        		newClient.start();
-							} catch (IOException e) {
-								System.err.println("could not connect to game");
-								e.printStackTrace();
-							}
-			        	}
+			        JButton button = new UpdatingButton("Join Game", () -> {
+			        	SpaceFrame.joinGame(gameAddress);
 			        });
 			        cons.gridx = 4;
 			        add(button, cons);
