@@ -22,35 +22,35 @@ public class PanelOptions extends JPanel {
 		UpdatingCheckBox box;
 		
 		box = new UpdatingCheckBox("Planet", (Boolean b) -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().getOptions().setPlanet(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setPlanet(b);
 			}
 		}, () -> {
-			return Manager.hasOwnGame() && Manager.getGame().getOptions().isPlanet();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanet();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().getOptions().setPlanetStationary(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setPlanetStationary(b);
 			}
 		}, () -> {
-			return Manager.hasOwnGame() && Manager.getGame().getOptions().isPlanetStationary();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isPlanetStationary();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().getOptions().setGravity(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setGravity(b);
 			}
 		}, () -> {
-			return Manager.hasOwnGame() && Manager.getGame().getOptions().isGravity();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isGravity();
 		});
 		optionPanel.add(box);
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().getOptions().setWrap(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setWrap(b);
 			}
 		}, () -> {
-			return Manager.hasOwnGame() && Manager.getGame().getOptions().isWrap();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isWrap();
 		});
 		optionPanel.add(box);
 		/*
@@ -64,11 +64,11 @@ public class PanelOptions extends JPanel {
 		optionPanel.add(box);
 		*/
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().getOptions().setAutoRestart(b);
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().getOptions().setAutoRestart(b);
 			}
 		}, () -> {
-			return Manager.hasOwnGame() && Manager.getGame().getOptions().isAutoRestart();
+			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getOptions().isAutoRestart();
 		});
 		optionPanel.add(box);
 		JPanel panel;
@@ -76,12 +76,12 @@ public class PanelOptions extends JPanel {
 		panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
 		slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
-			Manager.getGame().getOptions().setBigG(i);
+			SpaceFrame.getGame().getOptions().setBigG(i);
 		}, () -> {
-			if (Manager.hasOwnGame()) {
+			if (SpaceFrame.hasOwnGame()) {
 				return GameOptions.DEFAULT_BIG_G;
 			} else {
-				return Manager.getGame().getOptions().getBigG();
+				return SpaceFrame.getGame().getOptions().getBigG();
 			}
 		});
 		panel.add(slider, BorderLayout.CENTER);

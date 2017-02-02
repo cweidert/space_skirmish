@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.heliomug.games.space.ControlConfig;
 import com.heliomug.games.space.Player;
@@ -23,15 +24,21 @@ import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
 public class PanelListLocalPlayers extends UpdatingPanel {
+	private JPanel panel;
+	
 	public PanelListLocalPlayers() {
-		super(new GridBagLayout());
+		super(new BorderLayout());
 		PanelUtils.addEtch(this, "Local Player List");
+		
+		panel = new JPanel(new GridBagLayout());
+		JScrollPane scrollPane = new JScrollPane(panel);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	}
 	
 	@Override
 	public void update() {
-        removeAll();
-		List<Player> players = Manager.getLocalPlayers();
+		panel.removeAll();
+		List<Player> players = SpaceFrame.getLocalPlayers();
         if (players != null & players.size() > 0) {
         	JLabel label;
     		GridBagConstraints cons = new GridBagConstraints();
@@ -40,21 +47,21 @@ public class PanelListLocalPlayers extends UpdatingPanel {
     		cons.weightx = 1;
     		
     		cons.gridx = 0;
-    		add(new JLabel("Name", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Name", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Left", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Left", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Right", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Right", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Forward", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Forward", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Back", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Back", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Fire", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Fire", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Color", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Color", JLabel.CENTER), cons);
     		cons.gridx++;
-    		add(new JLabel("Remove", JLabel.CENTER), cons);
+    		panel.add(new JLabel("Remove", JLabel.CENTER), cons);
     		
     		cons.gridy++;
     		
@@ -62,42 +69,42 @@ public class PanelListLocalPlayers extends UpdatingPanel {
 				cons.gridx = 0;
 				label = new JLabel(player.getName(), JLabel.CENTER);
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				add(label, cons);
+				panel.add(label, cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.TURN_LEFT), cons);
+				panel.add(new KeyDisplay(player, ShipSignal.TURN_LEFT), cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.TURN_RIGHT), cons);
+				panel.add(new KeyDisplay(player, ShipSignal.TURN_RIGHT), cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.FORWARD), cons);
+				panel.add(new KeyDisplay(player, ShipSignal.FORWARD), cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.BACKWARDS), cons);
+				panel.add(new KeyDisplay(player, ShipSignal.BACKWARDS), cons);
 	    		cons.gridx++;
-				add(new KeyDisplay(player, ShipSignal.FIRE), cons);
+				panel.add(new KeyDisplay(player, ShipSignal.FIRE), cons);
 	    		cons.gridx++;
 				JPanel panel = new JPanel();
 				panel.setBackground(player.getColor());
-				add(panel, cons);
+				panel.add(panel, cons);
 	    		cons.gridx++;
 	    		JButton button = new UpdatingButton("X", () -> true, () -> {
-					Manager.removeLocalPlayer(player);
+					SpaceFrame.removeLocalPlayer(player);
 				});
-				add(button, cons);
+				panel.add(button, cons);
 				cons.gridy++;
 			}
 		} else {
-			add(new JLabel("no players yet!"));
+			panel.add(new JLabel("no players yet!"));
 		}
-        revalidate();
+        panel.revalidate();
 	}
 	
 	private class KeyDisplay extends JPanel {
 		public KeyDisplay(Player player, ShipSignal sig) {
 			super(new BorderLayout());
-			ControlConfig controls = Manager.getControlConfig(player);
+			ControlConfig controls = SpaceFrame.getControlConfig(player);
 
 			setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			JButton button = new UpdatingButton(controls.getKeyString(sig), () -> true, () -> {
-				JDialog dialog = new JDialog(FrameSpace.getFrame(), "Key Assignment");
+				JDialog dialog = new JDialog(SpaceFrame.getFrame(), "Key Assignment");
 				String prompt = String.format("Press %s's button for %s", player.getName(), sig);
 				dialog.add(new JLabel(prompt));
 				dialog.setFocusable(true);

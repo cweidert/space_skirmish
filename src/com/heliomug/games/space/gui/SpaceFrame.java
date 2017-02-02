@@ -1,13 +1,20 @@
 package com.heliomug.games.space.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import com.heliomug.games.space.CommandPlayer;
 import com.heliomug.games.space.CommandShip;
@@ -19,14 +26,18 @@ import com.heliomug.games.space.server.CommandServer;
 import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.utils.server.Client;
+import com.heliomug.utils.server.NetworkUtils;
 import com.heliomug.utils.server.Server;
 
-public class Manager {
+@SuppressWarnings("serial")
+public class SpaceFrame extends JFrame {
 	public static final String MASTER_HOST_HOME = "http://home.heliomug.com";
 	public static final int MASTER_PORT = 27961;
 	public static final int GAME_PORT = 27960;
 	
 	public static final int SERVER_DELAY = 250; 
+	
+	private static SpaceFrame theFrame;
 	
 	private static MasterClient masterClient;
 	
@@ -38,6 +49,13 @@ public class Manager {
 	
 	private static Game ownGame;
 	
+	public static SpaceFrame getFrame() {
+		if (theFrame == null) {
+			theFrame = new SpaceFrame();
+		}
+		return theFrame;
+	}
+
 	
 	public static Game getGame() {
 		if (ownGame != null) {
@@ -80,7 +98,7 @@ public class Manager {
 	public static void joinGame(GameAddress address) {
 		if (address.isLocal() && server != null && address.getPort() == server.getPort()) {
 			String message = "That's your local game, dude.  You're hosting on that bad boy.";
-			JOptionPane.showMessageDialog(FrameSpace.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(theFrame, message, "Whoops", JOptionPane.WARNING_MESSAGE);
 		} else {
 			Thread t = new Thread(() -> {
 				try {
@@ -89,7 +107,7 @@ public class Manager {
 					setClient(newClient);
 				} catch (IOException e) {
 					String message = "Couldn't connect to that game.";
-					JOptionPane.showMessageDialog(FrameSpace.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(theFrame, message, "Whoops", JOptionPane.WARNING_MESSAGE);
 				}
 			});
 			t.start();
@@ -179,14 +197,14 @@ public class Manager {
 	
 	
 	private static void setServer(Server<Game> server) {
-		if (Manager.server != null && masterClient != null) {
-			GameAddress gameAddress = new GameAddress(Manager.server);
+		if (SpaceFrame.server != null && masterClient != null) {
+			GameAddress gameAddress = new GameAddress(SpaceFrame.server);
 			masterClient.sendCommand(new CommandServer(gameAddress, false));
 		}
-		if (Manager.server != null) {
-			Manager.server.close();
+		if (SpaceFrame.server != null) {
+			SpaceFrame.server.close();
 		}
-		Manager.server = server;
+		SpaceFrame.server = server;
 	}
 	
 	private static void setClient(Client<Game> newClient) {
@@ -210,5 +228,52 @@ public class Manager {
 		} else {
 			ownGame = null;
 		}
+	}
+	
+	
+	private SpaceFrame() {
+		super("Networked Space Game");
+		
+		InetAddress masterAddress;
+		try {
+			masterAddress = InetAddress.getByName(new URL(MASTER_HOST_HOME).getHost());
+			masterClient = new MasterClient(masterAddress, MASTER_PORT);
+			masterClient.start();
+		} catch (IOException e) {
+			try {
+				masterAddress = InetAddress.getByName(NetworkUtils.getExternalAddress().getHostAddress());
+				masterClient = new MasterClient(masterAddress, MASTER_PORT);
+				masterClient.start();
+			} catch (IOException e1) {
+				masterClient = null;
+			}
+		}
+		
+		server = null;
+		client = null;
+		controlAssignments = new HashMap<>();
+		localPlayers = new ArrayList<>();
+		ownGame = new Game();
+		
+		setupGUI();
+	}
+	
+	private void setupGUI() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel panel = new JPanel(new BorderLayout());
+
+		panel.add(new PanelWins(), BorderLayout.NORTH);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setFocusable(false);
+		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
+		tabbedPane.addTab("Game", new TabGame());
+		tabbedPane.addTab("Local Players", new TabPlayers());
+		tabbedPane.addTab("Game Options", new PanelOptions());
+		tabbedPane.addTab("Internet Games", new TabConnections());
+		panel.add(tabbedPane, BorderLayout.CENTER);
+
+		this.add(panel);
+		pack();
 	}
 }

@@ -9,8 +9,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
-import com.heliomug.games.space.gui.FrameSpace;
-import com.heliomug.games.space.gui.Manager;
+import com.heliomug.games.space.gui.SpaceFrame;
 
 @SuppressWarnings("serial")
 public class ColorButton extends JButton {
@@ -32,11 +31,11 @@ public class ColorButton extends JButton {
 	
 	public ColorButton() {
 		super("   ");
-		setFocusable(false);
+		setFocusable(false);	
 		resetColor();
 		addActionListener((ActionEvent e) -> {
 			Color newColor = JColorChooser.showDialog(
-					FrameSpace.getFrame(),
+					SpaceFrame.getFrame(),
                     "Choose Player Color",
                     color);
 			setColor(newColor);
@@ -46,7 +45,7 @@ public class ColorButton extends JButton {
 	public void resetColor() {
 		List<Color> colors = new ArrayList<>();
 		colors.addAll(coolColors);
-		colors.removeAll(Manager.getPlayerColors());
+		colors.removeAll(SpaceFrame.getPlayerColors());
 		if (colors.size() == 0) {
 			setColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()));
 		} else {

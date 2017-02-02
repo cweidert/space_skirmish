@@ -32,7 +32,7 @@ public class PanelListHosts extends UpdatingPanel {
 		super(new GridBagLayout());
 		PanelUtils.addEtch(this, "Host List");
 		addressBox = new JTextField("");
-		portBox = new JSpinner(new SpinnerNumberModel(Manager.GAME_PORT, 1, 65535, 1));
+		portBox = new JSpinner(new SpinnerNumberModel(SpaceFrame.GAME_PORT, 1, 65535, 1));
         portBox.setEditor(new JSpinner.NumberEditor(portBox, "#"));
 		joinCustomButton = getJoinCustomButton();
 	}
@@ -49,10 +49,10 @@ public class PanelListHosts extends UpdatingPanel {
 				address = InetAddress.getByName(new URL(urlString).getHost());
 				int port = (int)portBox.getValue();
 				GameAddress gameAddress = new GameAddress(address, port); 
-				Manager.joinGame(gameAddress);
+				SpaceFrame.joinGame(gameAddress);
 			} catch (UnknownHostException | MalformedURLException e) {
 				String message = "That host can't be found.";
-				JOptionPane.showMessageDialog(FrameSpace.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(SpaceFrame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		return button;
@@ -83,7 +83,7 @@ public class PanelListHosts extends UpdatingPanel {
 		add(label, cons);
 		cons.gridy++;
 
-		List<GameAddress> li = Manager.getGameAddressList();
+		List<GameAddress> li = SpaceFrame.getGameAddressList();
 		if (li != null && li.size() > 0) {
 			for (GameAddress gameAddress : li) {
 				String gameString = gameAddress.getName();
@@ -108,7 +108,7 @@ public class PanelListHosts extends UpdatingPanel {
 				add(label, cons);
 				cons.gridx++;
 		        JButton button = new UpdatingButton("Join Game", () -> {
-		        	Manager.joinGame(gameAddress);
+		        	SpaceFrame.joinGame(gameAddress);
 		        });
 		        add(button, cons);
 		        cons.gridy++;

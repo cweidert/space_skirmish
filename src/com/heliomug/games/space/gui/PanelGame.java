@@ -45,7 +45,7 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 
-		Game game = Manager.getGame();
+		Game game = SpaceFrame.getGame();
 		if (game != null && game.isActive()) {
 			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {
 				if (game.getOptions().isWrap()) {

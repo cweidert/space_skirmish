@@ -34,12 +34,12 @@ public class TabGame extends JPanel {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Manager.handleKey(e.getKeyCode(), true);
+				SpaceFrame.handleKey(e.getKeyCode(), true);
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				Manager.handleKey(e.getKeyCode(), false);
+				SpaceFrame.handleKey(e.getKeyCode(), false);
 			}
 
 			@Override
@@ -53,9 +53,9 @@ public class TabGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", () -> Manager.hasOwnGame(), () -> {
-			if (Manager.hasOwnGame()) {
-				Manager.getGame().start();
+		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
+			if (SpaceFrame.hasOwnGame()) {
+				SpaceFrame.getGame().start();
 			}
 		});
 		panel.add(button);

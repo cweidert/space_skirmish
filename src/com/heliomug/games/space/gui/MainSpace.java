@@ -9,7 +9,7 @@ public class MainSpace {
 		MasterServer.startMasterServer();
 
 		EventQueue.invokeLater(() -> {
-			FrameSpace frame = FrameSpace.getFrame();
+			SpaceFrame frame = SpaceFrame.getFrame();
 			frame.setVisible(true);
 		});
 	}
