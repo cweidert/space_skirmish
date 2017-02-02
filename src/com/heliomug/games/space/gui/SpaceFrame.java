@@ -72,6 +72,10 @@ public class SpaceFrame extends JFrame {
 	}
 	
 
+	public static boolean isServing() {
+		return getFrame().server != null;
+	}
+	
 	public static void hostMyGame(String name, int port) {
 		setServer(null);
 		Server<Game> myServer = new Server<Game>(ownGame, port);

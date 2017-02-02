@@ -38,7 +38,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 	
 	
 	public JButton getJoinCustomButton() {
-		JButton button = new UpdatingButton("Join Game", () -> {
+		JButton button = new UpdatingButton("Join", () -> {
 			InetAddress address;
 			try {
 				String urlString = addressBox.getText();
@@ -71,7 +71,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 		
 		JLabel label;
 		cons.gridx = 0;
-		label = new JLabel("Game", JLabel.CENTER);
+		label = new JLabel("Name", JLabel.CENTER);
 		hostPanel.add(label, cons);
 		cons.gridx = 1;
 		label = new JLabel("External IP Address", JLabel.CENTER);
@@ -108,7 +108,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				hostPanel.add(label, cons);
 				cons.gridx++;
-		        JButton button = new UpdatingButton("Join Game", () -> {
+		        JButton button = new UpdatingButton("Join", () -> {
 		        	SpaceFrame.joinGame(gameAddress);
 		        });
 		        hostPanel.add(button, cons);

@@ -1,7 +1,6 @@
 package com.heliomug.games.space.gui;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,31 +11,32 @@ import javax.swing.SpinnerNumberModel;
 
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
+import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
-public class PanelHostMyGame extends JPanel {
+public class PanelHostMyGame extends UpdatingPanel {
 	private JTextField nameBox;
 	private JSpinner portBox;
 	
 	public PanelHostMyGame() {
-		super(new BorderLayout());
+		super(new FlowLayout());
 		PanelUtils.addEtch(this, "Host My Game");
 		
 		setupGUI();
 	}
 	
 	private void setupGUI() {
-		add(getOptionsPanel(), BorderLayout.NORTH);
-		add(getButtonPanel(), BorderLayout.SOUTH);
+		add(getOptionsPanel());
+		add(getButtonPanel());
 	}
 
 	public JPanel getOptionsPanel() {
-		JPanel panel = new JPanel(new GridLayout(1, 0));
+		JPanel panel = new JPanel();
 		JLabel label;
 		label = new JLabel("Name: ");
 		label.setHorizontalAlignment(JLabel.RIGHT);
 		panel.add(label);
-		nameBox = new JTextField("");
+		nameBox = new JTextField(20);
 		nameBox.grabFocus();
 		panel.add(nameBox);
 		label = new JLabel("Port: ");
@@ -54,18 +54,24 @@ public class PanelHostMyGame extends JPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host My Game", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Host", () -> SpaceFrame.hasOwnGame() && !SpaceFrame.isServing(), () -> {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "[no name]" : name;
+			name = name.length() > 20 ? name.substring(0, 20) : name;
 			int port = (int) portBox.getValue();
 			SpaceFrame.hostMyGame(name, port);
 		});
 		panel.add(button);
 
-		button = new UpdatingButton("Remove My Hosted Game", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Unhost", () -> SpaceFrame.isServing(), () -> {
 			SpaceFrame.deleteHostedGame();
 		});
 		panel.add(button);
 		return panel;
+	}
+	
+	@Override
+	public void update() {
+		repaint();
 	}
 }
