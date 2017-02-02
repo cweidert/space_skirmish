@@ -47,24 +47,26 @@ public class Client<T extends Serializable> {
 		clientThread.setDaemon(true);
 		clientThread.start();
 		isActive = true;
-		System.out.println("-Started client on \n\t" + socket);
+		System.out.println("-Started client on \n\t" + this);
 	}
 	
-	public void stop() {
-		System.out.println("-Stopping client \n\t" + this);
-		if (clientThread != null) {
-			clientThread.interrupt();
-			clientThread = null;
-		}
-		try {
-			if (out == null) {
-				System.err.println("out was null in \n\t" + this);
-			} else {
-				out.close();
+	public void close() {
+		if (isActive) {
+			System.out.println("-Stopping client \n\t" + this);
+			if (clientThread != null) {
+				clientThread.interrupt();
+				clientThread = null;
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				if (out == null) {
+					System.out.println("out was null in \n\t" + this);
+				} else {
+					out.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		isActive = false;
 	}
@@ -75,14 +77,14 @@ public class Client<T extends Serializable> {
 				if (out != null) { 
 					out.writeObject(command);
 				} else {
-					System.err.println("out is null");
+					System.out.println("out is null");
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println("client not active");
+			System.out.println("client not active");
 		}
 	}
 	
@@ -101,26 +103,24 @@ public class Client<T extends Serializable> {
 						try {
 							Thread.sleep(INCOMING_SLEEP_TIME);
 						} catch (InterruptedException e) {
-							System.out.println("-Interruption for client \n\t" + Client.this);
+							System.out.println("Interruption for client \n\t" + Client.this);
 							break;
 						}
 					}
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("IOException for client \n\t" + Client.this);
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Class not found exception for client \n\t" + Client.this);
 			} finally {
-				stop();
+				close();
 			}
 		}
 	}
 	
 	@Override
 	public void finalize() {
-		stop();
+		close();
 	}
 	
 	@Override

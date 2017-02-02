@@ -40,15 +40,20 @@ public class TabGame extends JPanel {
 		
 		button = new UpdatingButton("Create Local Game!", () -> SpaceFrame.getClient() == null, () -> {
 			if (SpaceFrame.getServer() == null) {
-				Server<Game> server = SpaceFrame.makeMyOwnServer("[no name]", 27960);
-				try {
-					Client<Game> client = new GameAddress(server).getClientFor();
-					client.start();
-					SpaceFrame.setClient(client);
-				} catch (IOException e) {
-					System.err.println("couldn't set client to own local game");
-					e.printStackTrace();
-				}
+				Server<Game> server = SpaceFrame.makeAndSetServer("[no name]", 27960);
+				Thread t = new Thread(() -> {
+					try {
+						// give it a second for the game to start up
+						Thread.sleep(250);
+						Client<Game> client = new GameAddress(server).getClientFor();
+						client.start();
+						SpaceFrame.setClient(client);
+					} catch (IOException | InterruptedException e) {
+						System.err.println("couldn't set client to own local game");
+						e.printStackTrace();
+					}
+				});
+				t.start();
 			}
 		});
 		panel.add(button);

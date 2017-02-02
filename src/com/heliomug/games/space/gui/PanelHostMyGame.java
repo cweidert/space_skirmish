@@ -2,6 +2,7 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -66,11 +67,19 @@ public class PanelHostMyGame extends JPanel {
 			if (server == null) {
 				String name = nameBox.getText();
 				int port = (int) portBox.getValue();
-				server = SpaceFrame.makeMyOwnServer(name, port);
+				server = SpaceFrame.makeAndSetServer(name, port);
 			}
+			GameAddress gameAddress = new GameAddress(server);
 			if (masterClient != null) {
-				GameAddress gameAddress = new GameAddress(server);
 				masterClient.sendCommand(new CommandServer(gameAddress));
+			}
+			try {
+				Client<Game> client = gameAddress.getClientFor();
+				client.start();
+				SpaceFrame.setClient(client);
+			} catch (IOException e) {
+				System.err.println("could not connect to my own game");
+				e.printStackTrace();
 			}
 		});
 		panel.add(button);
@@ -79,7 +88,7 @@ public class PanelHostMyGame extends JPanel {
 			MasterClient masterClient = SpaceFrame.getMasterClient(); 
 			Server<Game> server = SpaceFrame.getServer(); 
 			if (server != null) {
-				server.stop();
+				server.close();
 				SpaceFrame.setServer(null);
 				if (masterClient != null) {
 					GameAddress gameAddress = new GameAddress(server);
@@ -88,7 +97,7 @@ public class PanelHostMyGame extends JPanel {
 			}
 			Client<Game> client = SpaceFrame.getClient(); 
 			if (client != null) {
-				client.stop();
+				client.close();
 				SpaceFrame.setClient(null);
 			}
 		});

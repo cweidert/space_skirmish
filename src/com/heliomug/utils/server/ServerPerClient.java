@@ -60,21 +60,23 @@ public class ServerPerClient<T extends Serializable> {
 		System.out.println("-Started server per client \n\t" + this);
 	}
 	
-	public void stop() {
-		System.out.println("-Stopping server per client \n\t" + this);
-		if (sendingThread != null && !sendingThread.isInterrupted()) {
-			sendingThread.interrupt();
-			sendingThread = null;
-		}
-		if (receivingThread != null && !receivingThread.isInterrupted()) {
-			receivingThread.interrupt();
-			receivingThread = null;
-		}
-		try {
-			socket.close();
-		} catch (IOException e) {
-			System.err.println("Couldn't close socket for Server Per Client " + ServerPerClient.this);
-			e.printStackTrace();
+	public void close() {
+		if (isActive) {
+			System.out.println("-Stopping server per client \n\t" + this);
+			if (sendingThread != null && !sendingThread.isInterrupted()) {
+				sendingThread.interrupt();
+				sendingThread = null;
+			}
+			if (receivingThread != null && !receivingThread.isInterrupted()) {
+				receivingThread.interrupt();
+				receivingThread = null;
+			}
+			try {
+				socket.close();
+			} catch (IOException e) {
+				System.out.println("Couldn't close socket for Server Per Client " + ServerPerClient.this);
+				e.printStackTrace();
+			}
 		}
 		isActive = false;
 	}
@@ -99,12 +101,11 @@ public class ServerPerClient<T extends Serializable> {
 					}
 				} 
 			} catch (IOException e) {
-				System.err.println("IO Exception for incoming receiver for \n\t" + ServerPerClient.this);
+				System.out.println("IO Exception for incoming receiver for \n\t" + ServerPerClient.this);
 			} catch (ClassNotFoundException e) {
-				System.err.println("Class Not Found Exception for incoming receiver for " + ServerPerClient.this);
-				//e.printStackTrace();
+				System.out.println("Class Not Found Exception for incoming receiver for " + ServerPerClient.this);
 			} finally {
-				stop();
+				close();
 			}
 		}
 	}
@@ -128,21 +129,20 @@ public class ServerPerClient<T extends Serializable> {
 					}
 				} 
 			} catch (IOException e) {
-				System.err.println("IO Exception for outgoing sender for " + ServerPerClient.this);
-				//e.printStackTrace();
+				System.out.println("IO Exception for outgoing sender for " + ServerPerClient.this);
 			} finally {
-				stop();
+				close();
 			}
 		}
 	}
 	
 	@Override
 	public void finalize() {
-		stop();
+		close();
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("Server Per Client for %s on %s", thing, socket);
+		return String.format("Server Per Client on %s for %s", socket, thing);
 	}
 }

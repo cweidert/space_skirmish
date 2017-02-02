@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
 public class ServerTester {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Server<Letter> server = new Server<>(new Letter("hey"), 8189);
 		server.start();
 		try {
@@ -23,7 +23,7 @@ public class ServerTester {
 				}
 			}
 			
-			client.stop();
+			client.close();
 
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
@@ -33,7 +33,13 @@ public class ServerTester {
 			e1.printStackTrace();
 		}
 		
-		server.stop();
+		server.close();
+		System.out.println("a");
+		Thread.sleep(1000);
+		System.out.println("b");
+		server = new Server<>(new Letter("hey"), 8189);
+		System.out.println(server);
+		System.out.println("c");
 	}
 	
 	private static class LetterMessageChange implements Consumer<Letter>, Serializable {

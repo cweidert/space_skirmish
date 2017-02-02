@@ -11,16 +11,15 @@ public class GameOptions implements Serializable {
 	public static final Rectangle2D ORIGINAL_BOUNDS = new Rectangle2D.Double(- DEFAULT_WIDTH / 2, - DEFAULT_HEIGHT / 2,	DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	public static final double BUFFER_WIDTH = 12;
 
-	public static final double DEFAULT_KILL_WIDTH = DEFAULT_WIDTH * 2;
-	public static final double DEFAULT_KILL_HEIGHT = DEFAULT_HEIGHT * 2;
-	public static final Rectangle2D ORIGINAL_KILL_BOUNDS = new Rectangle2D.Double(- DEFAULT_KILL_WIDTH / 2, - DEFAULT_KILL_HEIGHT / 2,	DEFAULT_KILL_WIDTH, DEFAULT_KILL_HEIGHT);
-
+	//public static final double DEFAULT_KILL_ZONE_RATIO = 3;
+	//public static final double MAX_KILL_ZONE_RATIO = 10;
+	
 	public static final int DEFAULT_BIG_G = 10000;
 	public static final int MAX_BIG_G = 100000;
-	public static final boolean DEFAULT_IS_WRAP = true;
+	public static final boolean DEFAULT_IS_WRAP = false;
 	public static final boolean DEFAULT_IS_PLANET = true; 
 	public static final boolean DEFAULT_IS_GRAVITY = true;
-	public static final boolean DEFAULT_IS_KILL_ZONE = false;
+	public static final boolean DEFAULT_IS_KILL_ZONE = true;
 	public static final boolean DEFAULT_IS_AUTO_RESTART = true;
 	public static final boolean DEFAULT_IS_PLANET_STATIONARY = true;
 	
@@ -29,13 +28,12 @@ public class GameOptions implements Serializable {
 	private boolean isPlanet;
 	private boolean isPlanetStationary;
 	private boolean isGravity;
-	private boolean isKillZone;
+	//private boolean isKillZone;
 	
 	private int bigG;
 	private double width;
 	private double height;
-	private double killWidth;
-	private double killHeight;
+	//private double killZoneRatio;
 	
 	public GameOptions() {
 		isGravity = DEFAULT_IS_GRAVITY;
@@ -46,8 +44,7 @@ public class GameOptions implements Serializable {
 		bigG = DEFAULT_BIG_G;
 		setWidth(DEFAULT_WIDTH);
 		setHeight(DEFAULT_HEIGHT);
-		killWidth = DEFAULT_KILL_WIDTH;
-		killHeight = DEFAULT_KILL_HEIGHT;
+		//setKillZoneRatio(DEFAULT_KILL_ZONE_RATIO);
 	}
 	
 	public boolean isWrap() {
@@ -139,10 +136,6 @@ public class GameOptions implements Serializable {
 		return new Rectangle2D.Double(getLeft(), getBottom(), getWidth(), getHeight());
 	}
 	
-	public Rectangle2D getKillBounds() {
-		return new Rectangle2D.Double(-killWidth / 2, - killHeight / 2, killWidth, killHeight);
-	}
-	
 	public boolean isPlanetStationary() {
 		return isPlanetStationary;
 	}
@@ -151,6 +144,11 @@ public class GameOptions implements Serializable {
 		this.isPlanetStationary = isPlanetStationary;
 	}
 
+	/*
+	public Rectangle2D getKillBounds() {
+		return new Rectangle2D.Double(getLeft() * killZoneRatio, getRight() * killZoneRatio, getWidth() * killZoneRatio, getHeight() * killZoneRatio);
+	}
+	
 	public boolean isKillZone() {
 		return isKillZone;
 	}
@@ -158,4 +156,13 @@ public class GameOptions implements Serializable {
 	public void setKillZone(boolean isKillZone) {
 		this.isKillZone = isKillZone;
 	}
+
+	public double getKillZoneRatio() {
+		return killZoneRatio;
+	}
+
+	public void setKillZoneRatio(double killZoneRatio) {
+		this.killZoneRatio = killZoneRatio;
+	}
+	*/
 }

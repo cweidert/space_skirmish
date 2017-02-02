@@ -53,6 +53,7 @@ public class PanelOptions extends JPanel {
 			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isWrap();
 		});
 		optionPanel.add(box);
+		/*
 		box = new UpdatingCheckBox("Kill Zone", (Boolean b) -> {
 			if (SpaceFrame.getServer() != null) {
 				SpaceFrame.getServer().getThing().getOptions().setKillZone(b);
@@ -61,6 +62,7 @@ public class PanelOptions extends JPanel {
 			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isKillZone();
 		});
 		optionPanel.add(box);
+		*/
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
 			if (SpaceFrame.getServer() != null) {
 				SpaceFrame.getServer().getThing().getOptions().setAutoRestart(b);
@@ -69,9 +71,11 @@ public class PanelOptions extends JPanel {
 			return SpaceFrame.getServer() != null && SpaceFrame.getServer().getThing().getOptions().isAutoRestart();
 		});
 		optionPanel.add(box);
-		JPanel panel = new JPanel(new BorderLayout());
+		JPanel panel;
+		UpdatingSlider slider;
+		panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
-		UpdatingSlider slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
+		slider = new UpdatingSlider(0, GameOptions.MAX_BIG_G, GameOptions.DEFAULT_BIG_G, (Integer i) -> {
 			SpaceFrame.getServer().getThing().getOptions().setBigG(i);
 		}, () -> {
 			if (SpaceFrame.getServer() == null) {
@@ -82,6 +86,27 @@ public class PanelOptions extends JPanel {
 		});
 		panel.add(slider, BorderLayout.CENTER);
 		optionPanel.add(panel);
+		/*
+		panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel("Kill Zone Ratio"), BorderLayout.WEST);
+		slider = new UpdatingSlider(
+				0, 
+				(int)GameOptions.MAX_KILL_ZONE_RATIO * 100, 
+				(int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100, 
+				(Integer i) -> {
+					SpaceFrame.getServer().getThing().getOptions().setKillZoneRatio(i / 100.0);
+					System.out.println(SpaceFrame.getServer().getThing().getOptions().getKillZoneRatio());
+				}, () -> {
+					if (SpaceFrame.getServer() == null) {
+						return (int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100;
+					} else {
+						return (int)(SpaceFrame.getServer().getThing().getOptions().getKillZoneRatio() * 100);
+					}
+				}
+		);
+		panel.add(slider, BorderLayout.CENTER);
+		optionPanel.add(panel);
+		*/
 		add(optionPanel, BorderLayout.SOUTH);
 	}
 }

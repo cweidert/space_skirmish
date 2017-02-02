@@ -2,9 +2,9 @@ package com.heliomug.games.space.gui;
 
 import static java.awt.event.KeyEvent.VK_A;
 import static java.awt.event.KeyEvent.VK_D;
+import static java.awt.event.KeyEvent.VK_DELETE;
 import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_E;
-import static java.awt.event.KeyEvent.VK_END;
 import static java.awt.event.KeyEvent.VK_F;
 import static java.awt.event.KeyEvent.VK_G;
 import static java.awt.event.KeyEvent.VK_H;
@@ -34,7 +34,7 @@ import com.heliomug.games.space.ShipSignal;
 public class ControlConfig {
 	private static int[][] DEFAULT_CONFIGS = new int[][] {
 		new int[] { VK_A, VK_D, VK_W, VK_S, VK_E},
-		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN, VK_END },
+		new int[] { VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN, VK_DELETE },
 		new int[] { VK_J, VK_L, VK_I, VK_K, VK_U},
 		new int[] { VK_F, VK_H, VK_T, VK_G, VK_Y},
 		new int[] { VK_NUMPAD4, VK_NUMPAD6, VK_NUMPAD8, VK_NUMPAD5, VK_NUMPAD7},

@@ -20,12 +20,11 @@ import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
 import com.heliomug.games.space.server.MasterClient;
 import com.heliomug.games.space.server.MasterServer;
-import com.heliomug.utils.gui.MessageDisplayer;
 import com.heliomug.utils.server.Client;
 import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
-public class SpaceFrame extends JFrame implements MessageDisplayer {
+public class SpaceFrame extends JFrame {
 	private static SpaceFrame theFrame;
 	
 	public static SpaceFrame getFrame() {
@@ -36,18 +35,24 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	}
 
 	public static MasterClient getMasterClient() {
-		return getFrame().masterClient;
+		return theFrame.masterClient;
 	}
 	
 	public static Client<Game> getClient() {
-		return getFrame().client;
+		return theFrame.client;
 	}
 
 	public static void setClient(Client<Game> client) {
-		getFrame().client = client;
+		if (theFrame.client != null) {
+			theFrame.client.close();
+		}
+		theFrame.client = client;
+		for (Player player : getLocalPlayers()) {
+			client.sendCommand(new CommandPlayer(player));
+		}
 	}
 	
-	public static Server<Game> makeMyOwnServer(String name, int port) {
+	public static Server<Game> makeAndSetServer(String name, int port) {
 		name = name.length() == 0 ? "[no name]" : name;
 		Server<Game> myServer = new Server<Game>(new Game(name), port); 
 		SpaceFrame.setServer(myServer);
@@ -56,43 +61,48 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	}
 	
 	public static Server<Game> getServer() {
-		return getFrame().server;
+		return theFrame.server;
 	}
 	
 	public static void setServer(Server<Game> server) {
-		getFrame().server = server;
+		if (theFrame.server != null) {
+			theFrame.server.close();
+		}
+		theFrame.server = server;
 	}
 	
 	public static void addLocalPlayer(Player player) {
-		if (getClient() != null) {
-			getFrame().localPlayers.add(player);
-			getFrame().controlAssignments.put(player, new ControlConfig(player));
-			getClient().sendCommand(new CommandPlayer(player));
+		if (theFrame.client != null) {
+			theFrame.localPlayers.add(player);
+			theFrame.controlAssignments.put(player, new ControlConfig(player));
+			theFrame.client.sendCommand(new CommandPlayer(player));
 		}
 	}
 
 	public static void removeLocalPlayer(Player player) {
-		if (getClient() != null) {
-			getFrame().localPlayers.remove(player);
-			getFrame().controlAssignments.remove(player);
-			getClient().sendCommand(new CommandPlayer(player, false));
+		if (theFrame.client != null) {
+			theFrame.localPlayers.remove(player);
+			theFrame.controlAssignments.remove(player);
+			theFrame.client.sendCommand(new CommandPlayer(player, false));
 		}
 	}
 	
 	public static List<Player> getLocalPlayers() {
-		return getFrame().localPlayers;
+		return theFrame.localPlayers;
 	}
 	
 	public static ControlConfig getControlConfig(Player player) {
-		return getFrame().controlAssignments.get(player);
+		return theFrame.controlAssignments.get(player);
 	}
 	
 	public static Game getClientGame() {
-		if (getFrame().client != null) {
-			return getFrame().client.getThing();
+		if (theFrame.client != null) {
+			return theFrame.client.getThing();
 		}
 		return null;
 	}
+	
+	
 	
 	private MasterClient masterClient;
 	
@@ -157,10 +167,5 @@ public class SpaceFrame extends JFrame implements MessageDisplayer {
 	
 	public void update() {
 		repaint();
-	}
-	
-	@Override
-	public void accept(String message) {
-		//this.messageLabel.setText(message);
 	}
 }

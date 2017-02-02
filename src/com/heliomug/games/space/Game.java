@@ -183,9 +183,11 @@ public class Game implements Serializable, ActionListener {
 				wrapAll();
 			}
 			
+			/*
 			if (options.isKillZone()) {
 				killZoneAll();
 			}
+			*/
 			
 			collideAll(dt);
 			
@@ -223,6 +225,7 @@ public class Game implements Serializable, ActionListener {
 		}
 	}
 	
+	/*
 	private void killZoneAll() {
 		Rectangle2D killZone = options.getKillBounds();
 		for (Sprite sprite : sprites) {
@@ -231,6 +234,7 @@ public class Game implements Serializable, ActionListener {
 			}
 		}
 	}
+	*/
 	
 	private void wrapAll() {
 		for (Sprite sprite : sprites) {
@@ -333,10 +337,12 @@ public class Game implements Serializable, ActionListener {
 	public void draw(Graphics2D g) {
 		g.setColor(BOUNDS_COLOR);
 		g.draw(options.getWrapBounds());
+		/*
 		if (options.isKillZone()) {
 			g.setColor(KILL_ZONE_COLOR);
 			g.draw(options.getKillBounds());
 		}
+		*/
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
 		}
