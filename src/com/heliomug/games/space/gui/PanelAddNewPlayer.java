@@ -2,6 +2,7 @@ package com.heliomug.games.space.gui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -43,7 +44,7 @@ public class PanelAddNewPlayer extends JPanel {
 	
 	public JPanel getButtonPanel() {
 		JPanel panel = new JPanel();
-		JButton button = new UpdatingButton("Add Player", () -> true, () -> {
+		JButton button = new UpdatingButton("Add Player", KeyEvent.VK_P, () -> true, () -> {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "Joe Schmoe" : name;
 			Color color = colorButton.getColor();

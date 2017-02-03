@@ -3,9 +3,9 @@ package com.heliomug.games.space.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +25,12 @@ import com.heliomug.games.space.ShipSignal;
 import com.heliomug.games.space.server.CommandServer;
 import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.MasterClient;
+import com.heliomug.games.space.server.MasterServer;
 import com.heliomug.utils.server.Client;
-import com.heliomug.utils.server.NetworkUtils;
 import com.heliomug.utils.server.Server;
 
 @SuppressWarnings("serial")
 public class SpaceFrame extends JFrame {
-	public static final String MASTER_HOST_HOME = "http://home.heliomug.com";
-	public static final int MASTER_PORT = 27961;
 	public static final int GAME_PORT = 27960;
 	
 	public static final int SERVER_DELAY = 250; 
@@ -200,6 +198,16 @@ public class SpaceFrame extends JFrame {
 	}
 	
 	
+	public static void quit() {
+		if (server != null) {
+			server.close();
+		}
+		if (client != null) {
+			client.close();
+		}
+		System.exit(0);
+	}
+	
 	private static void setServer(Server<Game> server) {
 		if (SpaceFrame.server != null && masterClient != null) {
 			GameAddress gameAddress = new GameAddress(SpaceFrame.server);
@@ -247,20 +255,7 @@ public class SpaceFrame extends JFrame {
 		super("Networked Space Game");
 		
 		Thread t = new Thread(() -> {
-			InetAddress masterAddress;
-			try {
-				masterAddress = InetAddress.getByName(new URL(MASTER_HOST_HOME).getHost());
-				masterClient = new MasterClient(masterAddress, MASTER_PORT);
-				masterClient.start();
-			} catch (IOException e) {
-				try {
-					masterAddress = InetAddress.getByName(NetworkUtils.getExternalAddress().getHostAddress());
-					masterClient = new MasterClient(masterAddress, MASTER_PORT);
-					masterClient.start();
-				} catch (IOException e1) {
-					masterClient = null;
-				}
-			}
+			masterClient = MasterServer.getClient();
 		});
 		t.start();
 		
@@ -274,6 +269,16 @@ public class SpaceFrame extends JFrame {
 	}
 	
 	private void setupGUI() {
+		setFocusable(true);
+		addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					SpaceFrame.quit();
+				}
+				SpaceFrame.handleKey(e.getKeyCode(), true);
+			}
+		});
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel(new BorderLayout());
 
@@ -288,7 +293,7 @@ public class SpaceFrame extends JFrame {
 		cardPanel.add(new CardConnections(), CONNECTIONS_CARD);
 		panel.add(cardPanel, BorderLayout.CENTER);
 
-		this.add(panel);
+		add(panel);
 		pack();
 	}
 	

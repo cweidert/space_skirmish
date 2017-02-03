@@ -1,6 +1,7 @@
 package com.heliomug.games.space.gui;
 
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -54,7 +55,7 @@ public class PanelHostMyGame extends UpdatingPanel {
 		
 		JButton button;
 		
-		button = new UpdatingButton("Host", () -> SpaceFrame.hasOwnGame() && !SpaceFrame.isServing(), () -> {
+		button = new UpdatingButton("Host", KeyEvent.VK_H, () -> SpaceFrame.hasOwnGame() && !SpaceFrame.isServing(), () -> {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "[no name]" : name;
 			name = name.length() > 20 ? name.substring(0, 20) : name;
@@ -63,7 +64,7 @@ public class PanelHostMyGame extends UpdatingPanel {
 		});
 		panel.add(button);
 
-		button = new UpdatingButton("Unhost", () -> SpaceFrame.isServing(), () -> {
+		button = new UpdatingButton("Unhost", KeyEvent.VK_U, () -> SpaceFrame.isServing(), () -> {
 			SpaceFrame.deleteHostedGame();
 		});
 		panel.add(button);

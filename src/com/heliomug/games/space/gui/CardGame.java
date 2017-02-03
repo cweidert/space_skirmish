@@ -27,7 +27,7 @@ public class CardGame extends JPanel {
 
 	public void setupGUI() {
 		add(board, BorderLayout.CENTER);
-		add(getOptionPanel(), BorderLayout.SOUTH);
+		add(getCardSwitchPanel(), BorderLayout.SOUTH);
 		
 		setFocusable(true);
 		this.addKeyListener(new KeyListener() {
@@ -48,34 +48,34 @@ public class CardGame extends JPanel {
 		});
 	}
 
-	public JPanel getOptionPanel() {
+	private JPanel getCardSwitchPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 0));
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Start Round!", KeyEvent.VK_R, () -> SpaceFrame.hasOwnGame(), () -> {
 			if (SpaceFrame.hasOwnGame()) {
 				SpaceFrame.getGame().start();
 			}
 		});
 		panel.add(button);
 		
-		button = new UpdatingButton("Players", () -> {
+		button = new UpdatingButton("Players", KeyEvent.VK_P, () -> {
 			SpaceFrame.setCard(SpaceFrame.PLAYER_CARD);
 		});
 		panel.add(button);
 		
-		button = new UpdatingButton("Settings", () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Settings", KeyEvent.VK_S, () -> SpaceFrame.hasOwnGame(), () -> {
 			SpaceFrame.setCard(SpaceFrame.SETTINGS_CARD);
 		});
 		panel.add(button);
 		
-		button = new UpdatingButton("Internet", () -> {
+		button = new UpdatingButton("Internet", KeyEvent.VK_I, () -> {
 			SpaceFrame.setCard(SpaceFrame.CONNECTIONS_CARD);
 		});
 		panel.add(button);
 		
-		JCheckBox box = new UpdatingCheckBox("Auto-Zoom", (Boolean b) -> {
+		JCheckBox box = new UpdatingCheckBox("Auto-Zoom", KeyEvent.VK_Z, (Boolean b) -> {
 			board.setAutoZoom(b);
 		}, () -> board.isAutoZoom());
 		panel.add(box);
