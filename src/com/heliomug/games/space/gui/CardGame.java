@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingCheckBox;
 
-public class CardGame extends JPanel { 
+class CardGame extends JPanel { 
 	private static final long serialVersionUID = -4501673998714242701L;
 	
 	private PanelGame board;
@@ -34,12 +34,15 @@ public class CardGame extends JPanel {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				SpaceFrame.handleKey(e.getKeyCode(), true);
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					Session.quit();
+				}
+				Session.handleKey(e.getKeyCode(), true);
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				SpaceFrame.handleKey(e.getKeyCode(), false);
+				Session.handleKey(e.getKeyCode(), false);
 			}
 
 			@Override
@@ -53,9 +56,9 @@ public class CardGame extends JPanel {
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", KeyEvent.VK_R, () -> SpaceFrame.hasOwnGame(), () -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().start();
+		button = new UpdatingButton("Start Round!", KeyEvent.VK_R, () -> Session.hasOwnGame(), () -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().start();
 			}
 		});
 		panel.add(button);
@@ -65,7 +68,7 @@ public class CardGame extends JPanel {
 		});
 		panel.add(button);
 		
-		button = new UpdatingButton("Settings", KeyEvent.VK_S, () -> SpaceFrame.hasOwnGame(), () -> {
+		button = new UpdatingButton("Settings", KeyEvent.VK_S, () -> Session.hasOwnGame(), () -> {
 			SpaceFrame.setCard(SpaceFrame.SETTINGS_CARD);
 		});
 		panel.add(button);

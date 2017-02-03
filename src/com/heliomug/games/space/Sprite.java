@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import com.heliomug.utils.games.Boundable;
 
-public class Sprite implements Boundable, Serializable {
+class Sprite implements Boundable, Serializable {
 	private static final long serialVersionUID = -6488981465597378521L;
 
 	private static final Color DEFAULT_COLOR = Color.RED;
@@ -30,6 +30,8 @@ public class Sprite implements Boundable, Serializable {
 	private boolean isAlive;
 	private boolean isStationary;	
 	
+	private boolean isAgeLimit;
+	private long ageLimit;
 	private long birthday;
 	
 	public Sprite() {
@@ -56,10 +58,12 @@ public class Sprite implements Boundable, Serializable {
 		this.isAlive = true;
 		this.sumForce = new Vec();
 		this.isStationary = DEFAULT_IS_STATIONARY;
+		this.isAgeLimit = false;
+		this.ageLimit = 0;
 		this.birthday = System.currentTimeMillis();
 	}
 	
-	public long age() {
+	public long getAge() {
 		return System.currentTimeMillis() - birthday;
 	}
 	
@@ -128,7 +132,17 @@ public class Sprite implements Boundable, Serializable {
 		sumForce = sumForce.add(force);
 	}
 	
+	public void setAgeLimit(long age) {
+		isAgeLimit = true;
+		ageLimit = age;
+	}
+	
 	public void update(double dt) {
+		if (isAgeLimit) {
+			if (getAge() > ageLimit) {
+				die();
+			}
+		}
 		if (!isStationary) {
 			double scalar = dt / mass;
 			velocity = velocity.add(sumForce.mult(scalar));

@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Client<T extends Serializable> {
 	private static final int INCOMING_SLEEP_TIME = 20;
@@ -33,6 +35,14 @@ public class Client<T extends Serializable> {
 		this.out = null;
 		this.thing = null;
 	}
+
+	public int getPort() {
+		return socket.getPort();
+	}
+	
+	public InetAddress getAddress() {
+		return socket.getInetAddress();
+	}
 	
 	public boolean isActive() {
 		return isActive;
@@ -47,25 +57,24 @@ public class Client<T extends Serializable> {
 		clientThread.setDaemon(true);
 		clientThread.start();
 		isActive = true;
-		System.out.println("-Started client \n\t" + this);
+		Logger.getGlobal().log(Level.INFO, "Started client " + this);
 	}
 	
 	public void close() {
 		if (isActive) {
-			System.out.println("-Stopping client \n\t" + this);
+			Logger.getGlobal().log(Level.INFO, "Stopping client " + this);
 			if (clientThread != null) {
 				clientThread.interrupt();
 				clientThread = null;
 			}
 			try {
 				if (out == null) {
-					System.out.println("out was null in \n\t" + this);
+					Logger.getGlobal().log(Level.WARNING, "out was null in " + this);
 				} else {
 					out.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getGlobal().log(Level.WARNING, "could not close out in " + this, e);
 			}
 		}
 		isActive = false;
@@ -77,14 +86,14 @@ public class Client<T extends Serializable> {
 				if (out != null) { 
 					out.writeObject(command);
 				} else {
-					System.out.println("out is null");
+					Logger.getGlobal().log(Level.WARNING, "out is null");
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				Logger.getGlobal().log(Level.WARNING, "couldn't write command in " + this, e);
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("client not active");
+			Logger.getGlobal().log(Level.WARNING, "client client is not active somehow");
 		}
 	}
 	
@@ -103,15 +112,18 @@ public class Client<T extends Serializable> {
 						try {
 							Thread.sleep(INCOMING_SLEEP_TIME);
 						} catch (InterruptedException e) {
-							System.out.println("Interruption for client \n\t" + Client.this);
+							// that's okay.  someone is probably trying to close us.  
+							//Logger.getGlobal().log(Level.INFO, "Interruption for client " + Client.this);
 							break;
 						}
 					}
 				}
 			} catch (IOException e) {
-				System.out.println("IOException for client \n\t" + Client.this);
+				// that's okay.  someone probably closed the server on us
+				//Logger.getGlobal().log(Level.INFO, "IOException for client " + Client.this);
 			} catch (ClassNotFoundException e) {
-				System.out.println("Class not found exception for client \n\t" + Client.this);
+				// that's weird
+				//Logger.getGlobal().log(Level.WARNING, "Class not found exception for client " + Client.this, e);
 			} finally {
 				close();
 			}

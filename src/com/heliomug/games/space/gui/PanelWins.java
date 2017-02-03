@@ -11,7 +11,7 @@ import com.heliomug.games.space.Player;
 import com.heliomug.utils.gui.UpdatingPanel;
 
 @SuppressWarnings("serial")
-public class PanelWins extends UpdatingPanel {
+class PanelWins extends UpdatingPanel {
 	public PanelWins() {
 		super(new GridLayout(1, 0));
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -26,7 +26,7 @@ public class PanelWins extends UpdatingPanel {
 	@Override
 	public void update() {
         removeAll();
-   		List<Player> players = SpaceFrame.getAllPlayers();
+   		List<Player> players = Session.getAllPlayers();
     	if (players != null & players.size() > 0) {
 			for (Player player : players) {
 				String winString = players.size() > 8 ? String.valueOf(player.getWins()) : player.getWinString();

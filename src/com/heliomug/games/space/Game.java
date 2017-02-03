@@ -130,6 +130,9 @@ public class Game implements Serializable, ActionListener {
 		} else if (signal == ShipSignal.FIRE) {
 			Bullet bullet = ship.getBullet();
 			if (bullet != null) {
+				if (settings.isBulletAgeLimit()) {
+					bullet.setAgeLimit(settings.getBulletAgeLimit());
+				}
 				sprites.add(bullet);
 			}
 		}

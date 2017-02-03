@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server<T extends Serializable> implements Runnable {
 	private static final int SLEEP_TIME = 5;
@@ -44,12 +46,13 @@ public class Server<T extends Serializable> implements Runnable {
 		serverThread.setDaemon(true);
 		serverThread.start();
 		isActive = true;
-		System.out.println("-Started server \n\t" + this); 
+		String message = "Started server " + this;
+		Logger.getGlobal().log(Level.INFO, message); 
 	}
 	
 	public void close() {
 		if (isActive) {
-			System.out.println("-Stopping server \n\t" + this);
+			Logger.getGlobal().log(Level.INFO, "Stopping server " + this);
 			if (serverThread != null) {
 				serverThread.interrupt();
 				serverThread = null;
@@ -59,8 +62,7 @@ public class Server<T extends Serializable> implements Runnable {
 					serverSocket.close();
 					serverSocket = null;
 				} catch (IOException e) {
-					System.out.println("couldn't close server socket for \n\t" + this);
-					e.printStackTrace();
+					Logger.getGlobal().log(Level.WARNING, "couldn't close server socket for " + this, e);
 				}
 			}
 		}
@@ -69,24 +71,24 @@ public class Server<T extends Serializable> implements Runnable {
 	
 	public void run() {
 		try {
-			try {
-				serverSocket = new ServerSocket(port);
-				while (!Thread.currentThread().isInterrupted()) {
-					Socket incoming = serverSocket.accept();
-					ServerPerClient<T> serverPerClient = new ServerPerClient<>(thing, incoming);
-					serverPerClient.start();
-					try {
-						Thread.sleep(SLEEP_TIME);
-					} catch (InterruptedException e) {
-						System.out.println("Interruption for server " + Server.this);
-						break;
-					}
+			serverSocket = new ServerSocket(port);
+			while (!Thread.currentThread().isInterrupted()) {
+				Socket incoming = serverSocket.accept();
+				ServerPerClient<T> serverPerClient = new ServerPerClient<>(thing, incoming);
+				serverPerClient.start();
+				try {
+					Thread.sleep(SLEEP_TIME);
+				} catch (InterruptedException e) {
+					// it's okay if we're interrupted.  someone's probably just closing the server.  
+					//Logger.getGlobal().log(Level.INFO, "Interruption for server " + Server.this);
+					break;
 				}
-			} finally {
-				close();
 			}
 		} catch (IOException e) {
-			System.out.println("IO Exception for server " + Server.this);
+			// that's okay.  someone is probably closing this server.  
+			//Logger.getGlobal().log(Level.INFO, "IOException for server " + Server.this);
+		} finally {
+			close();
 		}
 	}
 	

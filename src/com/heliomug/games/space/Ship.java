@@ -8,7 +8,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.io.Serializable;
 
-public class Ship extends Sprite implements Serializable {
+class Ship extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
 	private static final double MAX_SPEED = 150.0;
@@ -114,7 +114,7 @@ public class Ship extends Sprite implements Serializable {
 	@Override
 	public Color getColor() {
 		if (health < BLINK_THRESHOLD) {
-			if (age() % BLINK_CYCLE < BLINK_CYCLE / 2) {
+			if (getAge() % BLINK_CYCLE < BLINK_CYCLE / 2) {
 				return Color.BLACK;
 			} else {
 				return Color.RED;

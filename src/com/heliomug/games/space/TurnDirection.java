@@ -1,6 +1,6 @@
 package com.heliomug.games.space;
 
-public enum TurnDirection {
+enum TurnDirection {
 	RIGHT(-1),
 	NONE(0),
 	LEFT(1);

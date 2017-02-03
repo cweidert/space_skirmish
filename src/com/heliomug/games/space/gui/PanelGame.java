@@ -8,7 +8,7 @@ import com.heliomug.games.space.Game;
 import com.heliomug.utils.gui.WeidertPanel;
 
 @SuppressWarnings("serial")
-public class PanelGame extends WeidertPanel implements Runnable {
+class PanelGame extends WeidertPanel implements Runnable {
 	private static final int BOARD_WIDTH = 640;
 	private static final int BOARD_HEIGHT = 480;
 
@@ -45,7 +45,7 @@ public class PanelGame extends WeidertPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 
-		Game game = SpaceFrame.getGame();
+		Game game = Session.getGame();
 		if (game != null && game.isActive()) {
 			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {
 				if (game.getSettings().isWrap()) {

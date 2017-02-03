@@ -1,4 +1,4 @@
-package com.heliomug.utils.gui;
+package com.heliomug.games.space.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -9,10 +9,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
-import com.heliomug.games.space.gui.SpaceFrame;
-
 @SuppressWarnings("serial")
-public class ColorButton extends JButton {
+class ColorButton extends JButton {
 	private static final List<Color> primaryColors = Arrays.asList(new Color[] {
 			new Color(0xff, 0xff, 0xff),
 			new Color(0xff, 0xff, 0x00),
@@ -50,10 +48,10 @@ public class ColorButton extends JButton {
 	public void resetColor() {
 		List<Color> colors = new ArrayList<>();
 		colors.addAll(primaryColors);
-		colors.removeAll(SpaceFrame.getPlayerColors());
+		colors.removeAll(Session.getPlayerColors());
 		if (colors.size() == 0) {
 			colors.addAll(secondaryColors);
-			colors.removeAll(SpaceFrame.getPlayerColors());
+			colors.removeAll(Session.getPlayerColors());
 		}
 		if (colors.size() == 0) {
 			setColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()));

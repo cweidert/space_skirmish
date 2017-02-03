@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import com.heliomug.utils.gui.UpdatingButton;
 
 @SuppressWarnings("serial")
-public class PanelReturnToGame extends JPanel {
+class PanelReturnToGame extends JPanel {
 	public PanelReturnToGame() {
 		super(new BorderLayout());
 		JButton button = new UpdatingButton("Return to Game", () -> {

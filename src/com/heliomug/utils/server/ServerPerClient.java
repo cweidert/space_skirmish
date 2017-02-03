@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerPerClient<T extends Serializable> {
 	private static final int OUTGOING_SLEEP_TIME = 25;
@@ -57,12 +59,12 @@ public class ServerPerClient<T extends Serializable> {
 		receivingThread.start();
 		startTime = System.currentTimeMillis();
 		isActive = true;
-		System.out.println("-Started server per client \n\t" + this);
+		Logger.getGlobal().log(Level.INFO, "Started server per client " + this);
 	}
 	
 	public void close() {
 		if (isActive) {
-			System.out.println("-Stopping server per client \n\t" + this);
+			Logger.getGlobal().log(Level.INFO, "Stopping server per client " + this);
 			if (sendingThread != null && !sendingThread.isInterrupted()) {
 				sendingThread.interrupt();
 				sendingThread = null;
@@ -74,7 +76,8 @@ public class ServerPerClient<T extends Serializable> {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				System.out.println("Couldn't close socket for Server Per Client " + ServerPerClient.this);
+				String message = "Couldn't close socket for Server Per Client " + ServerPerClient.this;
+				Logger.getGlobal().log(Level.WARNING, message, e);
 				e.printStackTrace();
 			}
 		}
@@ -95,15 +98,17 @@ public class ServerPerClient<T extends Serializable> {
 						try {
 							Thread.sleep(INCOMING_SLEEP_TIME);
 						} catch (InterruptedException e) {
-							System.out.println("Interruption for incoming receiver for " + ServerPerClient.this);
+							// that's okay.  someone's probably trying to close us
+							//Logger.getGlobal().log(Level.INFO, "Interruption for incoming receiver for " + ServerPerClient.this);
 							break;
 						}
 					}
 				} 
 			} catch (IOException e) {
-				System.out.println("IO Exception for incoming receiver for \n\t" + ServerPerClient.this);
+				// that's okay. someone probably just closed the server on us
+				//Logger.getGlobal().log(Level.INFO, "IO Exception for incoming receiver for \n\t" + ServerPerClient.this);
 			} catch (ClassNotFoundException e) {
-				System.out.println("Class Not Found Exception for incoming receiver for " + ServerPerClient.this);
+				Logger.getGlobal().log(Level.WARNING, "Class Not Found Exception for incoming receiver for " + ServerPerClient.this);
 			} finally {
 				close();
 			}
@@ -112,24 +117,25 @@ public class ServerPerClient<T extends Serializable> {
 	
 	private class Sender implements Runnable {
 		public void run() {
-			try {
-				try ( 
-					OutputStream outStream = socket.getOutputStream();
-					ObjectOutputStream out = new ObjectOutputStream(outStream); 
-				) {
-					while (!Thread.currentThread().isInterrupted()) {
-						out.reset();
-						out.writeObject(thing);
-						try {
-							Thread.sleep(OUTGOING_SLEEP_TIME);
-						} catch (InterruptedException e) {
-							System.out.println("Interruption for outgoing sender for " + ServerPerClient.this);
-							break;
-						}
+			try ( 
+				OutputStream outStream = socket.getOutputStream();
+				ObjectOutputStream out = new ObjectOutputStream(outStream); 
+			) {
+				while (!Thread.currentThread().isInterrupted()) {
+					out.reset();
+					out.writeObject(thing);
+					try {
+						Thread.sleep(OUTGOING_SLEEP_TIME);
+					} catch (InterruptedException e) {
+						// that's okay.  someone is probably trying to close us.    
+						//String message = "Interruption for outgoing sender for " + ServerPerClient.this;
+						//Logger.getGlobal().log(Level.INFO, message);
+						break;
 					}
-				} 
+				}
 			} catch (IOException e) {
-				System.out.println("IO Exception for outgoing sender for " + ServerPerClient.this);
+				// that's okay.  someone probably just closed the server on us.  
+				//Logger.getGlobal().log(Level.INFO, "IO Exception for outgoing sender for " + ServerPerClient.this);
 			} finally {
 				close();
 			}

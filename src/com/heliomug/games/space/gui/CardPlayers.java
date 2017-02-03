@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class CardPlayers extends JPanel {
+class CardPlayers extends JPanel {
 	public CardPlayers() {
 		super(new BorderLayout());
 		JPanel panel = new JPanel(new BorderLayout());

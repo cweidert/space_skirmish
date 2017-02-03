@@ -12,7 +12,7 @@ import com.heliomug.games.space.Player;
 import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
-public class PanelListExternalPlayers extends UpdatingScrollPanel {
+class PanelListExternalPlayers extends UpdatingScrollPanel {
 	public PanelListExternalPlayers() {
 		super("External Players");
 	}
@@ -22,8 +22,8 @@ public class PanelListExternalPlayers extends UpdatingScrollPanel {
         JPanel panel = getListPanel();
 		panel.removeAll();
         
-        List<Player> externalPlayers = SpaceFrame.getExternalPlayers();
-		externalPlayers.removeAll(SpaceFrame.getLocalPlayers());
+        List<Player> externalPlayers = Session.getExternalPlayers();
+		externalPlayers.removeAll(Session.getLocalPlayers());
     	if (externalPlayers != null & externalPlayers.size() > 0) {
         	JLabel label;
     		GridBagConstraints cons = new GridBagConstraints();

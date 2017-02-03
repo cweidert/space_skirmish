@@ -4,18 +4,18 @@ import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public class CommandServer implements Consumer<CopyOnWriteArrayList<GameAddress>>, Serializable {
+public class CommandGameList implements Consumer<CopyOnWriteArrayList<GameAddress>>, Serializable {
 	private static final long serialVersionUID = 3971484296007941716L;
 
 	private GameAddress gameAddress;
 	private boolean isAdd;
 	
 	
-	public CommandServer(GameAddress gameAddress) {
+	public CommandGameList(GameAddress gameAddress) {
 		this(gameAddress, true);
 	}
 	
-	public CommandServer(GameAddress gameAddress, boolean isAdd) {
+	public CommandGameList(GameAddress gameAddress, boolean isAdd) {
 		this.gameAddress = gameAddress;
 		this.isAdd = isAdd;
 	}

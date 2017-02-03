@@ -23,6 +23,10 @@ public class GameAddress implements Serializable {
 		this(server, "");
 	}
 	
+	public GameAddress(Client<Game> client) {
+		this(client.getAddress(), client.getPort());
+	}
+	
 	public GameAddress(Server<Game> server, String name) {
 		this(server.getAddress(), server.getPort(), name);
 	}

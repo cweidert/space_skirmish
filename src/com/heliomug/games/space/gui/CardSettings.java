@@ -12,7 +12,7 @@ import com.heliomug.utils.gui.UpdatingCheckBox;
 import com.heliomug.utils.gui.UpdatingSlider;
 
 @SuppressWarnings("serial")
-public class CardSettings extends JPanel {
+class CardSettings extends JPanel {
 	public CardSettings() {
 		super(new BorderLayout());
 
@@ -24,21 +24,54 @@ public class CardSettings extends JPanel {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		panel.add(getMiscSettings());
 		panel.add(getGravityPanel());
+		panel.add(getBulletPanel());
 		panel.add(getPlanetPanel());
 		panel.add(getBoundaryPanel());
 		return panel;
 	}
 
+	private JPanel getBulletPanel() {
+		JPanel panel = new JPanel(new GridLayout(0, 1));
+		PanelUtils.addEtch(panel, "Bullet Settings");
+		UpdatingCheckBox box;
+		box = new UpdatingCheckBox("Bullet Age Limit", (Boolean b) -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setBulletAgeLimit(b);
+			}
+		}, () -> {
+			return Session.hasOwnGame() && Session.getGame().getSettings().isBulletAgeLimit();
+		});
+		panel.add(box);
+		JPanel subpanel;
+		UpdatingSlider slider;
+		subpanel = new JPanel(new BorderLayout());
+		subpanel.add(new JLabel("Bullet Age Limit"), BorderLayout.WEST);
+		int max = (int)GameSettings.MAX_BULLET_AGE_LIMIT;
+		int def = (int)GameSettings.DEFAULT_BULLET_AGE_LIMIT;
+		slider = new UpdatingSlider(0, max, def, (Integer i) -> {
+			Session.getGame().getSettings().setBulletAgeLimit(i);
+		}, () -> {
+			if (Session.hasOwnGame()) {
+				return def;
+			} else {
+				return (int)Session.getGame().getSettings().getBulletAgeLimit();
+			}
+		});
+		subpanel.add(slider, BorderLayout.CENTER);
+		panel.add(subpanel);
+		return panel;
+	}
+	
 	private JPanel getMiscSettings() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		PanelUtils.addEtch(panel, "Misc Settings");
 		UpdatingCheckBox box;
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getSettings().setAutoRestart(b);
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setAutoRestart(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isAutoRestart();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isAutoRestart();
 		});
 		panel.add(box);
 		return panel;
@@ -49,11 +82,11 @@ public class CardSettings extends JPanel {
 		PanelUtils.addEtch(panel, "Gravity Settings");
 		UpdatingCheckBox box;
 		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getSettings().setGravity(b);
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setGravity(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isGravity();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isGravity();
 		});
 		panel.add(box);
 		JPanel subpanel;
@@ -61,12 +94,12 @@ public class CardSettings extends JPanel {
 		subpanel = new JPanel(new BorderLayout());
 		subpanel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
 		slider = new UpdatingSlider(0, GameSettings.MAX_BIG_G, GameSettings.DEFAULT_BIG_G, (Integer i) -> {
-			SpaceFrame.getGame().getSettings().setBigG(i);
+			Session.getGame().getSettings().setBigG(i);
 		}, () -> {
-			if (SpaceFrame.hasOwnGame()) {
+			if (Session.hasOwnGame()) {
 				return GameSettings.DEFAULT_BIG_G;
 			} else {
-				return SpaceFrame.getGame().getSettings().getBigG();
+				return Session.getGame().getSettings().getBigG();
 			}
 		});
 		subpanel.add(slider, BorderLayout.CENTER);
@@ -79,19 +112,19 @@ public class CardSettings extends JPanel {
 		PanelUtils.addEtch(panel, "Planet Settings");
 		UpdatingCheckBox box;
 		box = new UpdatingCheckBox("Planet On", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getSettings().setPlanet(b);
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setPlanet(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isPlanet();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanet();
 		});
 		panel.add(box);
 		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getSettings().setPlanetStationary(b);
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setPlanetStationary(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isPlanetStationary();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanetStationary();
 		});
 		panel.add(box);
 		return panel;
@@ -104,11 +137,11 @@ public class CardSettings extends JPanel {
 		UpdatingCheckBox box;
 		
 		box = new UpdatingCheckBox("Wrap", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().getSettings().setWrap(b);
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setWrap(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().getSettings().isWrap();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isWrap();
 		});
 		panel.add(box);
 

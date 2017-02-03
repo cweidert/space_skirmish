@@ -2,7 +2,7 @@ package com.heliomug.games.space;
 
 import java.awt.Color;
 
-public class Bullet extends Sprite {
+class Bullet extends Sprite {
 	private static final long serialVersionUID = -7116875414850194040L;
 
 	private static final double BULLET_RADIUS = 1;

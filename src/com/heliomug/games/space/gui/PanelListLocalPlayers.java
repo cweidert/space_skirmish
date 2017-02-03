@@ -20,7 +20,7 @@ import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
-public class PanelListLocalPlayers extends UpdatingScrollPanel {
+class PanelListLocalPlayers extends UpdatingScrollPanel {
 	public PanelListLocalPlayers() {
 		super("Local Player List");
 	}
@@ -29,7 +29,7 @@ public class PanelListLocalPlayers extends UpdatingScrollPanel {
 	public void update() {
 		JPanel playerPanel = getListPanel();
 		playerPanel.removeAll();
-		List<Player> players = SpaceFrame.getLocalPlayers();
+		List<Player> players = Session.getLocalPlayers();
         if (players != null & players.size() > 0) {
         	JLabel label;
     		GridBagConstraints cons = new GridBagConstraints();
@@ -79,7 +79,7 @@ public class PanelListLocalPlayers extends UpdatingScrollPanel {
 				playerPanel.add(panel, cons);
 	    		cons.gridx++;
 	    		JButton button = new UpdatingButton("X", () -> {
-					SpaceFrame.removeLocalPlayer(player);
+					Session.removeLocalPlayer(player);
 				});
 				button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	    		playerPanel.add(button, cons);
@@ -96,7 +96,7 @@ public class PanelListLocalPlayers extends UpdatingScrollPanel {
 	private class KeyDisplay extends JPanel {
 		public KeyDisplay(Player player, ShipSignal sig) {
 			super(new BorderLayout());
-			ControlConfig controls = SpaceFrame.getControlConfig(player);
+			ControlConfig controls = Session.getControlConfig(player);
 
 			setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			JButton button = new UpdatingButton(controls.getKeyString(sig), () -> true, () -> {

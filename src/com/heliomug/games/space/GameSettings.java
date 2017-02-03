@@ -14,6 +14,8 @@ public class GameSettings implements Serializable {
 	//public static final double DEFAULT_KILL_ZONE_RATIO = 3;
 	//public static final double MAX_KILL_ZONE_RATIO = 10;
 	
+	public static final long DEFAULT_BULLET_AGE_LIMIT = 3000;
+	public static final long MAX_BULLET_AGE_LIMIT = 10000;
 	public static final int DEFAULT_BIG_G = 10000;
 	public static final int MAX_BIG_G = 100000;
 	public static final boolean DEFAULT_IS_WRAP = false;
@@ -28,9 +30,11 @@ public class GameSettings implements Serializable {
 	private boolean isPlanet;
 	private boolean isPlanetStationary;
 	private boolean isGravity;
+	private int bigG;
+	private boolean isBulletAgeLimit;
+	private long bulletAgeLimit;
 	//private boolean isKillZone;
 	
-	private int bigG;
 	private double width;
 	private double height;
 	//private double killZoneRatio;
@@ -142,6 +146,23 @@ public class GameSettings implements Serializable {
 
 	public void setPlanetStationary(boolean isPlanetStationary) {
 		this.isPlanetStationary = isPlanetStationary;
+	}
+
+	public boolean isBulletAgeLimit() {
+		return isBulletAgeLimit;
+	}
+
+	public void setBulletAgeLimit(boolean isBulletAgeLimit) {
+		this.isBulletAgeLimit = isBulletAgeLimit;
+	}
+
+	public long getBulletAgeLimit() {
+		return bulletAgeLimit;
+	}
+
+	public void setBulletAgeLimit(long bulletAgeLimit) {
+		this.isBulletAgeLimit = true;
+		this.bulletAgeLimit = bulletAgeLimit;
 	}
 
 	/*

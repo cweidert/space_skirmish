@@ -3,7 +3,7 @@ package com.heliomug.games.space;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-public class Vec implements Serializable {
+class Vec implements Serializable {
 	private static final long serialVersionUID = 3483426213136510850L;
 
 	private double x, y;

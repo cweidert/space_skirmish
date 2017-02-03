@@ -72,19 +72,19 @@ public class ControlConfig {
 		if (numPlayers >= DEFAULT_CONFIGS.length) {
 			ind = DEFAULT_CONFIGS.length - 1;
 		}
-		setAll(DEFAULT_CONFIGS[ind][0], DEFAULT_CONFIGS[ind][1], DEFAULT_CONFIGS[ind][2], DEFAULT_CONFIGS[ind][3], DEFAULT_CONFIGS[ind][4]);
+		setAll(DEFAULT_CONFIGS[ind]);
 		numPlayers++;
 	}
 	
-	public void setAll(int left, int right, int forward, int back, int fire) {
-		this.leftKey = left;
-		this.rightKey = right;
-		this.forwardKey = forward;
-		this.backKey = back;
-		this.fireKey = fire;
+	private void setAll(int[] keys) { // left, int right, int forward, int back, int fire) {
+		this.leftKey = keys[0];
+		this.rightKey = keys[1];
+		this.forwardKey = keys[2];
+		this.backKey = keys[3];
+		this.fireKey = keys[4];
 	}
 	
-	public String keyToString(int key) {
+	private String keyToString(int key) {
 		String s = KeyEvent.getKeyText(key);
 		if (replacements.containsKey(s)) {
 			return replacements.get(s);
@@ -101,8 +101,7 @@ public class ControlConfig {
 		} else if (sig == ShipSignal.FORWARD) {
 			return keyToString(forwardKey);
 		} else if (sig == ShipSignal.BACKWARDS) {
-			return keyToString(backKey
-					);
+			return keyToString(backKey);
 		} else if (sig == ShipSignal.FIRE) {
 			return keyToString(fireKey);
 		} else {

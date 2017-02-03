@@ -22,7 +22,7 @@ import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
-public class PanelListHosts extends UpdatingScrollPanel {
+class PanelListHosts extends UpdatingScrollPanel {
 	JTextField addressBox;
 	JSpinner portBox;
 	JButton joinCustomButton;
@@ -31,7 +31,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 		super("Host List");
 		
 		addressBox = new JTextField("");
-		portBox = new JSpinner(new SpinnerNumberModel(SpaceFrame.GAME_PORT, 1, 65535, 1));
+		portBox = new JSpinner(new SpinnerNumberModel(Session.GAME_PORT, 1, 65535, 1));
         portBox.setEditor(new JSpinner.NumberEditor(portBox, "#"));
 		joinCustomButton = getJoinCustomButton();
 	}
@@ -48,7 +48,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 				address = InetAddress.getByName(new URL(urlString).getHost());
 				int port = (int)portBox.getValue();
 				GameAddress gameAddress = new GameAddress(address, port); 
-				SpaceFrame.joinGame(gameAddress);
+				Session.joinGame(gameAddress);
 			} catch (UnknownHostException | MalformedURLException e) {
 				String message = "That host can't be found.";
 				JOptionPane.showMessageDialog(SpaceFrame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
@@ -84,7 +84,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 		hostPanel.add(label, cons);
 		cons.gridy++;
 
-		List<GameAddress> li = SpaceFrame.getGameAddressList();
+		List<GameAddress> li = Session.getGameAddressList();
 		if (li != null && li.size() > 0) {
 			for (GameAddress gameAddress : li) {
 				String gameString = gameAddress.getName();
@@ -109,7 +109,7 @@ public class PanelListHosts extends UpdatingScrollPanel {
 				hostPanel.add(label, cons);
 				cons.gridx++;
 		        JButton button = new UpdatingButton("Join", () -> {
-		        	SpaceFrame.joinGame(gameAddress);
+		        	Session.joinGame(gameAddress);
 		        });
 		        hostPanel.add(button, cons);
 		        cons.gridy++;

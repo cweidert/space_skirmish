@@ -11,14 +11,16 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NetworkUtils {
 	private static InetAddress externalAddress;
 	private static InetAddress lanAddress;
 	
 	static {
-		System.out.println("External IP Address: " + getExternalAddress());
-		System.out.println("Lan IP Address: " + getLanAddress());
+		Logger.getGlobal().log(Level.INFO, "My External IP Address: " + getExternalAddress());
+		Logger.getGlobal().log(Level.INFO, "My Lan IP Address: " + getLanAddress());
 	}
 	
 	public static InetAddress getExternalAddress() {

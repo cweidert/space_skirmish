@@ -2,7 +2,7 @@ package com.heliomug.games.space;
 
 import java.awt.Color;
 
-public class Planet extends Sprite {
+class Planet extends Sprite {
 	private static final long serialVersionUID = 1328500729510526414L;
 
 	private static final double DEFAULT_RADIUS = 8.0;

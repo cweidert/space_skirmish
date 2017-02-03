@@ -10,12 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.heliomug.games.space.Player;
-import com.heliomug.utils.gui.ColorButton;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingButton;
 
 @SuppressWarnings("serial")
-public class PanelAddNewPlayer extends JPanel {
+class PanelAddNewPlayer extends JPanel {
 	private JTextField nameBox;
 	private ColorButton colorButton;
 	
@@ -48,7 +47,7 @@ public class PanelAddNewPlayer extends JPanel {
 			String name = nameBox.getText();
 			name = name.length() == 0 ? "Joe Schmoe" : name;
 			Color color = colorButton.getColor();
-			SpaceFrame.addLocalPlayer(new Player(name, color));
+			Session.addLocalPlayer(new Player(name, color));
 			colorButton.resetColor();
 		});
 		panel.add(button);
