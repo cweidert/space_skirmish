@@ -1,0 +1,9 @@
+rm -r src
+cp -r ~/prog/java/workspace/SpaceGame/src .
+git add *
+if [[ $# -lt 2 ]]; then
+    git commit -a
+else 
+    git commit -a -m "$2"
+fi
+git push origin craigtop
