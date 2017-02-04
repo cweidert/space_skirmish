@@ -5,10 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import com.heliomug.games.space.Game;
-import com.heliomug.utils.gui.WeidertPanel;
 
 @SuppressWarnings("serial")
-class PanelGame extends WeidertPanel implements Runnable {
+class PanelGame extends SlowZoomPanel implements Runnable {
 	private static final int BOARD_WIDTH = 640;
 	private static final int BOARD_HEIGHT = 480;
 

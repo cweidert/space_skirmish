@@ -27,6 +27,7 @@ class Ship extends Sprite implements Serializable {
 	private static final double STARTING_HEALTH = 100;
 	private static final long BLINK_CYCLE = 1000;
 	private static final int BLINK_THRESHOLD = 25;
+	private static final double UNSAFE_DEATH_RATE = STARTING_HEALTH / 2;
 	
 	private static final double DEFAULT_HEADING = 0;
 	private static final Vec DEFAULT_POSITION = new Vec();
@@ -87,6 +88,9 @@ class Ship extends Sprite implements Serializable {
 	}
 
 	public void update(double dt) {
+		if (!isSafe()) {
+			health -= dt * UNSAFE_DEATH_RATE;
+		}
 		heading += turnDirection.getValue() * TURN_SPEED * dt;
 		if (accel != 0) {
 			addForce(new Vec(heading).mult(BOOST_FORCE * accel));
@@ -94,6 +98,9 @@ class Ship extends Sprite implements Serializable {
 		super.update(dt);
 		if (getSpeed() > MAX_SPEED) {
 			setSpeed(MAX_SPEED);
+		}
+		if (health < 0) {
+			die();
 		}
 	}
 

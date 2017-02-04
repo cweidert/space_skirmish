@@ -1,15 +1,19 @@
-package com.heliomug.games.space;
+package com.heliomug.games.space.server;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class CommandShip implements Consumer<Game>, Serializable {
+import com.heliomug.games.space.Game;
+import com.heliomug.games.space.Player;
+import com.heliomug.games.space.ShipSignal;
+
+public class CommandShipSignal implements Consumer<Game>, Serializable {
 	private static final long serialVersionUID = -1189353728178342673L;
 
 	private Player player;
 	private ShipSignal signal;
 	
-	public CommandShip(Player player, ShipSignal signal) {
+	public CommandShipSignal(Player player, ShipSignal signal) {
 		this.player = player;
 		this.signal = signal;
 	}

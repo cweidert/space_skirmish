@@ -1,20 +1,22 @@
-package com.heliomug.games.space;
+package com.heliomug.games.space.server;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class CommandPlayer implements Consumer<Game>, Serializable {
+import com.heliomug.games.space.Game;
+import com.heliomug.games.space.Player;
+
+public class CommandAddRemovePlayer implements Consumer<Game>, Serializable {
 	private static final long serialVersionUID = 8350563567725970336L;
 
 	private Player player;
 	private boolean isAdding;
 	
-	
-	public CommandPlayer(Player player) {
+	public CommandAddRemovePlayer(Player player) {
 		this(player, true);
 	}
 	
-	public CommandPlayer(Player player, boolean isAdding) {
+	public CommandAddRemovePlayer(Player player, boolean isAdding) {
 		this.player = player;
 		this.isAdding = isAdding;
 	}

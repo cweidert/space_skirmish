@@ -10,13 +10,13 @@ import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
-import com.heliomug.games.space.CommandPlayer;
-import com.heliomug.games.space.CommandShip;
 import com.heliomug.games.space.ControlConfig;
 import com.heliomug.games.space.Game;
 import com.heliomug.games.space.Player;
 import com.heliomug.games.space.ShipSignal;
-import com.heliomug.games.space.server.CommandGameList;
+import com.heliomug.games.space.server.CommandAddRemoveGame;
+import com.heliomug.games.space.server.CommandAddRemovePlayer;
+import com.heliomug.games.space.server.CommandShipSignal;
 import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.GameListClient;
 import com.heliomug.games.space.server.GameListServer;
@@ -85,7 +85,7 @@ class Session {
 			Thread t = new Thread(() -> {
 				try {
 					Thread.sleep(SERVER_DELAY);
-					gameListClient.sendCommand(new CommandGameList(gameAddress));
+					gameListClient.sendCommand(new CommandAddRemoveGame(gameAddress));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -142,7 +142,7 @@ class Session {
 		for (Player player : localPlayers) {
 			ShipSignal signal = controlAssignments.get(player).getSignal(key, down);
 			if (signal != null) {
-				sendCommand(new CommandShip(player, signal));
+				sendCommand(new CommandShipSignal(player, signal));
 			}
 		}
 	}
@@ -159,13 +159,13 @@ class Session {
 	public static void addLocalPlayer(Player player) {
 		localPlayers.add(player);
 		controlAssignments.put(player, new ControlConfig(player));
-		sendCommand(new CommandPlayer(player));
+		sendCommand(new CommandAddRemovePlayer(player));
 	}
 
 	public static void removeLocalPlayer(Player player) {
 		localPlayers.remove(player);
 		controlAssignments.remove(player);
-		sendCommand(new CommandPlayer(player, false));
+		sendCommand(new CommandAddRemovePlayer(player, false));
 	}
 
 	public static List<Player> getAllPlayers() {
@@ -212,7 +212,7 @@ class Session {
 	private static void setServer(Server<Game> server) {
 		if (Session.gameServer != null && gameListClient != null) {
 			GameAddress gameAddress = new GameAddress(Session.gameServer);
-			gameListClient.sendCommand(new CommandGameList(gameAddress, false));
+			gameListClient.sendCommand(new CommandAddRemoveGame(gameAddress, false));
 		}
 		if (Session.gameServer != null) {
 			Session.gameServer.close();
@@ -234,7 +234,7 @@ class Session {
 		List<Player> playersToAdd = getLocalPlayers();
 		playersToAdd.removeAll(gameClient.getThing().getPlayers());
 		for (Player player : playersToAdd) {
-			gameClient.sendCommand(new CommandPlayer(player));
+			gameClient.sendCommand(new CommandAddRemovePlayer(player));
 		}
 		if (gameClient == null) {
 			ownGame = new Game();

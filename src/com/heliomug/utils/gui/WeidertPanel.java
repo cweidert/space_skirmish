@@ -28,9 +28,21 @@ import javax.swing.JPanel;
 public class WeidertPanel extends JPanel  {
 	private static final long serialVersionUID = 6395548544912733950L;
 
+	private static final boolean DEFAULT_IS_ZOOMABLE = true;
+	private static final boolean DEFAULT_IS_DRAGGABLE = true;
+
 	private static final double WHEEL_ZOOM_FACTOR = 1.25;
 	
-	private double sLeft, sRight, sBottom, sTop;
+	public double getTop() {
+		return top;
+	}
+
+
+	public void setTop(double top) {
+		this.top = top;
+	}
+
+	private double left, right, bottom, top;
 	
 	private boolean isZoomable, isDraggable;
 	
@@ -56,13 +68,13 @@ public class WeidertPanel extends JPanel  {
 	 */
 	public WeidertPanel(int pixelWidth, int pixelHeight, double left, double right, double bottom, double top) {
 		super();
-		this.sLeft = left;
-		this.sRight = right;
-		this.sTop = top;
-		this.sBottom = bottom;
+		this.left = left;
+		this.right = right;
+		this.top = top;
+		this.bottom = bottom;
 		
-		this.isZoomable = true;
-		this.isDraggable = false;
+		this.isZoomable = DEFAULT_IS_ZOOMABLE;
+		this.isDraggable = DEFAULT_IS_DRAGGABLE;
 		
 		this.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -71,7 +83,7 @@ public class WeidertPanel extends JPanel  {
 			}
 		});
 		
-		Mouser mouser = new Mouser();
+		ScreenMouser mouser = new ScreenMouser();
 		this.addMouseWheelListener(mouser);
 		this.addMouseListener(mouser);
 		this.addMouseMotionListener(mouser);
@@ -90,6 +102,35 @@ public class WeidertPanel extends JPanel  {
 		this.setDoubleBuffered(true);
 	}
 	
+	public double getLeft() {
+		return left;
+	}
+
+
+	public void setLeft(double left) {
+		this.left = left;
+	}
+
+
+	public double getRight() {
+		return right;
+	}
+
+
+	public void setRight(double right) {
+		this.right = right;
+	}
+
+
+	public double getBottom() {
+		return bottom;
+	}
+
+
+	public void setBottom(double bottom) {
+		this.bottom = bottom;
+	}
+
 	/**
 	 * Override this to do things with keys.  
 	 * 
@@ -133,6 +174,7 @@ public class WeidertPanel extends JPanel  {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
+		update();
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setTransform(getTransform());
@@ -156,10 +198,10 @@ public class WeidertPanel extends JPanel  {
 	 * @param dy vertical shift
 	 */
 	public void translateScreen(double dx, double dy) {
-		sLeft += dx;
-		sRight += dx;
-		sTop += dy;
-		sBottom += dy;
+		left += dx;
+		right += dx;
+		top += dy;
+		bottom += dy;
 	}
 
 	/**
@@ -180,10 +222,10 @@ public class WeidertPanel extends JPanel  {
 	 * @param top top
 	 */
 	public void setScreenBounds(double left, double right, double bottom, double top) {
-		sLeft = left;
-		sRight = right;
-		sBottom = bottom;
-		sTop = top;
+		this.left = left;
+		this.right = right;
+		this.bottom = bottom;
+		this.top = top;
 		fixAspectRatio();
 	}
 
@@ -194,8 +236,8 @@ public class WeidertPanel extends JPanel  {
 	 * @param y y coord
 	 */
 	public void setCenterOfScreen(double x, double y) {
-		double xSpan = (sRight - sLeft) / 2;
-		double ySpan = (sTop - sBottom) / 2;
+		double xSpan = (right - left) / 2;
+		double ySpan = (top - bottom) / 2;
 		setScreenBounds(x - xSpan, x + xSpan, y - ySpan, y + ySpan);
 	}
 	
@@ -205,8 +247,8 @@ public class WeidertPanel extends JPanel  {
 	 * @param r radius to show on the screeen
 	 */
 	public void setRadiusShown(double r) {
-		double xCen = (sLeft + sRight) / 2;
-		double yCen = (sTop + sBottom) / 2;
+		double xCen = (left + right) / 2;
+		double yCen = (top + bottom) / 2;
 		if (getWidth() > getHeight()) {
 			setScreenBounds(xCen - r * getWidth() / getHeight(), xCen + r * getWidth() / getHeight(), yCen - r, yCen + r);
 		} else {
@@ -222,10 +264,10 @@ public class WeidertPanel extends JPanel  {
 	 * @param s scale factor
 	 */
 	public void zoom(double x, double y, double s) {
-		double l = x - (x - sLeft) * s;
-		double r = x + (sRight - x) * s;
-		double t = y + (sTop - y) * s;
-		double b = y - (y - sBottom) * s;
+		double l = x - (x - left) * s;
+		double r = x + (right - x) * s;
+		double t = y + (top - y) * s;
+		double b = y - (y - bottom) * s;
 		setScreenBounds(l, r, b, t);
 	}
 	
@@ -240,6 +282,9 @@ public class WeidertPanel extends JPanel  {
 	public void handleMouseClick(double x, double y, MouseEvent e) {
 	}
 
+	public void update() {
+	}
+	
 	private Point2D getLocation(int px, int py) { 
 		try {
 			return getTransform().inverseTransform(new Point2D.Double(px,  py), null);
@@ -249,32 +294,44 @@ public class WeidertPanel extends JPanel  {
 		return null;
 	}
 	
-	private final AffineTransform getTransform() {
-		double xCoeff = getWidth() / (sRight - sLeft);
-		double yCoeff = getHeight() / (sBottom - sTop);
-		double xConst = sLeft * getWidth() / (sLeft - sRight);
-		double yConst = sTop * getHeight() / (sTop - sBottom);
+	public final AffineTransform getTransform() {
+		double xCoeff = getWidth() / (right - left);
+		double yCoeff = getHeight() / (bottom - top);
+		double xConst = left * getWidth() / (left - right);
+		double yConst = top * getHeight() / (top - bottom);
 		return new AffineTransform(xCoeff, 0, 0, yCoeff, xConst, yConst);
 	}
 	
-	private void fixAspectRatio() {
+	public void fixAspectRatio() {
 		AffineTransform t = getTransform();
 		double xScale = Math.abs(t.getScaleX());
 		double yScale = Math.abs(t.getScaleY());
 		if (xScale > yScale) {
-			double cen = (sLeft + sRight) / 2;
+			double cen = (left + right) / 2;
 			double halfWidth = getWidth() / yScale / 2; 
-			sLeft = cen - halfWidth;    
-			sRight = cen + halfWidth;
+			left = cen - halfWidth;    
+			right = cen + halfWidth;
+			/*
+			halfWidth = (goalRight - goalLeft) / yScale / 2;
+			cen = (goalRight - goalLeft) / 2;
+			goalRight = cen + halfWidth;
+			goalLeft = cen - halfWidth;
+			*/
 		} else if (xScale < yScale) {
-			double cen = (sTop + sBottom) / 2;
+			double cen = (top + bottom) / 2;
 			double halfHeight = getHeight() / xScale / 2; 
-			sBottom = cen - halfHeight;    
-			sTop = cen + halfHeight;
+			bottom = cen - halfHeight;    
+			top = cen + halfHeight;
+			/*
+			cen = (goalTop + goalBottom) / 2;
+			halfHeight = (goalTop - goalBottom) / xScale / 2; 
+			goalBottom = cen - halfHeight;    
+			goalTop = cen + halfHeight;
+			*/
 		}
 	}
 	
-	private class Mouser extends MouseAdapter implements MouseWheelListener {
+	private class ScreenMouser extends MouseAdapter implements MouseWheelListener {
 		private int dragStartX, dragStartY;
 
 		@Override
@@ -303,7 +360,7 @@ public class WeidertPanel extends JPanel  {
 			WeidertPanel.this.handleMouseClick(p.getX(), p.getY(), e);
 		}
 		
-		public void updateDragStart(MouseEvent e) {
+		private void updateDragStart(MouseEvent e) {
 			dragStartX = e.getX();
 			dragStartY = e.getY();
 		}

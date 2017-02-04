@@ -2,9 +2,11 @@ package com.heliomug.games.space.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import com.heliomug.games.space.GameSettings;
 import com.heliomug.utils.gui.PanelUtils;
@@ -30,6 +32,9 @@ class CardSettings extends JPanel {
 		return panel;
 	}
 
+	// ship collision kills?
+	
+	
 	private JPanel getBulletPanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		PanelUtils.addEtch(panel, "Bullet Settings");
@@ -145,35 +150,32 @@ class CardSettings extends JPanel {
 		});
 		panel.add(box);
 
-		/*
-		box = new UpdatingCheckBox("Kill Zone", (Boolean b) -> {
-			if (SpaceFrame.hasOwnGame()) {
-				SpaceFrame.getGame().setKillZone(b);
+		box = new UpdatingCheckBox("Safe Zone", KeyEvent.VK_S, (Boolean b) -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setSafeZone(b);
 			}
 		}, () -> {
-			return SpaceFrame.hasOwnGame() && SpaceFrame.getGame().isKillZone();
+			return Session.hasOwnGame() && Session.getGame().getSettings().isSafeZone();
 		});
-		optionPanel.add(box);
-		panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel("Kill Zone Ratio"), BorderLayout.WEST);
-		slider = new UpdatingSlider(
+		panel.add(box);
+		JPanel subpanel = new JPanel(new BorderLayout());
+		subpanel.add(new JLabel("Safe Zone Ratio"), BorderLayout.WEST);
+		JSlider slider = new UpdatingSlider(
 				0, 
-				(int)GameOptions.MAX_KILL_ZONE_RATIO * 100, 
-				(int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100, 
+				GameSettings.MAX_SAFE_ZONE_RADIUS, 
+				GameSettings.DEFAULT_SAFE_ZONE_RADIUS, 
 				(Integer i) -> {
-					SpaceFrame.getGame().setKillZoneRatio(i / 100.0);
-					System.out.println(SpaceFrame.getGame().getKillZoneRatio());
+					Session.getGame().getSettings().setSafeZoneRadius(i);
 				}, () -> {
-					if (SpaceFrame.getServer() == null) {
-						return (int)GameOptions.DEFAULT_KILL_ZONE_RATIO * 100;
+					if (Session.hasOwnGame()) {
+						return Session.getGame().getSettings().getSafeZoneRadius();
 					} else {
-						return (int)(SpaceFrame.getGame().getKillZoneRatio() * 100);
+						return GameSettings.DEFAULT_SAFE_ZONE_RADIUS;
 					}
 				}
 		);
-		panel.add(slider, BorderLayout.CENTER);
-		optionPanel.add(panel);
-		*/
+		subpanel.add(slider, BorderLayout.CENTER);
+		panel.add(subpanel);
 		
 		return panel;
 	}

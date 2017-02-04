@@ -29,6 +29,7 @@ class Sprite implements Boundable, Serializable {
 	
 	private boolean isAlive;
 	private boolean isStationary;	
+	private boolean isSafe;
 	
 	private boolean isAgeLimit;
 	private long ageLimit;
@@ -56,11 +57,20 @@ class Sprite implements Boundable, Serializable {
 		this.r = rad;
 		this.mass = mass;
 		this.isAlive = true;
+		this.isSafe = true;
 		this.sumForce = new Vec();
 		this.isStationary = DEFAULT_IS_STATIONARY;
 		this.isAgeLimit = false;
 		this.ageLimit = 0;
 		this.birthday = System.currentTimeMillis();
+	}
+	
+	public void setSafe(boolean b) {
+		isSafe = b;
+	}
+	
+	public boolean isSafe() {
+		return isSafe;
 	}
 	
 	public long getAge() {

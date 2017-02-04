@@ -1,5 +1,6 @@
 package com.heliomug.games.space;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,8 @@ public class Game implements Serializable, ActionListener {
 	public static final double START_SPEED = 27;
 	
 	public static final Color BOUNDS_COLOR = Color.RED;
-	public static final Color KILL_ZONE_COLOR = Color.RED;
+	public static final Color SAFE_ZONE_COLOR = Color.RED;
+	public static final int SAFE_ZONE_BORDER_WIDTH = 10;
 	
 	private List<Sprite> sprites; 
 	
@@ -175,11 +177,9 @@ public class Game implements Serializable, ActionListener {
 				wrapAll();
 			}
 			
-			/*
-			if (options.isKillZone()) {
-				killZoneAll();
+			if (settings.isSafeZone()) {
+				safeZoneAll();
 			}
-			*/
 			
 			collideAll(dt);
 			
@@ -217,16 +217,19 @@ public class Game implements Serializable, ActionListener {
 		}
 	}
 	
-	/*
-	private void killZoneAll() {
-		Rectangle2D killZone = options.getKillBounds();
+	
+	private void safeZoneAll() {
+		double safeRadius = settings.getSafeZoneRadius();
 		for (Sprite sprite : sprites) {
-			if (!sprite.getBounds().intersects(killZone)) {
-				sprite.die();
+			// center at zero;
+			if (sprite.getPosition().mag() > safeRadius) {
+				sprite.setSafe(false);
+			} else {
+				sprite.setSafe(true);
 			}
 		}
 	}
-	*/
+	
 	
 	private void wrapAll() {
 		for (Sprite sprite : sprites) {
@@ -329,14 +332,15 @@ public class Game implements Serializable, ActionListener {
 	public void draw(Graphics2D g) {
 		g.setColor(BOUNDS_COLOR);
 		g.draw(settings.getWrapBounds());
-		/*
-		if (options.isKillZone()) {
-			g.setColor(KILL_ZONE_COLOR);
-			g.draw(options.getKillBounds());
-		}
-		*/
+
 		for (Sprite sprite : sprites) {
 			sprite.draw(g);
+		}
+
+		if (settings.isSafeZone()) {
+			g.setStroke(new BasicStroke(SAFE_ZONE_BORDER_WIDTH));
+			g.setColor(SAFE_ZONE_COLOR);
+			g.draw(settings.getSafeZoneShape());
 		}
 	}
 	

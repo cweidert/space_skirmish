@@ -27,6 +27,14 @@ class Bullet extends Sprite {
 		return new Color(255, green, 0);
 	}
 	
+	@Override 
+	public void update(double dt) {
+		if (!isSafe()) {
+			die();
+		}
+		super.update(dt);
+	}
+	
 	@Override
 	public void getHitBy(Sprite other, double dt) {
 		if (other instanceof Bullet) {
