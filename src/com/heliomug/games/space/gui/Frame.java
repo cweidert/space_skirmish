@@ -9,16 +9,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-class SpaceFrame extends JFrame {
+class Frame extends JFrame {
 	public static final int GAME_PORT = 27960;
 	
 	public static final int SERVER_DELAY = 250; 
 	
-	private static SpaceFrame theFrame;
+	private static Frame theFrame;
 	
-	public static SpaceFrame getFrame() {
+	public static Frame getFrame() {
 		if (theFrame == null) {
-			theFrame = new SpaceFrame();
+			theFrame = new Frame();
 		}
 		return theFrame;
 	}
@@ -29,12 +29,12 @@ class SpaceFrame extends JFrame {
 	public static final String CONNECTIONS_CARD = "connections card";
 	
 	private JPanel cardPanel;
-	private JPanel gameCard;
+	private CardGame gameCard;
 	
 	Session space;
 	
-	private SpaceFrame() {
-		super("Networked Space Game");
+	private Frame() {
+		super("Networked Space / Tank Game");
 		
 		space = Session.getSpace();
 		
@@ -59,7 +59,8 @@ class SpaceFrame extends JFrame {
 		
 		cardPanel = new JPanel(new CardLayout());
 		cardPanel.setFocusable(false);
-		gameCard = new CardGame(); 
+		gameCard = new CardGame();
+		gameCard.reset();
 		cardPanel.add(gameCard, GAME_CARD);
 		cardPanel.add(new CardPlayers(), PLAYER_CARD);
 		cardPanel.add(new CardSettings(), SETTINGS_CARD);
@@ -68,6 +69,9 @@ class SpaceFrame extends JFrame {
 
 		add(panel);
 		pack();
+		
+		CardLayout layout = (CardLayout) cardPanel.getLayout();
+		layout.show(cardPanel, PLAYER_CARD);
 	}
 	
 	public static void setCard(String cardName) {

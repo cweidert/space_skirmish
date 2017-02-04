@@ -16,7 +16,7 @@ import com.heliomug.utils.gui.UpdatingButton;
 @SuppressWarnings("serial")
 class PanelAddNewPlayer extends JPanel {
 	private JTextField nameBox;
-	private ColorButton colorButton;
+	private ButtonColor colorButton;
 	
 	public PanelAddNewPlayer() {
 		super(new FlowLayout());
@@ -36,7 +36,7 @@ class PanelAddNewPlayer extends JPanel {
 		nameBox = new JTextField(25);
 		panel.add(nameBox);
 		panel.add(new JLabel("Color: "));
-		colorButton = new ColorButton();
+		colorButton = new ButtonColor();
 		panel.add(colorButton);
 		return panel;
 	}

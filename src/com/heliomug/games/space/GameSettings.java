@@ -34,7 +34,7 @@ public class GameSettings implements Serializable {
 	public static final int MAX_SAFE_ZONE_RADIUS = 1500;
 	
 	//misc
-	public static final boolean DEFAULT_IS_TANK_MODE = true;
+	public static final boolean DEFAULT_IS_TANK_MODE = false;
 	public static final boolean DEFAULT_IS_AUTO_RESTART = true;
 	
 	private boolean isAutoRestart;

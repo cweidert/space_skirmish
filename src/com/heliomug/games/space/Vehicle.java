@@ -23,7 +23,7 @@ class Vehicle extends Sprite implements Serializable {
 	private static final double TANK_BOOST_FORCE = 1000;
 	private static final double BOOST_RAD = 5;
 	private static final float BOOST_WIDTH = 4;
-	private static final Color BOOST_COLOR = new Color(255, 127, 0);
+	private static final Color BOOST_COLOR = Color.ORANGE;
 	
 	private static final double BULLET_SPEED = 75;
 

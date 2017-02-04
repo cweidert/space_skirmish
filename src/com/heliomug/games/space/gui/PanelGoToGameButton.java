@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 import com.heliomug.utils.gui.UpdatingButton;
 
 @SuppressWarnings("serial")
-class PanelReturnToGame extends JPanel {
-	public PanelReturnToGame() {
+class PanelGoToGameButton extends JPanel {
+	public PanelGoToGameButton() {
 		super(new BorderLayout());
-		JButton button = new UpdatingButton("Return to Game", () -> {
-			SpaceFrame.setCard(SpaceFrame.GAME_CARD);
+		JButton button = new UpdatingButton("Go to Game", () -> {
+			Frame.setCard(Frame.GAME_CARD);
 		});
 		button.setMnemonic(KeyEvent.VK_G);
 		add(button);	

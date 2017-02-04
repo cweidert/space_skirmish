@@ -11,6 +11,9 @@ class PanelGame extends SlowZoomPanel implements Runnable {
 	private static final int BOARD_WIDTH = 640;
 	private static final int BOARD_HEIGHT = 480;
 
+	private static final Color TANK_BACKGROUND = new Color(0, 64, 0); // grass
+	private static final Color SPACE_BACKGROUND = Color.BLACK;
+	
 	private static final int SLEEP_TIME = 1;
 	
 	private static final boolean DEFAULT_AUTO_ZOOM = true;
@@ -34,9 +37,9 @@ class PanelGame extends SlowZoomPanel implements Runnable {
 
 	public void reset() {
 		if (Session.getGame().getSettings().isTankMode()) {
-			setBackground(new Color(0, 80, 0));
+			setBackground(TANK_BACKGROUND);
 		} else {
-			setBackground(Color.BLACK);
+			setBackground(SPACE_BACKGROUND);
 		}
 	}
 	

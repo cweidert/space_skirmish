@@ -51,31 +51,38 @@ class CardGame extends JPanel {
 		});
 	}
 
+	public void reset() {
+		if (Session.hasOwnGame()) {
+			Session.getGame().start();
+			board.reset();
+		}
+	}
+	
 	private JPanel getCardSwitchPanel() {
 		JPanel panel = new JPanel(new GridLayout(1, 0));
 
 		JButton button; 
 		
-		button = new UpdatingButton("Start Round!", KeyEvent.VK_R, () -> Session.hasOwnGame(), () -> {
+		button = new UpdatingButton("Reset Round!", KeyEvent.VK_R, () -> Session.hasOwnGame(), () -> {
 			if (Session.hasOwnGame()) {
-				Session.getGame().start();
-				board.reset();
+				Session.getGame().reset();
+				reset();
 			}
 		});
 		panel.add(button);
 		
 		button = new UpdatingButton("Players", KeyEvent.VK_P, () -> {
-			SpaceFrame.setCard(SpaceFrame.PLAYER_CARD);
+			Frame.setCard(Frame.PLAYER_CARD);
 		});
 		panel.add(button);
 		
 		button = new UpdatingButton("Settings", KeyEvent.VK_S, () -> Session.hasOwnGame(), () -> {
-			SpaceFrame.setCard(SpaceFrame.SETTINGS_CARD);
+			Frame.setCard(Frame.SETTINGS_CARD);
 		});
 		panel.add(button);
 		
 		button = new UpdatingButton("Internet", KeyEvent.VK_I, () -> {
-			SpaceFrame.setCard(SpaceFrame.CONNECTIONS_CARD);
+			Frame.setCard(Frame.CONNECTIONS_CARD);
 		});
 		panel.add(button);
 		

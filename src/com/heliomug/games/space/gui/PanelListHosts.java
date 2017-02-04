@@ -51,7 +51,7 @@ class PanelListHosts extends UpdatingScrollPanel {
 				Session.joinGame(gameAddress);
 			} catch (UnknownHostException | MalformedURLException e) {
 				String message = "That host can't be found.";
-				JOptionPane.showMessageDialog(SpaceFrame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(Frame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		return button;

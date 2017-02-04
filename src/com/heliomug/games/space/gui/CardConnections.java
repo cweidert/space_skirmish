@@ -14,6 +14,6 @@ class CardConnections extends JPanel {
 		panel.add(new PanelClient(), BorderLayout.SOUTH);
 		add(panel, BorderLayout.NORTH);
 		add(new PanelListHosts(), BorderLayout.CENTER);
-		add(new PanelReturnToGame(), BorderLayout.SOUTH);
+		add(new PanelGoToGameButton(), BorderLayout.SOUTH);
 	}
 }

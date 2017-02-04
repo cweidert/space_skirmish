@@ -101,7 +101,7 @@ class Session {
 	public static void joinGame(GameAddress address) {
 		if (address.isLocal() && gameServer != null && address.getPort() == gameServer.getPort()) {
 			String message = "That's your local game, dude.  You're hosting on that bad boy.";
-			JOptionPane.showMessageDialog(SpaceFrame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(Frame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
 		} else {
 			Thread t = new Thread(() -> {
 				try {
@@ -110,7 +110,7 @@ class Session {
 					setClient(newClient);
 				} catch (IOException e) {
 					String message = "Couldn't connect to that game.";
-					JOptionPane.showMessageDialog(SpaceFrame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Frame.getFrame(), message, "Whoops", JOptionPane.WARNING_MESSAGE);
 				}
 			});
 			t.start();

@@ -19,15 +19,14 @@ class CardSettings extends JPanel {
 		super(new BorderLayout());
 
 		add(getSettingsPanel(), BorderLayout.CENTER);
-		add(new PanelReturnToGame(), BorderLayout.SOUTH);
+		add(new PanelGoToGameButton(), BorderLayout.SOUTH);
 	}
 	
 	public JPanel getSettingsPanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		panel.add(getMiscSettings());
-		panel.add(getGravityPanel());
+		panel.add(getSpacePanel());
 		panel.add(getBulletPanel());
-		panel.add(getPlanetPanel());
 		panel.add(getBoundaryPanel());
 		return panel;
 	}
@@ -91,11 +90,29 @@ class CardSettings extends JPanel {
 		return panel;
 	}
 	
-	private JPanel getGravityPanel() {
+	private JPanel getSpacePanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		PanelUtils.addEtch(panel, "Gravity Settings");
 		UpdatingCheckBox box;
-		box = new UpdatingCheckBox("Gravity", (Boolean b) -> {
+
+		box = new UpdatingCheckBox("Planet On", () -> Session.getGame().getSettings().isTankMode(), (Boolean b) -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setPlanet(b);
+			}
+		}, () -> {
+			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanet();
+		});
+		panel.add(box);
+		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setPlanetStationary(b);
+			}
+		}, () -> {
+			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanetStationary();
+		});
+		panel.add(box);
+
+		box = new UpdatingCheckBox("Gravity", () -> Session.getGame().getSettings().isTankMode(), (Boolean b) -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().getSettings().setGravity(b);
 			}
@@ -118,29 +135,7 @@ class CardSettings extends JPanel {
 		});
 		subpanel.add(slider, BorderLayout.CENTER);
 		panel.add(subpanel);
-		return panel;
-	}
-	
-	private JPanel getPlanetPanel() {
-		JPanel panel = new JPanel(new GridLayout(0, 1));
-		PanelUtils.addEtch(panel, "Planet Settings");
-		UpdatingCheckBox box;
-		box = new UpdatingCheckBox("Planet On", (Boolean b) -> {
-			if (Session.hasOwnGame()) {
-				Session.getGame().getSettings().setPlanet(b);
-			}
-		}, () -> {
-			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanet();
-		});
-		panel.add(box);
-		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
-			if (Session.hasOwnGame()) {
-				Session.getGame().getSettings().setPlanetStationary(b);
-			}
-		}, () -> {
-			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanetStationary();
-		});
-		panel.add(box);
+
 		return panel;
 	}
 	

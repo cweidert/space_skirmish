@@ -100,7 +100,7 @@ class PanelListLocalPlayers extends UpdatingScrollPanel {
 
 			setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			JButton button = new UpdatingButton(controls.getKeyString(sig), () -> true, () -> {
-				JDialog dialog = new JDialog(SpaceFrame.getFrame(), "Key Assignment");
+				JDialog dialog = new JDialog(Frame.getFrame(), "Key Assignment");
 				String prompt = String.format("Press %s's button for %s", player.getName(), sig);
 				dialog.add(new JLabel(prompt));
 				dialog.setFocusable(true);

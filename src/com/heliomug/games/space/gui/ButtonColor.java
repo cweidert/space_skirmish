@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
 @SuppressWarnings("serial")
-class ColorButton extends JButton {
+class ButtonColor extends JButton {
 	private static final List<Color> primaryColors = Arrays.asList(new Color[] {
 			new Color(0xff, 0xff, 0xff),
 			new Color(0xff, 0xff, 0x00),
@@ -22,7 +22,7 @@ class ColorButton extends JButton {
 	});
 	
 	private static final List<Color> secondaryColors = Arrays.asList(new Color[] {
-			new Color(0x00, 0x64, 0x00),
+			//new Color(0x00, 0x64, 0x00), no dark green with grass
 			new Color(0x80, 0x00, 0x00),
 			new Color(0x80, 0x80, 0x00),
 			new Color(0x80, 0x80, 0x80),
@@ -32,13 +32,13 @@ class ColorButton extends JButton {
 	
 	private Color color;
 	
-	public ColorButton() {
+	public ButtonColor() {
 		super("   ");
 		setFocusable(false);	
 		resetColor();
 		addActionListener((ActionEvent e) -> {
 			Color newColor = JColorChooser.showDialog(
-					SpaceFrame.getFrame(),
+					Frame.getFrame(),
                     "Choose Player Color",
                     color);
 			setColor(newColor);

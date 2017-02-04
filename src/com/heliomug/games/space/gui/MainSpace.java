@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 public class MainSpace {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
-			SpaceFrame frame = SpaceFrame.getFrame();
+			Frame frame = Frame.getFrame();
 			frame.setVisible(true);
 		});
 	}

@@ -13,7 +13,7 @@ class CardPlayers extends JPanel {
 		panel.add(new PanelListLocalPlayers(), BorderLayout.CENTER);
 		panel.add(new PanelAddNewPlayer(), BorderLayout.SOUTH);
 		add(panel, BorderLayout.CENTER);
-		add(new PanelReturnToGame(), BorderLayout.SOUTH);
+		add(new PanelGoToGameButton(), BorderLayout.SOUTH);
 	}
 }
 
