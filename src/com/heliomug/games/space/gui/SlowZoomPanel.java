@@ -1,9 +1,9 @@
 package com.heliomug.games.space.gui;
 
-import com.heliomug.utils.gui.WeidertPanel;
+import com.heliomug.utils.gui.ZoomablePanel;
 
 @SuppressWarnings("serial")
-class SlowZoomPanel extends WeidertPanel {
+class SlowZoomPanel extends ZoomablePanel {
 	private static final boolean DEFAULT_IS_SLOW_ZOOM = true;
 	
 	private static final double DEFAULT_ZOOM_LIMIT = 200;

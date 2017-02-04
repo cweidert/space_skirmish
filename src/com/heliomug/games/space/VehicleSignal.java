@@ -1,6 +1,6 @@
 package com.heliomug.games.space;
 
-public enum ShipSignal {
+public enum VehicleSignal {
 	TURN_LEFT("left"),
 	TURN_RIGHT("right"),
 	TURN_NONE("straight ahead"),
@@ -11,7 +11,7 @@ public enum ShipSignal {
 	
 	private String name;
 	
-	private ShipSignal(String name) {
+	private VehicleSignal(String name) {
 		this.name = name;
 	}
 	

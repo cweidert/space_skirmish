@@ -32,7 +32,7 @@ public class Game implements Serializable, ActionListener {
 	
 	private List<Player> players;
 	
-	private Map<Player, Ship> shipAssignments;
+	private Map<Player, Vehicle> shipAssignments;
 	
 	private long lastUpdated;
 	private long timeStarted;
@@ -82,7 +82,7 @@ public class Game implements Serializable, ActionListener {
 		double maxX = settings.getRight();
 		double minY = settings.getBottom();
 		double maxY = settings.getTop();
-		for (Ship ship : shipAssignments.values()) {
+		for (Vehicle ship : shipAssignments.values()) {
 			if (ship.isAlive()) {
 				double x = ship.getPosition().getX();
 				double y = ship.getPosition().getY();
@@ -106,30 +106,30 @@ public class Game implements Serializable, ActionListener {
 	
 	public void addPlayer(Player player) {
 		players.add(player);
-		shipAssignments.put(player, new Ship(player));
+		shipAssignments.put(player, new Vehicle(player));
 	}
 
 	public void removePlayer(Player player) {
-		Ship ship = shipAssignments.remove(player);
+		Vehicle ship = shipAssignments.remove(player);
 		players.remove(player);
 		sprites.remove(ship);
 	}
 	
-	public void handleShipSignal(Player player, ShipSignal signal) {
-		Ship ship = shipAssignments.get(player);
-		if (signal == ShipSignal.TURN_LEFT) {
+	public void handleShipSignal(Player player, VehicleSignal signal) {
+		Vehicle ship = shipAssignments.get(player);
+		if (signal == VehicleSignal.TURN_LEFT) {
 			ship.setTurnDirection(TurnDirection.LEFT);
-		} else if (signal == ShipSignal.TURN_RIGHT) {
+		} else if (signal == VehicleSignal.TURN_RIGHT) {
 			ship.setTurnDirection(TurnDirection.RIGHT);
-		} else if (signal == ShipSignal.TURN_NONE) {
+		} else if (signal == VehicleSignal.TURN_NONE) {
 			ship.setTurnDirection(TurnDirection.NONE);
-		} else if (signal == ShipSignal.FORWARD) {
+		} else if (signal == VehicleSignal.FORWARD) {
 			ship.setAccel(1);
-		} else if (signal == ShipSignal.BACKWARDS) {
+		} else if (signal == VehicleSignal.BACKWARDS) {
 			ship.setAccel(-1);
-		} else if (signal == ShipSignal.ACCEL_OFF) {
+		} else if (signal == VehicleSignal.ACCEL_OFF) {
 			ship.setAccel(0);
-		} else if (signal == ShipSignal.FIRE) {
+		} else if (signal == VehicleSignal.FIRE) {
 			Bullet bullet = ship.getBullet();
 			if (bullet != null) {
 				if (settings.isBulletAgeLimit()) {
@@ -156,15 +156,25 @@ public class Game implements Serializable, ActionListener {
 		isRoundEnded = false;
 		int size = players.size();
 		for (int i = 0 ; i < size ; i++) {
-			Ship ship = shipAssignments.get(players.get(i));
+			Vehicle ship = shipAssignments.get(players.get(i));
 			double theta = Math.PI * 2 * i / size;
 			Vec position = new Vec(theta).mult(START_RAD);
 			double theta2 = theta + Math.PI / 2;
 			Vec velocity = new Vec(theta2).mult(START_SPEED);
-			ship.reset(position, velocity, theta + Math.PI / 2);
+			ship.reset(position, velocity, theta + Math.PI / 2, settings.isTankMode());
 			sprites.add(ship);
 		}
 		lastUpdated = timeStarted = System.currentTimeMillis();
+	}
+	
+	private void endRound() {
+		if (!isRoundEnded) {
+			Player winner = getWinner();
+			if (winner != null) {
+				winner.addWin();
+			}
+			isRoundEnded = true;
+		}
 	}
 	
 	
@@ -207,16 +217,6 @@ public class Game implements Serializable, ActionListener {
 		}
 	}
 
-	private void endRound() {
-		if (!isRoundEnded) {
-			Player winner = getWinner();
-			if (winner != null) {
-				winner.addWin();
-			}
-			isRoundEnded = true;
-		}
-	}
-	
 	
 	private void safeZoneAll() {
 		double safeRadius = settings.getSafeZoneRadius();
@@ -229,7 +229,6 @@ public class Game implements Serializable, ActionListener {
 			}
 		}
 	}
-	
 	
 	private void wrapAll() {
 		for (Sprite sprite : sprites) {
@@ -258,13 +257,6 @@ public class Game implements Serializable, ActionListener {
 				}
 			}
 		}
-	}
-	
-	private Vec gForce(Sprite a, Sprite b) {
-		Vec diff = b.getPosition().sub(a.getPosition());
-		double dist = diff.mag();
-		double mag = settings.getBigG() * a.getMass() * b.getMass() / (dist * dist);
-		return diff.norm().mult(mag);
 	}
 	
 	private void removeDead() {
@@ -300,18 +292,27 @@ public class Game implements Serializable, ActionListener {
 		return numberOfLivingPlayers() == 0;
 	}
 	
+	
 	public int numberOfPlayers() {
 		return players.size();
 	}
+
 	
 	private int numberOfLivingPlayers() {
 		int tot = 0;
-		for (Ship ship : shipAssignments.values()) {
+		for (Vehicle ship : shipAssignments.values()) {
 			if (ship.isAlive()) {
 				tot++;
 			}
 		}
 		return tot;
+	}
+	
+	private Vec gForce(Sprite a, Sprite b) {
+		Vec diff = b.getPosition().sub(a.getPosition());
+		double dist = diff.mag();
+		double mag = settings.getBigG() * a.getMass() * b.getMass() / (dist * dist);
+		return diff.norm().mult(mag);
 	}
 	
 	private boolean isRoundOver() {

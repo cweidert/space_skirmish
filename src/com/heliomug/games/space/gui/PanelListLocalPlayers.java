@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 import com.heliomug.games.space.ControlConfig;
 import com.heliomug.games.space.Player;
-import com.heliomug.games.space.ShipSignal;
+import com.heliomug.games.space.VehicleSignal;
 import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingScrollPanel;
 
@@ -63,15 +63,15 @@ class PanelListLocalPlayers extends UpdatingScrollPanel {
 				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				playerPanel.add(label, cons);
 	    		cons.gridx++;
-				playerPanel.add(new KeyDisplay(player, ShipSignal.TURN_LEFT), cons);
+				playerPanel.add(new KeyDisplay(player, VehicleSignal.TURN_LEFT), cons);
 	    		cons.gridx++;
-				playerPanel.add(new KeyDisplay(player, ShipSignal.TURN_RIGHT), cons);
+				playerPanel.add(new KeyDisplay(player, VehicleSignal.TURN_RIGHT), cons);
 	    		cons.gridx++;
-				playerPanel.add(new KeyDisplay(player, ShipSignal.FORWARD), cons);
+				playerPanel.add(new KeyDisplay(player, VehicleSignal.FORWARD), cons);
 	    		cons.gridx++;
-				playerPanel.add(new KeyDisplay(player, ShipSignal.BACKWARDS), cons);
+				playerPanel.add(new KeyDisplay(player, VehicleSignal.BACKWARDS), cons);
 	    		cons.gridx++;
-				playerPanel.add(new KeyDisplay(player, ShipSignal.FIRE), cons);
+				playerPanel.add(new KeyDisplay(player, VehicleSignal.FIRE), cons);
 	    		cons.gridx++;
 				JPanel panel = new JPanel();
 				panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -94,7 +94,7 @@ class PanelListLocalPlayers extends UpdatingScrollPanel {
 	}
 	
 	private class KeyDisplay extends JPanel {
-		public KeyDisplay(Player player, ShipSignal sig) {
+		public KeyDisplay(Player player, VehicleSignal sig) {
 			super(new BorderLayout());
 			ControlConfig controls = Session.getControlConfig(player);
 

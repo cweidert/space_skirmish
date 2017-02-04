@@ -8,29 +8,38 @@ import java.io.Serializable;
 public class GameSettings implements Serializable {
 	private static final long serialVersionUID = 7655574152522563536L;
 
+	// screen size
 	public static final double DEFAULT_WIDTH = 256;
 	public static final double DEFAULT_HEIGHT = 192;
 	public static final Rectangle2D ORIGINAL_BOUNDS = new Rectangle2D.Double(- DEFAULT_WIDTH / 2, - DEFAULT_HEIGHT / 2,	DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	public static final double BUFFER_WIDTH = 12;
 
+	// expiration date
 	public static final long DEFAULT_BULLET_AGE_LIMIT = 3000;
 	public static final long MAX_BULLET_AGE_LIMIT = 10000;
 
+	// gravity
 	public static final boolean DEFAULT_IS_GRAVITY = true;
 	public static final int DEFAULT_BIG_G = 10000;
 	public static final int MAX_BIG_G = 100000;
 
+	// planets
 	public static final boolean DEFAULT_IS_PLANET = true; 
 	public static final boolean DEFAULT_IS_PLANET_STATIONARY = true;
-	
+
+	// boundaries
+	public static final boolean DEFAULT_IS_WRAP = false;
 	public static final boolean DEFAULT_IS_SAFE_ZONE = true;
 	public static final int DEFAULT_SAFE_ZONE_RADIUS = 500;
 	public static final int MAX_SAFE_ZONE_RADIUS = 1500;
 	
-	public static final boolean DEFAULT_IS_WRAP = false;
+	//misc
+	public static final boolean DEFAULT_IS_TANK_MODE = true;
 	public static final boolean DEFAULT_IS_AUTO_RESTART = true;
 	
 	private boolean isAutoRestart;
+	
+	private boolean isTankMode;
 	
 	private boolean isPlanet;
 	private boolean isPlanetStationary;
@@ -51,17 +60,18 @@ public class GameSettings implements Serializable {
 	public GameSettings() {
 		setWidth(DEFAULT_WIDTH);
 		setHeight(DEFAULT_HEIGHT);
+
 		bigG = DEFAULT_BIG_G;
-		isGravity = DEFAULT_IS_GRAVITY;
-		isWrap = DEFAULT_IS_WRAP;
-		
 		isPlanet = DEFAULT_IS_PLANET;
 		isPlanetStationary = DEFAULT_IS_PLANET_STATIONARY;
+
+		setTankMode(DEFAULT_IS_TANK_MODE);
 		
+		isGravity = DEFAULT_IS_GRAVITY;
+		isWrap = DEFAULT_IS_WRAP;
 		isAutoRestart = DEFAULT_IS_AUTO_RESTART;
 		isSafeZone = DEFAULT_IS_SAFE_ZONE;
 		safeZoneRadius = DEFAULT_SAFE_ZONE_RADIUS;
-		//setKillZoneRatio(DEFAULT_KILL_ZONE_RATIO);
 	}
 	
 	public boolean isWrap() {
@@ -74,7 +84,7 @@ public class GameSettings implements Serializable {
 	
 	
 	public boolean isPlanet() {
-		return isPlanet;
+		return isPlanet && !isTankMode;
 	}
 	
 	public void setPlanet(boolean b) {
@@ -82,7 +92,7 @@ public class GameSettings implements Serializable {
 	}
 	
 	public boolean isGravity() {
-		return isGravity;
+		return isGravity && !isTankMode;
 	}
 	
 	public void setGravity(boolean b) {
@@ -196,5 +206,13 @@ public class GameSettings implements Serializable {
 	
 	public Shape getSafeZoneShape() {
 		return new Ellipse2D.Double(-safeZoneRadius, -safeZoneRadius, safeZoneRadius * 2, safeZoneRadius * 2);
+	}
+
+	public boolean isTankMode() {
+		return isTankMode;
+	}
+
+	public void setTankMode(boolean isTankMode) {
+		this.isTankMode = isTankMode;
 	}
 }

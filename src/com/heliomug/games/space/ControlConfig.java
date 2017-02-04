@@ -93,47 +93,47 @@ public class ControlConfig {
 		}
 	}
 	
-	public String getKeyString(ShipSignal sig) {
-		if (sig == ShipSignal.TURN_LEFT) {
+	public String getKeyString(VehicleSignal sig) {
+		if (sig == VehicleSignal.TURN_LEFT) {
 			return keyToString(leftKey);
-		} else if (sig == ShipSignal.TURN_RIGHT) {
+		} else if (sig == VehicleSignal.TURN_RIGHT) {
 			return keyToString(rightKey);
-		} else if (sig == ShipSignal.FORWARD) {
+		} else if (sig == VehicleSignal.FORWARD) {
 			return keyToString(forwardKey);
-		} else if (sig == ShipSignal.BACKWARDS) {
+		} else if (sig == VehicleSignal.BACKWARDS) {
 			return keyToString(backKey);
-		} else if (sig == ShipSignal.FIRE) {
+		} else if (sig == VehicleSignal.FIRE) {
 			return keyToString(fireKey);
 		} else {
 			return "";
 		}
 	}
 	
-	public void setKey(ShipSignal sig, int key) {
-		if (sig == ShipSignal.TURN_LEFT) {
+	public void setKey(VehicleSignal sig, int key) {
+		if (sig == VehicleSignal.TURN_LEFT) {
 			leftKey = key;
-		} else if (sig == ShipSignal.TURN_RIGHT) {
+		} else if (sig == VehicleSignal.TURN_RIGHT) {
 			rightKey = key;
-		} else if (sig == ShipSignal.FORWARD) {
+		} else if (sig == VehicleSignal.FORWARD) {
 			forwardKey = key;
-		} else if (sig == ShipSignal.FIRE) {
+		} else if (sig == VehicleSignal.FIRE) {
 			fireKey = key;
-		} else if (sig == ShipSignal.BACKWARDS) {
+		} else if (sig == VehicleSignal.BACKWARDS) {
 			backKey = key;
 		} 
 	}
 	
-	public ShipSignal getSignal(int key, boolean isDown) {
+	public VehicleSignal getSignal(int key, boolean isDown) {
 		if (key == leftKey) {
 			if (leftDown != isDown) {
 				leftDown = isDown;
 				if (isDown) {
-					return ShipSignal.TURN_LEFT;
+					return VehicleSignal.TURN_LEFT;
 				} else {
 					if (rightDown) {
-						return ShipSignal.TURN_RIGHT;
+						return VehicleSignal.TURN_RIGHT;
 					} else {
-						return ShipSignal.TURN_NONE;
+						return VehicleSignal.TURN_NONE;
 					}
 				}
 			} 
@@ -141,12 +141,12 @@ public class ControlConfig {
 			if (rightDown != isDown) {
 				rightDown = isDown;
 				if (isDown) {
-					return ShipSignal.TURN_RIGHT;
+					return VehicleSignal.TURN_RIGHT;
 				} else {
 					if (leftDown) {
-						return ShipSignal.TURN_LEFT;
+						return VehicleSignal.TURN_LEFT;
 					} else {
-						return ShipSignal.TURN_NONE;
+						return VehicleSignal.TURN_NONE;
 					}
 				}
 			} 
@@ -154,12 +154,12 @@ public class ControlConfig {
 			if (forwardDown != isDown) {
 				forwardDown = isDown;
 				if (isDown) {
-					return ShipSignal.FORWARD;
+					return VehicleSignal.FORWARD;
 				} else {
 					if (backDown) {
-						return ShipSignal.BACKWARDS;
+						return VehicleSignal.BACKWARDS;
 					} else {
-						return ShipSignal.ACCEL_OFF;
+						return VehicleSignal.ACCEL_OFF;
 					}
 				}
 			} 
@@ -167,12 +167,12 @@ public class ControlConfig {
 			if (backDown != isDown) {
 				backDown = isDown;
 				if (isDown) {
-					return ShipSignal.BACKWARDS;
+					return VehicleSignal.BACKWARDS;
 				} else {
 					if (forwardDown) {
-						return ShipSignal.FORWARD;
+						return VehicleSignal.FORWARD;
 					} else {
-						return ShipSignal.ACCEL_OFF;
+						return VehicleSignal.ACCEL_OFF;
 					}
 				}
 			} 
@@ -180,7 +180,7 @@ public class ControlConfig {
 			if (fireDown != isDown) {
 				fireDown = isDown;
 				if (isDown) {
-					return ShipSignal.FIRE;
+					return VehicleSignal.FIRE;
 				}
 			}
 		}

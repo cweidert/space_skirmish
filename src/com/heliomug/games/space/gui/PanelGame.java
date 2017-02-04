@@ -29,8 +29,15 @@ class PanelGame extends SlowZoomPanel implements Runnable {
 	}
 	
 	private void setupGUI() {
-		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
+	}
+
+	public void reset() {
+		if (Session.getGame().getSettings().isTankMode()) {
+			setBackground(new Color(0, 80, 0));
+		} else {
+			setBackground(Color.BLACK);
+		}
 	}
 	
 	public void setAutoZoom(boolean b) {
@@ -43,7 +50,6 @@ class PanelGame extends SlowZoomPanel implements Runnable {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-
 		Game game = Session.getGame();
 		if (game != null && game.isActive()) {
 			if (isAutoZoom && (game.numberOfPlayers() == 0 || !game.allDead())) {

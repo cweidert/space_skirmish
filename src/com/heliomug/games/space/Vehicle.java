@@ -8,16 +8,19 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.io.Serializable;
 
-class Ship extends Sprite implements Serializable {
+class Vehicle extends Sprite implements Serializable {
 	private static final long serialVersionUID = 317323665656103453L;
 
 	private static final double MAX_SPEED = 150.0;
 	private static final double TURN_SPEED = Math.PI;
 	
-	private static final double TUR_RAD = 7;
+	private static final double TUR_RADIUS = 7;
+	private static final float TURRET_WIDTH = 2;
+	private static final Color TURRET_COLOR = Color.YELLOW;
 	private static final double SHIP_RAD = 5;
 
-	private static final double BOOST_FORCE = 100;
+	private static final double SHIP_BOOST_FORCE = 100;
+	private static final double TANK_BOOST_FORCE = 1000;
 	private static final double BOOST_RAD = 5;
 	private static final float BOOST_WIDTH = 4;
 	private static final Color BOOST_COLOR = new Color(255, 127, 0);
@@ -29,6 +32,8 @@ class Ship extends Sprite implements Serializable {
 	private static final int BLINK_THRESHOLD = 25;
 	private static final double UNSAFE_DEATH_RATE = STARTING_HEALTH / 2;
 	
+	private static final boolean DEFAULT_IS_TANK = false;
+
 	private static final double DEFAULT_HEADING = 0;
 	private static final Vec DEFAULT_POSITION = new Vec();
 	private static final Vec DEFAULT_VELOCITY = new Vec();
@@ -41,13 +46,15 @@ class Ship extends Sprite implements Serializable {
 	private double health;
 	private Color color;
 	
+	private boolean isTank;
 	
-	public Ship(Player player) {
+	public Vehicle(Player player) {
 		super(SHIP_RAD);
 		heading = DEFAULT_HEADING;
 		this.color = player.getColor();
-		reset(DEFAULT_POSITION, heading);
 		this.accel = 0;
+		this.isTank = DEFAULT_IS_TANK;
+		reset(DEFAULT_POSITION, heading);
 	}
 
 	public void reset(Vec pos, double heading) {
@@ -55,6 +62,11 @@ class Ship extends Sprite implements Serializable {
 	}
 	
 	public void reset(Vec pos, Vec velo, double heading) {
+		reset(pos, velo, heading, DEFAULT_IS_TANK);
+	}
+	
+	public void reset(Vec pos, Vec velo, double heading, boolean isTank) {
+		this.isTank = isTank;
 		setPosition(pos);
 		setVelocity(velo);
 		setAlive(true);
@@ -64,13 +76,17 @@ class Ship extends Sprite implements Serializable {
 		health = STARTING_HEALTH;
 	}
 	
+	public void setTank(boolean b) {
+		isTank = b;
+	}
+	
 	public double getHeading() {
 		return heading;
 	}
 
 	public Bullet getBullet() {
 		if (isAlive()) {
-			Vec position = getPosition().add(new Vec(heading).mult(SHIP_RAD + TUR_RAD));
+			Vec position = getPosition().add(new Vec(heading).mult(SHIP_RAD + TUR_RADIUS));
 			Vec velocity = getVelocity().add(new Vec(heading).mult(BULLET_SPEED));
 			Bullet bullet = new Bullet(position, velocity);
 			setVelocity(getVelocity().sub(velocity.mult(bullet.getMass()))); 
@@ -93,7 +109,11 @@ class Ship extends Sprite implements Serializable {
 		}
 		heading += turnDirection.getValue() * TURN_SPEED * dt;
 		if (accel != 0) {
-			addForce(new Vec(heading).mult(BOOST_FORCE * accel));
+			if (isTank) {
+				addForce(new Vec(heading).mult(TANK_BOOST_FORCE * accel));
+			} else {
+				addForce(new Vec(heading).mult(SHIP_BOOST_FORCE * accel));
+			}
 		}
 		super.update(dt);
 		if (getSpeed() > MAX_SPEED) {
@@ -102,11 +122,14 @@ class Ship extends Sprite implements Serializable {
 		if (health < 0) {
 			die();
 		}
+		if (isTank) {
+			setVelocity(new Vec());
+		}
 	}
 
 	@Override
 	public void getHitBy(Sprite other, double dt) {
-		if (other instanceof Ship) {
+		if (other instanceof Vehicle) {
 			die();
 		} else if (other instanceof Bullet) {
 			Bullet b = (Bullet) other;
@@ -138,12 +161,38 @@ class Ship extends Sprite implements Serializable {
 		}
 	}
 	
-	public void drawFancy(Graphics2D g) {
+	public void drawTank(Graphics2D g) {
+		double r = getRadius();
+		Vec pos = getPosition();
+		double x = pos.getX();
+		double y = pos.getY();
+		double a = Math.cos(heading + Math.PI / 4) * r;
+		double b = Math.sin(heading + Math.PI / 4) * r;
+		Path2D shape = new Path2D.Double();
+		shape.moveTo(x + a, y + b);
+		shape.lineTo(x - b, y + a);
+		shape.lineTo(x - a, y - b);
+		shape.lineTo(x + b, y - a);
+		shape.lineTo(x + a, y + b);
+		g.setColor(getColor());
+		g.fill(shape);
+		g.setColor(TURRET_COLOR);
+		g.setStroke(new BasicStroke(TURRET_WIDTH));
+		g.draw(new Line2D.Double(x, y, x + r * Math.cos(heading), y + r * Math.sin(heading)));
+		
+	}
+	
+	public void drawShip(Graphics2D g) {
 		double r = getRadius();
 		double r2 = r / 2;
-		Vec position = getPosition();
-		double x = position.getX();
-		double y = position.getY();
+		double x = getPosition().getX();
+		double y = getPosition().getY();
+		
+		if (accel != 0) {
+			g.setColor(BOOST_COLOR);
+			g.setStroke(new BasicStroke(BOOST_WIDTH));
+			g.draw(new Line2D.Double(x, y, x - accel * Math.cos(heading) * BOOST_RAD, y - accel * Math.sin(heading) * BOOST_RAD));
+		}
 		
 		Path2D shape = new Path2D.Double();
 		shape.moveTo(x, y);
@@ -169,14 +218,10 @@ class Ship extends Sprite implements Serializable {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		double x = getPosition().getX();
-		double y = getPosition().getY();
-		if (accel != 0) {
-			g.setColor(BOOST_COLOR);
-			g.setStroke(new BasicStroke(BOOST_WIDTH));
-			g.draw(new Line2D.Double(x, y, x - accel * Math.cos(heading) * BOOST_RAD, y - accel * Math.sin(heading) * BOOST_RAD));
+		if (isTank) {
+			drawTank(g);
+		} else {
+			drawShip(g);
 		}
-
-		drawFancy(g);
 	}
 }

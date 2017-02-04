@@ -25,7 +25,7 @@ import javax.swing.JPanel;
  * @author Craig Weidert
  *
  */
-public class WeidertPanel extends JPanel  {
+public class ZoomablePanel extends JPanel  {
 	private static final long serialVersionUID = 6395548544912733950L;
 
 	private static final boolean DEFAULT_IS_ZOOMABLE = true;
@@ -46,12 +46,12 @@ public class WeidertPanel extends JPanel  {
 	
 	private boolean isZoomable, isDraggable;
 	
-	public WeidertPanel(int pixelWidth, int pixelHeight) {
+	public ZoomablePanel(int pixelWidth, int pixelHeight) {
 		this(pixelWidth, pixelHeight, -10, 10, -10, 10);
 	}
 
 		
-	public WeidertPanel(int pixelWidth, int pixelHeight, Rectangle2D bounds) {
+	public ZoomablePanel(int pixelWidth, int pixelHeight, Rectangle2D bounds) {
 		this(pixelWidth, pixelHeight, bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY());
 	}
 	
@@ -66,7 +66,7 @@ public class WeidertPanel extends JPanel  {
 	 * @param bottom Coordinate on bottom side if screen
 	 * @param top Coordinate on top side of screen
 	 */
-	public WeidertPanel(int pixelWidth, int pixelHeight, double left, double right, double bottom, double top) {
+	public ZoomablePanel(int pixelWidth, int pixelHeight, double left, double right, double bottom, double top) {
 		super();
 		this.left = left;
 		this.right = right;
@@ -357,7 +357,7 @@ public class WeidertPanel extends JPanel  {
 		public void mousePressed(MouseEvent e) {
 			if (isDraggable) updateDragStart(e);
 			Point2D p = getLocation(e.getX(), e.getY());
-			WeidertPanel.this.handleMouseClick(p.getX(), p.getY(), e);
+			ZoomablePanel.this.handleMouseClick(p.getX(), p.getY(), e);
 		}
 		
 		private void updateDragStart(MouseEvent e) {

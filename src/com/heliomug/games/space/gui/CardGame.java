@@ -59,6 +59,7 @@ class CardGame extends JPanel {
 		button = new UpdatingButton("Start Round!", KeyEvent.VK_R, () -> Session.hasOwnGame(), () -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().start();
+				board.reset();
 			}
 		});
 		panel.add(button);

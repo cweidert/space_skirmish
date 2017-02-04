@@ -154,8 +154,7 @@ class Sprite implements Boundable, Serializable {
 			}
 		}
 		if (!isStationary) {
-			double scalar = dt / mass;
-			velocity = velocity.add(sumForce.mult(scalar));
+			velocity = velocity.add(sumForce.mult(dt / mass));
 			position = position.add(velocity.mult(dt));
 		}
 		sumForce = new Vec();

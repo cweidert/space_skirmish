@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import com.heliomug.games.space.ControlConfig;
 import com.heliomug.games.space.Game;
 import com.heliomug.games.space.Player;
-import com.heliomug.games.space.ShipSignal;
+import com.heliomug.games.space.VehicleSignal;
 import com.heliomug.games.space.server.CommandAddRemoveGame;
 import com.heliomug.games.space.server.CommandAddRemovePlayer;
 import com.heliomug.games.space.server.CommandShipSignal;
@@ -140,7 +140,7 @@ class Session {
 	
 	public static void handleKey(int key, boolean down) {
 		for (Player player : localPlayers) {
-			ShipSignal signal = controlAssignments.get(player).getSignal(key, down);
+			VehicleSignal signal = controlAssignments.get(player).getSignal(key, down);
 			if (signal != null) {
 				sendCommand(new CommandShipSignal(player, signal));
 			}

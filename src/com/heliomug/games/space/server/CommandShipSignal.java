@@ -5,15 +5,15 @@ import java.util.function.Consumer;
 
 import com.heliomug.games.space.Game;
 import com.heliomug.games.space.Player;
-import com.heliomug.games.space.ShipSignal;
+import com.heliomug.games.space.VehicleSignal;
 
 public class CommandShipSignal implements Consumer<Game>, Serializable {
 	private static final long serialVersionUID = -1189353728178342673L;
 
 	private Player player;
-	private ShipSignal signal;
+	private VehicleSignal signal;
 	
-	public CommandShipSignal(Player player, ShipSignal signal) {
+	public CommandShipSignal(Player player, VehicleSignal signal) {
 		this.player = player;
 		this.signal = signal;
 	}

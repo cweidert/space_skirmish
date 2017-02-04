@@ -71,12 +71,21 @@ class CardSettings extends JPanel {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		PanelUtils.addEtch(panel, "Misc Settings");
 		UpdatingCheckBox box;
+
 		box = new UpdatingCheckBox("Auto Restart", (Boolean b) -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().getSettings().setAutoRestart(b);
 			}
 		}, () -> {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isAutoRestart();
+		});
+		panel.add(box);
+		box = new UpdatingCheckBox("Tank Mode", (Boolean b) -> {
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setTankMode(b);
+			}
+		}, () -> {
+			return Session.hasOwnGame() && Session.getGame().getSettings().isTankMode();
 		});
 		panel.add(box);
 		return panel;
