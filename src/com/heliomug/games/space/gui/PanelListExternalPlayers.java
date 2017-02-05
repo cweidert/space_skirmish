@@ -5,10 +5,12 @@ import java.awt.GridBagConstraints;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heliomug.games.space.Player;
+import com.heliomug.utils.gui.UpdatingButton;
 import com.heliomug.utils.gui.UpdatingScrollPanel;
 
 @SuppressWarnings("serial")
@@ -47,7 +49,15 @@ class PanelListExternalPlayers extends UpdatingScrollPanel {
 				JPanel colorPanel = new JPanel();
 				colorPanel.setBackground(player.getColor());
 				colorPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				panel.add(panel, cons);
+				panel.add(colorPanel, cons);
+	    		if (Session.hasOwnGame()) {
+		    		cons.gridx++;
+		    		JButton button = new UpdatingButton("X", () -> {
+						Session.getGame().removePlayer(player);
+					});
+					button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		    		panel.add(button, cons);
+	    		}
 				cons.gridy++;
 			}
     	} else {

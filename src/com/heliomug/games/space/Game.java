@@ -105,15 +105,20 @@ public class Game implements Serializable, ActionListener {
 	}
 	
 	public void addPlayer(Player player) {
-		players.add(player);
-		shipAssignments.put(player, new Vehicle(player));
-		reset();
+		if (!players.contains(player)) {
+			players.add(player);
+			shipAssignments.put(player, new Vehicle(player));
+			reset();
+		}
 	}
 
 	public void removePlayer(Player player) {
-		Vehicle ship = shipAssignments.remove(player);
-		players.remove(player);
-		sprites.remove(ship);
+		if (players.contains(player)) {
+			Vehicle ship = shipAssignments.remove(player);
+			players.remove(player);
+			sprites.remove(ship);
+			reset();
+		}
 	}
 	
 	public void handleShipSignal(Player player, VehicleSignal signal) {

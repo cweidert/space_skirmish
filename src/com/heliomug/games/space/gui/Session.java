@@ -49,13 +49,14 @@ class Session {
 
 	
 	public static Game getGame() {
-		if (ownGame != null) {
-			return ownGame;
-		} else if (gameClient != null) {
-			return gameClient.getThing();
+		if (gameClient != null) {
+			if (gameClient.isActive()) {
+				return gameClient.getThing();
+			} else {
+				setClient(null);
+			}
 		}
-		System.out.println("and game is " + getGame());
-		return null;
+		return ownGame;
 	}
 	
 	public static boolean hasOwnGame() {
@@ -177,13 +178,10 @@ class Session {
 	}
 	
 	public static List<Player> getExternalPlayers() {
-		if (gameClient == null) {
-			return new ArrayList<>();
-		} else {
-			List<Player> all = getAllPlayers();
-			all.removeAll(localPlayers);
-			return all;
-		}
+		List<Player> all = new ArrayList<>();
+		all.addAll(getAllPlayers());
+		all.removeAll(localPlayers);
+		return all;
 	}
 	
 	public static List<Color> getPlayerColors() {
@@ -231,15 +229,24 @@ class Session {
 		}
 		gameClient = newClient;
 
-		List<Player> playersToAdd = getLocalPlayers();
-		playersToAdd.removeAll(gameClient.getThing().getPlayers());
-		for (Player player : playersToAdd) {
-			gameClient.sendCommand(new CommandAddRemovePlayer(player));
-		}
 		if (gameClient == null) {
 			ownGame = new Game();
 		} else {
 			ownGame = null;
+		}
+		addAllPlayersToGame();
+	}
+	
+	private static void addAllPlayersToGame() {
+		List<Player> playersToAdd = getLocalPlayers();
+		if (ownGame == null) {
+			for (Player player : playersToAdd) {
+				gameClient.sendCommand(new CommandAddRemovePlayer(player));
+			}
+		} else {
+			for (Player player : playersToAdd) {
+				new CommandAddRemovePlayer(player).accept(ownGame);
+			}
 		}
 	}
 	
