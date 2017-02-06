@@ -19,7 +19,7 @@ public class Server<T extends Serializable> implements Runnable {
 	
 	private boolean isActive;
 
-	ServerSocket serverSocket;
+	private ServerSocket serverSocket;
 	
 	public Server(T thing, int port) {
 		this.thing = thing;

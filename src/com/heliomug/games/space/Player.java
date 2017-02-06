@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.heliomug.utils.server.Address;
+
 public class Player implements Serializable {
 	private static final long serialVersionUID = -4011767966592548445L;
 
@@ -11,14 +13,25 @@ public class Player implements Serializable {
 	private int wins;
 	private Color color;
 	
+	private Address address;
+	
 	// id is for serialization / matching purposes
 	private long id;
+	
+	public Player(int i, Color c) {
+		this(getNameString(i), c);
+	}
 	
 	public Player(String name, Color color) {
 		this.name = name;
 		this.wins = 0;
 		this.color = color;
 		this.id = (long)(Math.random() * Long.MAX_VALUE);
+		this.address = new Address();
+	}
+	
+	private static String getNameString(int i) {
+		return "Player " + i; 
 	}
 	
 	public Color getColor() {
@@ -35,6 +48,10 @@ public class Player implements Serializable {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public Address getAddress() {
+		return this.address;
 	}
 	
 	// i know keys to maps are supposed to be immutable,

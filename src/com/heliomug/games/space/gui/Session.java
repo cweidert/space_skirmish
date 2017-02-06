@@ -20,6 +20,7 @@ import com.heliomug.games.space.server.CommandShipSignal;
 import com.heliomug.games.space.server.GameAddress;
 import com.heliomug.games.space.server.GameListClient;
 import com.heliomug.games.space.server.GameListServer;
+import com.heliomug.utils.server.Address;
 import com.heliomug.utils.server.Client;
 import com.heliomug.utils.server.Server;
 
@@ -156,6 +157,12 @@ class Session {
 		}
 	}
 	
+	public static void addLocalPlayers(int n) {
+		while (localPlayers.size() < n) {
+			int i = localPlayers.size() + 1; 
+			addLocalPlayer(new Player(i, ButtonColor.getOkayColor()));
+		}
+	}
 	
 	public static void addLocalPlayer(Player player) {
 		localPlayers.add(player);
@@ -169,6 +176,10 @@ class Session {
 		sendCommand(new CommandAddRemovePlayer(player, false));
 	}
 
+	public static void removePlayersWithAddress(Address address) {
+		getGame().removePlayersWithAddress(address);
+	}
+	
 	public static List<Player> getAllPlayers() {
 		return getGame().getPlayers();
 	}

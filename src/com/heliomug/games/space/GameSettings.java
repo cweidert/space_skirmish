@@ -15,6 +15,7 @@ public class GameSettings implements Serializable {
 	public static final double BUFFER_WIDTH = 12;
 
 	// expiration date
+	public static final boolean DEFAULT_IS_BULLET_AGE_LIMIT = true;
 	public static final long DEFAULT_BULLET_AGE_LIMIT = 3000;
 	public static final long MAX_BULLET_AGE_LIMIT = 10000;
 
@@ -61,15 +62,18 @@ public class GameSettings implements Serializable {
 		setWidth(DEFAULT_WIDTH);
 		setHeight(DEFAULT_HEIGHT);
 
+		setTankMode(DEFAULT_IS_TANK_MODE);
+		isAutoRestart = DEFAULT_IS_AUTO_RESTART;
+		
+		isGravity = DEFAULT_IS_GRAVITY;
 		bigG = DEFAULT_BIG_G;
 		isPlanet = DEFAULT_IS_PLANET;
 		isPlanetStationary = DEFAULT_IS_PLANET_STATIONARY;
 
-		setTankMode(DEFAULT_IS_TANK_MODE);
-		
-		isGravity = DEFAULT_IS_GRAVITY;
+		isBulletAgeLimit = DEFAULT_IS_BULLET_AGE_LIMIT;
+		bulletAgeLimit = DEFAULT_BULLET_AGE_LIMIT;
+
 		isWrap = DEFAULT_IS_WRAP;
-		isAutoRestart = DEFAULT_IS_AUTO_RESTART;
 		isSafeZone = DEFAULT_IS_SAFE_ZONE;
 		safeZoneRadius = DEFAULT_SAFE_ZONE_RADIUS;
 	}

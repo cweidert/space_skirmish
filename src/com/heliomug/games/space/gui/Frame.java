@@ -23,6 +23,8 @@ class Frame extends JFrame {
 		return theFrame;
 	}
 	
+	public static final String GAME_TYPE_CARD = "game type card";
+	public static final String QUICK_PLAYER_CARD = "quick player card";
 	public static final String GAME_CARD = "game card";
 	public static final String PLAYER_CARD = "player card";
 	public static final String SETTINGS_CARD = "settings card";
@@ -62,6 +64,8 @@ class Frame extends JFrame {
 		gameCard = new CardGame();
 		gameCard.reset();
 		cardPanel.add(gameCard, GAME_CARD);
+		cardPanel.add(new CardQuickPlayers(), QUICK_PLAYER_CARD);
+		cardPanel.add(new CardGameType(), GAME_TYPE_CARD);
 		cardPanel.add(new CardPlayers(), PLAYER_CARD);
 		cardPanel.add(new CardSettings(), SETTINGS_CARD);
 		cardPanel.add(new CardConnections(), CONNECTIONS_CARD);
@@ -71,7 +75,11 @@ class Frame extends JFrame {
 		pack();
 		
 		CardLayout layout = (CardLayout) cardPanel.getLayout();
-		layout.show(cardPanel, PLAYER_CARD);
+		layout.show(cardPanel, GAME_TYPE_CARD);
+	}
+	
+	public static void resetGamePanel() {
+		getFrame().gameCard.reset();
 	}
 	
 	public static void setCard(String cardName) {

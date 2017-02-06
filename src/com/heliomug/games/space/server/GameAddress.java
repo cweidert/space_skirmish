@@ -17,8 +17,6 @@ public class GameAddress implements Serializable {
 	private int port;
 	private String name;
 	
-	
-	
 	public GameAddress(Server<Game> server) {
 		this(server, "");
 	}

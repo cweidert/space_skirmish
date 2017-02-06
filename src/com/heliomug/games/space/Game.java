@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.Timer;
 
 import com.heliomug.utils.games.QuadTree;
+import com.heliomug.utils.server.Address;
 
 public class Game implements Serializable, ActionListener {
 	private static final long serialVersionUID = 1451293503897747642L;
@@ -119,6 +120,17 @@ public class Game implements Serializable, ActionListener {
 			sprites.remove(ship);
 			reset();
 		}
+	}
+	
+	public int removePlayersWithAddress(Address address) {
+		int tot = 0;
+		for (Player player : players) {
+			if (player.getAddress().equals(address)) {
+				removePlayer(player);
+				tot++;
+			}
+		}
+		return tot;
 	}
 	
 	public void handleShipSignal(Player player, VehicleSignal signal) {

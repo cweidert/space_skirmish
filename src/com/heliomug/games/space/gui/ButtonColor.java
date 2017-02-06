@@ -45,7 +45,7 @@ class ButtonColor extends JButton {
 		});
 	}
 	
-	public void resetColor() {
+	public static Color getOkayColor() {
 		List<Color> colors = new ArrayList<>();
 		colors.addAll(primaryColors);
 		colors.removeAll(Session.getPlayerColors());
@@ -54,10 +54,14 @@ class ButtonColor extends JButton {
 			colors.removeAll(Session.getPlayerColors());
 		}
 		if (colors.size() == 0) {
-			setColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random()));
+			return Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
 		} else {
-			setColor(colors.get((int)(Math.random() * colors.size())));
+			return colors.get((int)(Math.random() * colors.size()));
 		}
+	}
+	
+	public void resetColor() {
+		setColor(getOkayColor());
 	}
 	
 	public void setColor(Color c) {

@@ -4,14 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JLabel;
+import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.JRadioButton;
 
 import com.heliomug.games.space.GameSettings;
 import com.heliomug.utils.gui.PanelUtils;
 import com.heliomug.utils.gui.UpdatingCheckBox;
-import com.heliomug.utils.gui.UpdatingSlider;
+import com.heliomug.utils.gui.UpdatingRadioButton;
+import com.heliomug.utils.gui.UpdatingSliderPanel;
 
 @SuppressWarnings("serial")
 class CardSettings extends JPanel {
@@ -34,6 +35,7 @@ class CardSettings extends JPanel {
 	// ship collision kills?
 	
 	
+
 	private JPanel getBulletPanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		PanelUtils.addEtch(panel, "Bullet Settings");
@@ -46,23 +48,19 @@ class CardSettings extends JPanel {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isBulletAgeLimit();
 		});
 		panel.add(box);
-		JPanel subpanel;
-		UpdatingSlider slider;
-		subpanel = new JPanel(new BorderLayout());
-		subpanel.add(new JLabel("Bullet Age Limit"), BorderLayout.WEST);
 		int max = (int)GameSettings.MAX_BULLET_AGE_LIMIT;
 		int def = (int)GameSettings.DEFAULT_BULLET_AGE_LIMIT;
-		slider = new UpdatingSlider(0, max, def, (Integer i) -> {
+		UpdatingSliderPanel slider = new UpdatingSliderPanel("Bullet Age Limit", 0, max, def, 
+		(Integer i) -> {
 			Session.getGame().getSettings().setBulletAgeLimit(i);
 		}, () -> {
 			if (Session.hasOwnGame()) {
-				return def;
-			} else {
 				return (int)Session.getGame().getSettings().getBulletAgeLimit();
+			} else {
+				return def;
 			}
 		});
-		subpanel.add(slider, BorderLayout.CENTER);
-		panel.add(subpanel);
+		panel.add(slider);
 		return panel;
 	}
 	
@@ -79,31 +77,46 @@ class CardSettings extends JPanel {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isAutoRestart();
 		});
 		panel.add(box);
-		box = new UpdatingCheckBox("Tank Mode", (Boolean b) -> {
+		ButtonGroup gameModeGroup = new ButtonGroup();
+		JRadioButton button;
+		button = new UpdatingRadioButton("Tank Mode", gameModeGroup, () -> Session.hasOwnGame(), ()-> {  
 			if (Session.hasOwnGame()) {
-				Session.getGame().getSettings().setTankMode(b);
+				Session.getGame().getSettings().setTankMode(true);
+				Frame.resetGamePanel();
+				this.repaint();
 			}
-		}, () -> {
-			return Session.hasOwnGame() && Session.getGame().getSettings().isTankMode();
 		});
-		panel.add(box);
+		panel.add(button);
+		button = new UpdatingRadioButton("Space Mode", gameModeGroup, () -> Session.hasOwnGame(), ()-> {  
+			if (Session.hasOwnGame()) {
+				Session.getGame().getSettings().setTankMode(false);
+				Frame.resetGamePanel();
+				this.repaint();
+			}
+		});
+		panel.add(button);
 		return panel;
 	}
 	
 	private JPanel getSpacePanel() {
 		JPanel panel = new JPanel(new GridLayout(0, 1));
-		PanelUtils.addEtch(panel, "Gravity Settings");
+		PanelUtils.addEtch(panel, "Space Settings");
 		UpdatingCheckBox box;
 
-		box = new UpdatingCheckBox("Planet On", () -> Session.getGame().getSettings().isTankMode(), (Boolean b) -> {
+		box = new UpdatingCheckBox("Planet On", () -> {
+			return !Session.getGame().getSettings().isTankMode() && Session.hasOwnGame();
+		}, (Boolean b) -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().getSettings().setPlanet(b);
+				this.repaint();
 			}
 		}, () -> {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanet();
 		});
 		panel.add(box);
-		box = new UpdatingCheckBox("Planet Stationary", (Boolean b) -> {
+		box = new UpdatingCheckBox("Planet Stationary", () -> {
+			return Session.hasOwnGame() && Session.getGame().getSettings().isPlanet();
+		}, (Boolean b) -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().getSettings().setPlanetStationary(b);
 			}
@@ -112,7 +125,9 @@ class CardSettings extends JPanel {
 		});
 		panel.add(box);
 
-		box = new UpdatingCheckBox("Gravity", () -> Session.getGame().getSettings().isTankMode(), (Boolean b) -> {
+		box = new UpdatingCheckBox("Gravity", () -> {
+			return !Session.getGame().getSettings().isTankMode() && Session.hasOwnGame();
+		}, (Boolean b) -> {
 			if (Session.hasOwnGame()) {
 				Session.getGame().getSettings().setGravity(b);
 			}
@@ -120,21 +135,17 @@ class CardSettings extends JPanel {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isGravity();
 		});
 		panel.add(box);
-		JPanel subpanel;
-		UpdatingSlider slider;
-		subpanel = new JPanel(new BorderLayout());
-		subpanel.add(new JLabel("Gravity Level"), BorderLayout.WEST);
-		slider = new UpdatingSlider(0, GameSettings.MAX_BIG_G, GameSettings.DEFAULT_BIG_G, (Integer i) -> {
+		UpdatingSliderPanel slider;
+		slider = new UpdatingSliderPanel("Gravity Level", 0, GameSettings.MAX_BIG_G, GameSettings.DEFAULT_BIG_G, (Integer i) -> {
 			Session.getGame().getSettings().setBigG(i);
 		}, () -> {
 			if (Session.hasOwnGame()) {
-				return GameSettings.DEFAULT_BIG_G;
-			} else {
 				return Session.getGame().getSettings().getBigG();
+			} else {
+				return GameSettings.DEFAULT_BIG_G;
 			}
 		});
-		subpanel.add(slider, BorderLayout.CENTER);
-		panel.add(subpanel);
+		panel.add(slider);
 
 		return panel;
 	}
@@ -162,9 +173,8 @@ class CardSettings extends JPanel {
 			return Session.hasOwnGame() && Session.getGame().getSettings().isSafeZone();
 		});
 		panel.add(box);
-		JPanel subpanel = new JPanel(new BorderLayout());
-		subpanel.add(new JLabel("Safe Zone Ratio"), BorderLayout.WEST);
-		JSlider slider = new UpdatingSlider(
+		JPanel slider = new UpdatingSliderPanel(
+				"Safe Zone Radius", 
 				0, 
 				GameSettings.MAX_SAFE_ZONE_RADIUS, 
 				GameSettings.DEFAULT_SAFE_ZONE_RADIUS, 
@@ -178,8 +188,7 @@ class CardSettings extends JPanel {
 					}
 				}
 		);
-		subpanel.add(slider, BorderLayout.CENTER);
-		panel.add(subpanel);
+		panel.add(slider);
 		
 		return panel;
 	}
