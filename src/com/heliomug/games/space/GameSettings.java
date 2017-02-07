@@ -16,8 +16,8 @@ public class GameSettings implements Serializable {
 
 	// expiration date
 	public static final boolean DEFAULT_IS_BULLET_AGE_LIMIT = true;
-	public static final long DEFAULT_BULLET_AGE_LIMIT = 3000;
-	public static final long MAX_BULLET_AGE_LIMIT = 10000;
+	public static final long DEFAULT_BULLET_AGE_LIMIT = 8000;
+	public static final long MAX_BULLET_AGE_LIMIT = 15000;
 
 	// gravity
 	public static final boolean DEFAULT_IS_GRAVITY = true;

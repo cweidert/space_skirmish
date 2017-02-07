@@ -9,10 +9,23 @@ import javax.swing.JRadioButton;
 
 @SuppressWarnings("serial")
 public class UpdatingRadioButton extends JRadioButton {
+	private static final int NO_KEY = 0;
+	
 	Supplier<Boolean> sup;
 	
 	public UpdatingRadioButton(String text, ButtonGroup group, Supplier<Boolean> sup, Runnable com) {
+		this(text, NO_KEY, group, sup, com);
+	}
+
+	public UpdatingRadioButton(String text, int key, ButtonGroup group, Runnable com) {
+		this(text, key, group, () -> true, com);
+	}
+	
+	public UpdatingRadioButton(String text, int key, ButtonGroup group, Supplier<Boolean> sup, Runnable com) {
 		super(text);
+		if (key != NO_KEY) {
+			setMnemonic(key);
+		}
 		group.add(this);
 		this.sup = sup;
 		addActionListener((ActionEvent e) -> com.run());
